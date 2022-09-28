@@ -22,8 +22,13 @@
 /* Clock divider to run the ADC at 0.5 Hz (48 MHz clock) */
 #define ADC_0_5_HZ (24 * 1000 * 1000)
 
-static volatile uint16_t temp_adc_raw;
-static critical_section_t temp_critsec;
+#define AP_SCAN_INTVL_MS (10 * 1000)
+
+static volatile uint16_t temp_adc_raw = UINT16_MAX;
+static volatile bool linkup = false;
+static volatile int16_t rssi = INT16_MAX;
+static critical_section_t temp_critsec, rssi_critsec, linkup_critsec;
+static repeating_timer_t scan_timer;
 
 static void
 __not_in_flash_func(temp_isr)(void)
@@ -43,9 +48,48 @@ get_temp(void)
 	raw = temp_adc_raw;
 	critical_section_exit(&temp_critsec);
 
+	if (raw == UINT16_MAX)
+		return UINT32_MAX;
 	if ((raw & ADC_FIFO_ERR_BITS) != 0)
-		return 0;
+		return UINT32_MAX;
 	return 2909703 - 1917 * raw;
+}
+
+static int16_t
+get_rssi(void)
+{
+	int16_t val;
+
+	critical_section_enter_blocking(&rssi_critsec);
+	val = rssi;
+	critical_section_exit(&rssi_critsec);
+	return val;
+}
+
+static int
+scan_result(void *p, const cyw43_ev_scan_result_t *result)
+{
+	const char *ssid = p;
+	/* AN(ssid); AN(result); */
+	if (strncmp(ssid, result->ssid, result->ssid_len) != 0)
+		return 0;
+	critical_section_enter_blocking(&rssi_critsec);
+	rssi = result->rssi;
+	critical_section_exit(&rssi_critsec);
+	return 0;
+}
+
+static bool
+scan_start(repeating_timer_t *rt)
+{
+	cyw43_wifi_scan_options_t opts = { 0 };
+
+	if (cyw43_wifi_scan_active(&cyw43_state))
+		return true;
+	if (cyw43_wifi_scan(&cyw43_state, &opts, WIFI_SSID, scan_result) != 0)
+		// HTTP_LOG_ERROR
+		puts("cyw43_wifi_scan() failed");
+	return true;
 }
 
 void
@@ -64,6 +108,23 @@ core1_main(void)
 	irq_set_enabled(ADC_IRQ_FIFO, true);
 	adc_run(true);
 
+	/* Wait for the other core to signal that the network link is up. */
+	for (;;) {
+		bool up = false;
+
+		critical_section_enter_blocking(&linkup_critsec);
+		up = linkup;
+		critical_section_exit(&linkup_critsec);
+		if (up)
+			break;
+		sleep_ms(100);
+	}
+
+	if (!add_repeating_timer_ms(AP_SCAN_INTVL_MS, scan_start, WIFI_SSID,
+				    &scan_timer))
+		// HTTP_LOG_ERROR()
+		puts("Failed to start timer for AP scan");
+
 	for (;;)
 		__wfi();
 }
@@ -80,6 +141,8 @@ main(void)
 	err_t err;
 
 	critical_section_init(&temp_critsec);
+	critical_section_init(&linkup_critsec);
+	critical_section_init(&rssi_critsec);
 	sleep_ms(10);
 	multicore_reset_core1();
 	sleep_ms(10);
@@ -90,7 +153,6 @@ main(void)
 	if (cyw43_arch_init() != 0)
 		return -1;
 
-#if 0
 	cyw43_arch_enable_sta_mode();
 	do {
 		if (cyw43_arch_wifi_connect_async(WIFI_SSID, WIFI_PASSWORD,
@@ -105,6 +167,11 @@ main(void)
 		}
 	} while (link_status != CYW43_LINK_UP);
 
+	critical_section_enter_blocking(&linkup_critsec);
+	linkup = true;
+	critical_section_exit(&linkup_critsec);
+
+#if 0
 	if ((err = register_hndlr("/reflect", reflect_hndlr, HTTP_METHOD_GET,
 				  NULL)) != ERR_OK) {
 		printf("register_hndlr GET: %d\n", err);
@@ -124,6 +191,7 @@ main(void)
 
 	for (;;) {
 		uint32_t temp = get_temp();
+		int16_t _rssi = get_rssi();
 
 		if (temp != 0)
 			// HTTP_LOG_INFO("Temp K (Q20.12) = %u", temp);
@@ -131,6 +199,12 @@ main(void)
 		else
 			// HTTP_LOG_ERROR("ADC error");
 			puts("ADC error");
+
+		if (_rssi != INT16_MAX)
+			printf("rssi = %d\n", _rssi);
+		else
+			// HTTP_LOG_ERROR()
+			puts("rssi not yet set");
 		sleep_ms(1000);
 	}
 #if 0
