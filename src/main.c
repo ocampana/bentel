@@ -84,9 +84,11 @@ scan_start(repeating_timer_t *rt)
 {
 	cyw43_wifi_scan_options_t opts = { 0 };
 
+	// AN(rt);
 	if (cyw43_wifi_scan_active(&cyw43_state))
 		return true;
-	if (cyw43_wifi_scan(&cyw43_state, &opts, WIFI_SSID, scan_result) != 0)
+	if (cyw43_wifi_scan(&cyw43_state, &opts, rt->user_data, scan_result)
+	    != 0)
 		// HTTP_LOG_ERROR
 		puts("cyw43_wifi_scan() failed");
 	return true;
