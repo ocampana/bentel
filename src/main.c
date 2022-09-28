@@ -19,8 +19,8 @@
 //#include "picow_http/http.h"
 
 #define ADC_TEMP_CH (4)
-/* Clock divider to run the ADC at 0.5 Hz (48 MHz clock) */
-#define ADC_0_5_HZ (24 * 1000 * 1000)
+/* Clock divider to run the ADC at 2 Hz (48 MHz clock) */
+#define ADC_CLKDIV_2HZ (24 * 1000 * 1000)
 
 #define AP_SCAN_INTVL_MS (10 * 1000)
 
@@ -101,7 +101,7 @@ core1_main(void)
 	adc_select_input(ADC_TEMP_CH);
 	/* Write to FIFO length 1, and retain the ERR bit. */
 	adc_fifo_setup(true, false, 1, true, false);
-	adc_set_clkdiv(ADC_0_5_HZ);
+	adc_set_clkdiv(ADC_CLKDIV_2HZ);
 
 	irq_set_exclusive_handler(ADC_IRQ_FIFO, temp_isr);
 	adc_irq_set_enabled(true);
