@@ -29,6 +29,10 @@ if (DEFINED NTP_SERVER)
 	add_compile_definitions(NTP_SERVER=\"${NTP_SERVER}\")
 endif()
 
+if (DEFINED HOSTNAME)
+	add_compile_definitions(CYW43_HOST_NAME=\"${HOSTNAME}\")
+endif()
+
 target_include_directories(picow-http-example PRIVATE
 	${CMAKE_CURRENT_LIST_DIR}/src
 )
