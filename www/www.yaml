@@ -1,0 +1,26 @@
+- static:
+    file: index.html
+
+- static:
+    file: picow.css
+
+- static:
+    file: favicon.png
+
+- custom:
+    path: /temp
+    methods:
+    - GET
+    - HEAD
+
+- custom:
+    path: /led
+    methods:
+    - GET
+    - HEAD
+
+- custom:
+    path: /ap
+    methods:
+    - GET
+    - HEAD

@@ -16,7 +16,8 @@
 #include "hardware/regs/adc.h"
 #include "hardware/sync.h"
 
-//#include "picow_http/http.h"
+#include "picow_http/http.h"
+#include "handlers.h"
 
 #define ADC_TEMP_CH (4)
 /* Clock divider to run the ADC at 2 Hz (48 MHz clock) */
@@ -39,7 +40,7 @@ __not_in_flash_func(temp_isr)(void)
 	critical_section_exit(&temp_critsec);
 }
 
-static uint32_t
+uint32_t
 get_temp(void)
 {
 	uint16_t raw;
@@ -55,7 +56,7 @@ get_temp(void)
 	return 2909703 - 1917 * raw;
 }
 
-static int16_t
+int16_t
 get_rssi(void)
 {
 	int16_t val;
@@ -134,11 +135,9 @@ core1_main(void)
 int
 main(void)
 {
-#if 0
 	struct server *srv;
 	struct server_cfg cfg;
 	struct ntp_cfg ntp_cfg;
-#endif
 	int link_status = CYW43_LINK_DOWN;
 	err_t err;
 
@@ -156,6 +155,7 @@ main(void)
 		return -1;
 
 	cyw43_arch_enable_sta_mode();
+	HTTP_LOG_INFO("Connecting to " WIFI_SSID " ...");
 	do {
 		if (cyw43_arch_wifi_connect_async(WIFI_SSID, WIFI_PASSWORD,
 						  CYW43_AUTH_WPA2_AES_PSK) != 0)
@@ -163,8 +163,11 @@ main(void)
 		while ((link_status = cyw43_tcpip_link_status(&cyw43_state,
 							      CYW43_ITF_STA))
 		       != CYW43_LINK_UP) {
-			if (link_status < 0)
+			if (link_status < 0) {
+				HTTP_LOG_ERROR("WiFi connect error status: %d",
+					       link_status);
 				break;
+			}
 			sleep_ms(100);
 		}
 	} while (link_status != CYW43_LINK_UP);
@@ -172,47 +175,50 @@ main(void)
 	critical_section_enter_blocking(&linkup_critsec);
 	linkup = true;
 	critical_section_exit(&linkup_critsec);
+	HTTP_LOG_INFO("Connected to " WIFI_SSID);
 
-#if 0
-	if ((err = register_hndlr("/reflect", reflect_hndlr, HTTP_METHOD_GET,
+	if ((err = register_hndlr("/temp", temp_handler, HTTP_METHOD_GET, NULL))
+	    != ERR_OK) {
+		HTTP_LOG_ERROR("register_hndlr GET /temp: %d", err);
+		return -1;
+	}
+	if ((err = register_hndlr("/temp", temp_handler, HTTP_METHOD_HEAD,
 				  NULL)) != ERR_OK) {
-		printf("register_hndlr GET: %d\n", err);
+		HTTP_LOG_ERROR("register_hndlr HEAD /temp: %d", err);
+		return -1;
+	}
+	if ((err = register_hndlr("/led", led_handler, HTTP_METHOD_GET, NULL))
+	    != ERR_OK) {
+		HTTP_LOG_ERROR("register_hndlr GET /led: %d", err);
+		return -1;
+	}
+	if ((err = register_hndlr("/led", led_handler, HTTP_METHOD_HEAD, NULL))
+	    != ERR_OK) {
+		HTTP_LOG_ERROR("register_hndlr HEAD /led: %d", err);
+		return -1;
+	}
+	if ((err = register_hndlr("/ap", ap_handler, HTTP_METHOD_GET, NULL))
+	    != ERR_OK) {
+		HTTP_LOG_ERROR("register_hndlr GET /ap: %d", err);
+		return -1;
+	}
+	if ((err = register_hndlr("/ap", led_handler, HTTP_METHOD_HEAD, NULL))
+	    != ERR_OK) {
+		HTTP_LOG_ERROR("register_hndlr HEAD /ap: %d", err);
 		return -1;
 	}
 
 	http_default_cfg(&cfg, &ntp_cfg);
-#endif
 #ifdef NTP_SERVER
 	ntp_cfg.server = NTP_SERVER;
 #endif
-#if 0
 	while ((err = http_srv_init(&srv, &cfg)) != ERR_OK)
-		printf("http_init: %d\n", err);
-	puts("http started");
-#endif
+		HTTP_LOG_ERROR("http_init: %d\n", err);
+	HTTP_LOG_INFO("http started");
+	cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, true);
 
-	for (;;) {
-		uint32_t temp = get_temp();
-		int16_t _rssi = get_rssi();
-
-		if (temp != 0)
-			// HTTP_LOG_INFO("Temp K (Q20.12) = %u", temp);
-			printf("Temp K (Q20.12) = %u\n", temp);
-		else
-			// HTTP_LOG_ERROR("ADC error");
-			puts("ADC error");
-
-		if (_rssi != INT16_MAX)
-			printf("rssi = %d\n", _rssi);
-		else
-			// HTTP_LOG_ERROR()
-			puts("rssi not yet set");
-		sleep_ms(1000);
-	}
-#if 0
 	for (;;)
 		__wfi();
-#endif
 
 	cyw43_arch_deinit();
 	return 0;

@@ -1,0 +1,99 @@
+/* https://static.raspberrypi.org/files/Raspberry_Pi_Visual_Guidelines.pdf */
+:root {
+    --raspberry-red: rgb(197, 26, 74);
+    --leaf-green: rgb(108, 198, 74);
+}
+
+body {
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+
+h1 {
+    width: 100%;
+    text-align: center;
+}
+
+.column {
+    float: left;
+    width: 35%;
+    text-align: center;
+}
+
+.row {
+    margin: 0 auto;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+/* Temperature value with scale, and LED ON/OFF */
+.valueDisplay {
+    margin-top: 5vh;
+    margin-bottom: 0;
+    font-size: 350%;
+}
+
+/* LED ON/OFF box with solid border */
+.ledDisplay {
+    border-style: solid;
+}
+
+/* Legend for temperature and LED value */
+.caption {
+    width: 100%;
+}
+
+button {
+    margin: 1vh auto;
+    width: 75%;
+}
+
+/* Buttons in a column */
+.buttons {
+    margin-top: 5vh;
+}
+
+/* Currently selected temperature scale */
+.scaleActive {
+    background-color: var(--raspberry-red);
+    color: white;
+}
+
+/* Unselected temperature scale buttons, and LED controls */
+.btnPlain {
+    background-color: white;
+    color: var(--raspberry-red);
+}
+
+/* LED ON/OFF box when ON. */
+.ledOn {
+    background-color: var(--leaf-green);
+    color: white;
+}
+
+/* LED ON/OFF box when OFF. */
+.ledOff {
+    background-color: black;
+    color: white;
+}
+
+/* Pi-Cow saying something. */
+.cow {
+    width: max-content;
+    margin: 0 auto;
+    text-align: left;
+    font-size: 350%;
+    background-color: var(--raspberry-red);
+}
+
+footer {
+    width: 100%;
+    text-align: center;
+    margin-top: 5vh;
+}

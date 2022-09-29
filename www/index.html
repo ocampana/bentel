@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PicoW HTTP server sample app</title>
+    <link rel="stylesheet" href="picow.css">
+    <link rel="shortcut icon" href="favicon.png" type="image/png" />
+  </head>
+
+  <body>
+    <h1>PicoW HTTP server sample application</h1>
+
+    <main class="row">
+
+      <!-- Left column with temperature display and LED controls -->
+      <section class="column">
+
+        <!-- Temperature display and scale selection -->
+        <section class="row">
+	  <!-- Temperature section value display on the left -->
+	  <section class="column">
+	    <p class="valueDisplay">
+	      <span id="tempValue">0</span> &deg;<span id="tempScale">K</span>
+	    </p>
+	    <h5 class="caption">Onboard temperature sensor</h5>
+	  </section>
+
+	  <!-- Temperature section scale buttons on the right -->
+	  <section class="column buttons">
+	    <button class="scaleActive" type="button" id="scaleK">
+	      Kelvin
+	    </button>
+	    <button class="btnPlain" type="button" id="scaleC">
+	      Celsius
+	    </button>
+	    <button class="btnPlain" type="button" id="scaleF">
+	      Fahrenheit
+	    </button>
+	  </section>
+        </section>
+
+        <!-- LED state display and control -->
+        <section class="row">
+	  <!-- LED state display on the left -->
+	  <section class="column">
+	    <p class="valueDisplay ledDisplay ledOff">
+	      <span id="ledState">OFF</span>
+	    </p>
+	    <h5 class="caption">Onboard LED</h5>
+	  </section>
+
+	  <!-- LED control buttons on the right -->
+	  <section class="column buttons">
+	    <button class="btnPlain" type="button" id="ledOn">
+	      Turn LED On
+	    </button>
+	    <button class="btnPlain" type="button" id="ledOff">
+	      Turn LED Off
+	    </button>
+	    <button class="btnPlain" type="button" id="ledToggle">
+	      Toggle LED
+	    </button>
+	  </section>
+        </section>
+      </section>
+      
+      <!-- Right column with the Pi-Cow -->
+      <section class="column">
+	<pre class="cow">
+ __________
+< http://π >
+ ----------
+  \  ^__^
+   \ (ππ)\
+     (__)\
+	</pre>
+      </section>
+    </main>
+
+    <!-- The footer shows the SSID and RSSI, if available. If not,
+         hide the text. -->
+    <footer>
+      <span id="ssid_text" style="display:none">
+        Connected to <span id="ssid"></span>
+      </span>
+      <br />
+      <span id="rssi_text" style="display:none">
+        Signal strength:
+        <a href="https://en.wikipedia.org/wiki/Received_signal_strength_indication">RSSI</a> = <span id="rssi"></span>
+      </span>
+    </footer>
+  </body>
+</html>
