@@ -118,9 +118,11 @@ led_handler(struct http *http, void *p)
 }
 
 static const char *json_fmt =
-	"{ssid:\"" WIFI_SSID "\",have_rssi=\"%s\",rssi:%d}";
-#define JSON_MAX_LEN \
-    (STRLEN_LITERAL("{ssid:\"" WIFI_SSID "\",have_rssi=\"false\",rssi:-32768}"))
+	"{\"ssid\":\"" WIFI_SSID "\",\"have_rssi\":%s,\"rssi\":%d}";
+
+#define JSON_MAX							\
+	("{\"ssid\":\"" WIFI_SSID "\",\"have_rssi\":false,\"rssi\":-32768}")
+#define JSON_MAX_LEN (STRLEN_LITERAL(JSON_MAX))
 
 err_t
 ap_handler(struct http *http, void *p)
