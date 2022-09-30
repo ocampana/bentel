@@ -14,6 +14,11 @@ const tempValElem = document.getElementById("tempValue");
 const ledBoxElem = document.getElementById("ledBox");
 const ledStateElem = document.getElementById("ledState");
 
+const ssidTextElem = document.getElementById("ssid_text");
+const rssiTextElem = document.getElementById("rssi_text");
+const ssidElem = document.getElementById("ssid");
+const rssiElem = document.getElementById("rssi");
+
 async function updateTemp() {
     let tempVal = 0;
     let body = '';
@@ -93,9 +98,35 @@ async function updateLed() {
     ledBoxElem.classList.add("ledOff");
 }
 
+async function updateAP() {
+    let data = null;
+    try {
+        let response = await fetch("/ap");
+        if (!response.ok) {
+            /* XXX toast */
+            console.log("/ap status: " + response.status);
+            return;
+        }
+        data = await response.json();
+    }
+    catch (ex) {
+        /* XXX toast */
+        console.log(ex);
+        return;
+    }
+
+    ssidElem.textContent = data.ssid;
+    ssidTextElem.style.display = "inline";
+    if (data.have_rssi) {
+        rssiElem.textContent = data.rssi.toString();
+        rssiTextElem.style.display = "inline";
+    }
+}
+
 function init() {
     updateTemp();
     updateLed();
+    updateAP();
 }
 
 if (document.readyState !== "loading") {
