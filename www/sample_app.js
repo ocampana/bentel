@@ -75,7 +75,13 @@ async function updateLed() {
         return;
     }
 
-    let ledOn = !!body;
+    let ledBit = parseInt(body);
+    if (ledBit == NaN) {
+        /* XXX toast */
+        console.log("/led response body: " + body);
+        return;
+    }
+    let ledOn = Boolean(ledBit);
     if (ledOn) {
         ledStateElem.textContent = "ON";
         ledBoxElem.classList.remove("ledOff");
