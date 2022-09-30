@@ -5,8 +5,8 @@
  * See LICENSE
  */
 
-const TEMP_UPDATE_INTVL_MS = 2000;
-const AP_UPDATE_INTVL_MS = 5000;
+const TEMP_UPDATE_INTVL_MS = 2718;
+const AP_UPDATE_INTVL_MS = 2 * 3141;
 
 let scale = 'K';
 const tempValElem = document.getElementById("tempValue");
@@ -127,6 +127,9 @@ function init() {
     updateTemp();
     updateLed();
     updateAP();
+
+    setInterval(updateTemp, TEMP_UPDATE_INTVL_MS);
+    setInterval(updateAP, AP_UPDATE_INTVL_MS);
 }
 
 if (document.readyState !== "loading") {
