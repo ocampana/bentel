@@ -5,8 +5,8 @@
  * See LICENSE
  */
 
-const TEMP_UPDATE_INTVL_MS = 2718;
-const AP_UPDATE_INTVL_MS = 2 * 3141;
+const TEMP_UPDATE_INTVL_MS = 2 * 2718;
+const AP_UPDATE_INTVL_MS = 3 * 3141;
 
 let scalePref = 'K';
 let tempK = 0.0;
