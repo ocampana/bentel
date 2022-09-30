@@ -71,7 +71,10 @@ static int
 scan_result(void *p, const cyw43_ev_scan_result_t *result)
 {
 	const char *ssid = p;
-	/* AN(ssid); AN(result); */
+
+	AN(ssid);
+	AN(result);
+	AN(result->ssid);
 	if (strncmp(ssid, result->ssid, result->ssid_len) != 0)
 		return 0;
 	critical_section_enter_blocking(&rssi_critsec);
@@ -85,13 +88,12 @@ scan_start(repeating_timer_t *rt)
 {
 	cyw43_wifi_scan_options_t opts = { 0 };
 
-	// AN(rt);
+	AN(rt);
 	if (cyw43_wifi_scan_active(&cyw43_state))
 		return true;
 	if (cyw43_wifi_scan(&cyw43_state, &opts, rt->user_data, scan_result)
 	    != 0)
-		// HTTP_LOG_ERROR
-		puts("cyw43_wifi_scan() failed");
+		HTTP_LOG_ERROR("cyw43_wifi_scan() failed");
 	return true;
 }
 
@@ -125,8 +127,7 @@ core1_main(void)
 
 	if (!add_repeating_timer_ms(AP_SCAN_INTVL_MS, scan_start, WIFI_SSID,
 				    &scan_timer))
-		// HTTP_LOG_ERROR()
-		puts("Failed to start timer for AP scan");
+		HTTP_LOG_ERROR("Failed to start timer for AP scan");
 
 	for (;;)
 		__wfi();
