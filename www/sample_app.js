@@ -19,16 +19,18 @@ const rssiTextElem = document.getElementById("rssi_text");
 const ssidElem = document.getElementById("ssid");
 const rssiElem = document.getElementById("rssi");
 
+async function getResp(url) {
+    let response = await fetch(url);
+    if (!response.ok)
+        throw new Error(url + " response status: " + response.status);
+    return response;
+}
+
 async function updateTemp() {
     let tempVal = 0;
     let body = '';
     try {
-        let response = await fetch("/temp");
-        if (!response.ok) {
-            /* XXX toast */
-            console.log("/temp status: " + response.status);
-            return;
-        }
+        let response = await getResp("/temp");
         body = await response.text();
     }
     catch (ex) {
@@ -66,12 +68,7 @@ async function updateTemp() {
 async function updateLed() {
     let body = '';
     try {
-        let response = await fetch("/led");
-        if (!response.ok) {
-            /* XXX toast */
-            console.log("/led status: " + response.status);
-            return;
-        }
+        let response = await getResp("/led");
         body = await response.text();
     }
     catch (ex) {
@@ -101,12 +98,7 @@ async function updateLed() {
 async function updateAP() {
     let data = null;
     try {
-        let response = await fetch("/ap");
-        if (!response.ok) {
-            /* XXX toast */
-            console.log("/ap status: " + response.status);
-            return;
-        }
+        let response = await getResp("/ap");
         data = await response.json();
     }
     catch (ex) {
