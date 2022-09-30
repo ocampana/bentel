@@ -71,7 +71,7 @@ get_rssi(void)
 }
 
 static int
-scan_result(void *p, const cyw43_ev_scan_result_t *result)
+__not_in_flash_func(scan_result)(void *p, const cyw43_ev_scan_result_t *result)
 {
 	const char *ssid = p;
 
@@ -87,7 +87,7 @@ scan_result(void *p, const cyw43_ev_scan_result_t *result)
 }
 
 static bool
-scan_start(repeating_timer_t *rt)
+__not_in_flash_func(scan_start)(repeating_timer_t *rt)
 {
 	cyw43_wifi_scan_options_t opts = { 0 };
 
