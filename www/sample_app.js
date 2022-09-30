@@ -11,6 +11,9 @@ const AP_UPDATE_INTVL_MS = 5000;
 let scale = 'K';
 const tempValElem = document.getElementById("tempValue");
 
+const ledBoxElem = document.getElementById("ledBox");
+const ledStateElem = document.getElementById("ledState");
+
 async function updateTemp() {
     let tempVal = 0;
     let body = '';
@@ -55,8 +58,38 @@ async function updateTemp() {
     tempValElem.textContent = tempVal.toString();
 }
 
+async function updateLed() {
+    let body = '';
+    try {
+        let response = await fetch("/led");
+        if (!response.ok) {
+            /* XXX toast */
+            console.log("/led status: " + response.status);
+            return;
+        }
+        body = await response.text();
+    }
+    catch (ex) {
+        /* XXX toast */
+        console.log(ex);
+        return;
+    }
+
+    let ledOn = !!body;
+    if (ledOn) {
+        ledStateElem.textContent = "ON";
+        ledBoxElem.classList.remove("ledOff");
+        ledBoxElem.classList.add("ledOn");
+        return;
+    }
+    ledStateElem.textContent = "OFF";
+    ledBoxElem.classList.remove("ledOn");
+    ledBoxElem.classList.add("ledOff");
+}
+
 function init() {
     updateTemp();
+    updateLed();
 }
 
 if (document.readyState !== "loading") {
