@@ -36,7 +36,7 @@ async function updateTemp() {
             tempVal = Math.round(tempK);
             break;
         case 'C':
-            tmepVal = Math.round(tempK - 273.15);
+            tempVal = Math.round(tempK - 273.15);
             break;
         case 'F':
             tempVal = Math.round(1.8 * (tempK - 273.15) + 32);
