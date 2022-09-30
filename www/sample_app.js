@@ -13,6 +13,9 @@ const tempValElem = document.getElementById("tempValue");
 
 const ledBoxElem = document.getElementById("ledBox");
 const ledStateElem = document.getElementById("ledState");
+const ledBtnOn = document.getElementById("ledBtnOn");
+const ledBtnOff = document.getElementById("ledBtnOff");
+const ledBtnToggle = document.getElementById("ledBtnToggle");
 
 const ssidTextElem = document.getElementById("ssid_text");
 const rssiTextElem = document.getElementById("rssi_text");
@@ -65,11 +68,14 @@ async function updateTemp() {
     tempValElem.textContent = tempVal.toString();
 }
 
-async function updateLed() {
-    let body = '';
+async function doLed(url) {
+    let ledBit = NaN;
     try {
-        let response = await getResp("/led");
+        let response = await getResp(url);
         body = await response.text();
+        ledBit = parseInt(body);
+        if (ledBit == NaN)
+            throw new Error(url + " response body: " + body);
     }
     catch (ex) {
         /* XXX toast */
@@ -77,12 +83,6 @@ async function updateLed() {
         return;
     }
 
-    let ledBit = parseInt(body);
-    if (ledBit == NaN) {
-        /* XXX toast */
-        console.log("/led response body: " + body);
-        return;
-    }
     let ledOn = Boolean(ledBit);
     if (ledOn) {
         ledStateElem.textContent = "ON";
@@ -93,6 +93,22 @@ async function updateLed() {
     ledStateElem.textContent = "OFF";
     ledBoxElem.classList.remove("ledOn");
     ledBoxElem.classList.add("ledOff");
+}
+
+async function updateLed() {
+    await doLed("/led");
+}
+
+async function ledDoOn() {
+    await doLed("/led?op=on");
+}
+
+async function ledDoOff() {
+    await doLed("/led?op=off");
+}
+
+async function ledDoToggle() {
+    await doLed("/led?op=toggle");
 }
 
 async function updateAP() {
@@ -119,6 +135,10 @@ function init() {
     updateTemp();
     updateLed();
     updateAP();
+
+    ledBtnOn.addEventListener("click", ledDoOn);
+    ledBtnOff.addEventListener("click", ledDoOff);
+    ledBtnToggle.addEventListener("click", ledDoToggle);
 
     setInterval(updateTemp, TEMP_UPDATE_INTVL_MS);
     setInterval(updateAP, AP_UPDATE_INTVL_MS);
