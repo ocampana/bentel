@@ -43,11 +43,7 @@ temp_handler(struct http *http, void *p)
 	return http_resp_send_buf(http, body, body_len, false);
 }
 
-static const char *bool_str[] = { "false", "true" };
-static const size_t bool_body_len[] = {
-	STRLEN_LITERAL("false"),
-	STRLEN_LITERAL("true"),
-};
+static const char *bit_str[] = { "0", "1" };
 
 #define QUERY_PFX_LEN (STRLEN_LITERAL("op="))
 #define ON_LEN (STRLEN_LITERAL("on"))
@@ -62,7 +58,7 @@ led_handler(struct http *http, void *p)
 	err_t err;
 	bool led_on;
 	const char *query;
-	size_t query_len, body_len;
+	size_t query_len;
 	int idx;
 	(void)p;
 
@@ -105,8 +101,7 @@ led_handler(struct http *http, void *p)
 	}
 
 	idx = bool_to_bit(led_on);
-	body_len = bool_body_len[idx];
-	if ((err = http_resp_set_len(resp, body_len)) != ERR_OK) {
+	if ((err = http_resp_set_len(resp, 1)) != ERR_OK) {
 		HTTP_LOG_ERROR("http_resp_set_len() failed: %d", err);
 		return http_resp_err(http, HTTP_STATUS_INTERNAL_SERVER_ERROR);
 	}
@@ -114,8 +109,14 @@ led_handler(struct http *http, void *p)
 		HTTP_LOG_ERROR("http_resp_set_type_literal() failed: %d", err);
 		return http_resp_err(http, HTTP_STATUS_INTERNAL_SERVER_ERROR);
 	}
-	return http_resp_send_buf(http, bool_str[idx], body_len, true);
+	return http_resp_send_buf(http, bit_str[idx], 1, true);
 }
+
+static const char *bool_str[] = { "false", "true" };
+static const size_t bool_body_len[] = {
+	STRLEN_LITERAL("false"),
+	STRLEN_LITERAL("true"),
+};
 
 static const char *json_fmt =
 	"{\"ssid\":\"" WIFI_SSID "\",\"have_rssi\":%s,\"rssi\":%d}";
