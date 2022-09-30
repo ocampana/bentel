@@ -8,8 +8,19 @@
 const TEMP_UPDATE_INTVL_MS = 2718;
 const AP_UPDATE_INTVL_MS = 2 * 3141;
 
-let scale = 'K';
+let scalePref = 'K';
+let tempK = 0.0;
+
 const tempValElem = document.getElementById("tempValue");
+const tempScaleElem = document.getElementById("tempScale");
+const scaleBtnK = document.getElementById("scaleK");
+const scaleBtnC = document.getElementById("scaleC");
+const scaleBtnF = document.getElementById("scaleF");
+const scale2Btn = {
+    "K": scaleBtnK,
+    "C": scaleBtnC,
+    "F": scaleBtnF,
+};
 
 const ledBoxElem = document.getElementById("ledBox");
 const ledStateElem = document.getElementById("ledState");
@@ -29,27 +40,7 @@ async function getResp(url) {
     return response;
 }
 
-async function updateTemp() {
-    let tempVal = 0;
-    let body = '';
-    try {
-        let response = await getResp("/temp");
-        body = await response.text();
-    }
-    catch (ex) {
-        /* XXX toast */
-        console.log(ex);
-        return;
-    }
-
-    let tempK_q20_12 = parseInt(body);
-    if (tempK_q20_12 == NaN) {
-        /* XXX toast */
-        console.log("/temp response body: " + body);
-        return;
-    }
-    let tempK = tempK_q20_12 / 4096.0;
-
+function renderTemp(tmpK, scale) {
     switch (scale) {
     case 'K':
         tempVal = Math.round(tempK);
@@ -61,11 +52,58 @@ async function updateTemp() {
         tempVal = Math.round(1.8 * (tempK - 273.15) + 32);
         break;
     default:
-        /* XXX toast */
-        console.log("/temp scale: " + scale);
-        return;
+        throw new Error("temperature scale: " + scale);
     }
     tempValElem.textContent = tempVal.toString();
+    tempScaleElem.textContent = scale;
+}
+
+async function updateTemp() {
+    try {
+        let response = await getResp("/temp");
+        let body = await response.text();
+        let tempK_q20_12 = parseInt(body);
+        if (tempK_q20_12 == NaN)
+            throw new Error("/temp response body: " + body);
+        tempK = tempK_q20_12 / 4096.0;
+        renderTemp(tempK, scalePref);
+    }
+    catch (ex) {
+        /* XXX toast */
+        console.log(ex);
+        return;
+    }
+}
+
+function doScale(scale) {
+    if (scale == scalePref)
+        return;
+
+    let btn = scale2Btn[scale];
+    let prevBtn = scale2Btn[scalePref];
+    prevBtn.classList.replace("scaleActive", "btnPlain");
+    btn.classList.replace("btnPlain", "scaleActive");
+    scalePref = scale;
+
+    try {
+        renderTemp(tempK, scalePref);
+    }
+    catch (err) {
+        /* XXX toast */
+        console.log(err);
+    }
+}
+
+function doScaleK() {
+    doScale("K");
+}
+
+function doScaleC() {
+    doScale("C");
+}
+
+function doScaleF() {
+    doScale("F");
 }
 
 async function doLed(url) {
@@ -135,6 +173,10 @@ function init() {
     updateTemp();
     updateLed();
     updateAP();
+
+    scaleBtnK.addEventListener("click", doScaleK);
+    scaleBtnC.addEventListener("click", doScaleC);
+    scaleBtnF.addEventListener("click", doScaleF);
 
     ledBtnOn.addEventListener("click", ledDoOn);
     ledBtnOff.addEventListener("click", ledDoOff);
