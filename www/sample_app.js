@@ -172,10 +172,10 @@ async function updateAP() {
     }
 }
 
-function init() {
-    updateTemp();
-    updateLed();
-    updateAP();
+async function init() {
+    await updateTemp();
+    await updateLed();
+    await updateAP();
 
     scaleBtnK.addEventListener("click", doScaleK);
     scaleBtnC.addEventListener("click", doScaleC);
