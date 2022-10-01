@@ -120,10 +120,6 @@ led_handler(struct http *http, void *p)
 }
 
 static const char *bool_str[] = { "false", "true" };
-static const size_t bool_body_len[] = {
-	STRLEN_LITERAL("false"),
-	STRLEN_LITERAL("true"),
-};
 
 static const char *json_fmt =
 	"{\"ssid\":\"" WIFI_SSID "\",\"have_rssi\":%s,\"rssi\":%d}";
