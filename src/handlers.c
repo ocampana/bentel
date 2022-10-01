@@ -45,7 +45,6 @@ temp_handler(struct http *http, void *p)
 
 static const char *bit_str[] = { "0", "1" };
 
-#define QUERY_PFX_LEN (STRLEN_LITERAL("op="))
 #define ON_LEN (STRLEN_LITERAL("on"))
 #define OFF_LEN (STRLEN_LITERAL("off"))
 #define TOGGLE_LEN (STRLEN_LITERAL("toggle"))
@@ -67,37 +66,45 @@ led_handler(struct http *http, void *p)
 
 	if (query != NULL) {
 		const char *val;
+		size_t val_len;
 
-		if (query_len < QUERY_PFX_LEN
-		    || memcmp(query, "op=", QUERY_PFX_LEN) != 0)
+		val = http_req_query_val(query, query_len, "op", 2, &val_len);
+		if (val == NULL)
 			return http_resp_err(http,
 					     HTTP_STATUS_UNPROCESSABLE_CONTENT);
 
-		val = query + QUERY_PFX_LEN;
-		if (query_len == QUERY_PFX_LEN + ON_LEN
-		    && memcmp(val, "on", ON_LEN) == 0) {
+		switch (val_len) {
+		case ON_LEN:
+			if (memcmp(val, "on", ON_LEN) != 0)
+				return http_resp_err(http,
+					     HTTP_STATUS_UNPROCESSABLE_CONTENT);
 			if (!led_on) {
 				cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN,
 						    true);
 				led_on = true;
 			}
-		}
-		else if (query_len == QUERY_PFX_LEN + OFF_LEN
-			 && memcmp(val, "off", OFF_LEN) == 0) {
+			break;
+		case OFF_LEN:
+			if (memcmp(val, "off", OFF_LEN) != 0)
+				return http_resp_err(http,
+					     HTTP_STATUS_UNPROCESSABLE_CONTENT);
 			if (led_on) {
 				cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN,
 						    false);
 				led_on = false;
 			}
-		}
-		else if (query_len == QUERY_PFX_LEN + TOGGLE_LEN
-			 && memcmp(val, "toggle", TOGGLE_LEN) == 0) {
+			break;
+		case TOGGLE_LEN:
+			if (memcmp(val, "toggle", TOGGLE_LEN) != 0)
+				return http_resp_err(http,
+					     HTTP_STATUS_UNPROCESSABLE_CONTENT);
 			led_on = !led_on;
 			cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, led_on);
-		}
-		else
+			break;
+		default:
 			return http_resp_err(http,
 					     HTTP_STATUS_UNPROCESSABLE_CONTENT);
+		}
 	}
 
 	idx = bool_to_bit(led_on);
