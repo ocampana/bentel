@@ -32,6 +32,7 @@ const ssidTextElem = document.getElementById("ssid_text");
 const rssiTextElem = document.getElementById("rssi_text");
 const ssidElem = document.getElementById("ssid");
 const rssiElem = document.getElementById("rssi");
+const ssElem = document.getElementById("ss_pct");
 
 async function getResp(url) {
     let response = await fetch(url);
@@ -165,6 +166,8 @@ async function updateAP() {
     ssidTextElem.style.display = "inline";
     if (data.have_rssi) {
         rssiElem.textContent = data.rssi.toString();
+        ssElem.textContent
+            = Math.max(Math.min(2 * (100 + data.rssi), 0), 100).toString();
         rssiTextElem.style.display = "inline";
     }
 }
