@@ -216,6 +216,7 @@ main(void)
 #ifdef NTP_SERVER
 	ntp_cfg.server = NTP_SERVER;
 #endif
+	cfg.idle_tmo_s = 30;
 	while ((err = http_srv_init(&srv, &cfg)) != ERR_OK)
 		HTTP_LOG_ERROR("http_init: %d\n", err);
 	HTTP_LOG_INFO("http started");
