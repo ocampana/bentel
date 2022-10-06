@@ -35,7 +35,7 @@ static critical_section_t temp_critsec, rssi_critsec, linkup_critsec;
 static repeating_timer_t scan_timer;
 
 static void
-__not_in_flash_func(temp_isr)(void)
+__time_critical_func(temp_isr)(void)
 {
 	uint16_t val = adc_fifo_get();
 	critical_section_enter_blocking(&temp_critsec);
@@ -71,7 +71,7 @@ get_rssi(void)
 }
 
 static int
-__not_in_flash_func(scan_result)(void *p, const cyw43_ev_scan_result_t *result)
+__time_critical_func(scan_result)(void *p, const cyw43_ev_scan_result_t *result)
 {
 	const char *ssid = p;
 
@@ -87,7 +87,7 @@ __not_in_flash_func(scan_result)(void *p, const cyw43_ev_scan_result_t *result)
 }
 
 static bool
-__not_in_flash_func(scan_start)(repeating_timer_t *rt)
+__time_critical_func(scan_start)(repeating_timer_t *rt)
 {
 	cyw43_wifi_scan_options_t opts = { 0 };
 
