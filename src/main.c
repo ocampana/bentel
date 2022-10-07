@@ -164,16 +164,23 @@ main(void)
 		if (cyw43_arch_wifi_connect_async(WIFI_SSID, WIFI_PASSWORD,
 						  CYW43_AUTH_WPA2_AES_PSK) != 0)
 			continue;
-		while ((link_status = cyw43_tcpip_link_status(&cyw43_state,
-							      CYW43_ITF_STA))
-		       != CYW43_LINK_UP) {
-			if (link_status < 0) {
-				HTTP_LOG_ERROR("WiFi connect error status: %d",
-					       link_status);
-				break;
+		do {
+#if PICO_CYW43_ARCH_POLL
+			cyw43_arch_poll();
+#endif
+			if ((link_status =
+			     cyw43_tcpip_link_status(&cyw43_state,
+						     CYW43_ITF_STA))
+			    != CYW43_LINK_UP) {
+				if (link_status < 0) {
+					HTTP_LOG_ERROR(
+						"WiFi connect error status: %d",
+						link_status);
+					break;
+				}
+				sleep_ms(100);
 			}
-			sleep_ms(100);
-		}
+		} while (link_status != CYW43_LINK_UP);
 	} while (link_status != CYW43_LINK_UP);
 
 	critical_section_enter_blocking(&linkup_critsec);
@@ -222,8 +229,14 @@ main(void)
 	HTTP_LOG_INFO("http started");
 	cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, true);
 
-	for (;;)
+	for (;;) {
+#if PICO_CYW43_ARCH_POLL
+		cyw43_arch_poll();
+		sleep_ms(1);
+#else
 		__wfi();
+#endif
+	}
 
 	cyw43_arch_deinit();
 	return 0;
