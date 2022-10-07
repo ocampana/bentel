@@ -21,6 +21,13 @@ if (DEFINED HOSTNAME)
 	add_compile_definitions(CYW43_HOST_NAME=\"${HOSTNAME}\")
 endif()
 
+set(SRCS
+	${CMAKE_CURRENT_LIST_DIR}/src/main.c
+	${CMAKE_CURRENT_LIST_DIR}/src/handlers.c
+	${CMAKE_CURRENT_LIST_DIR}/src/handlers.h
+	${CMAKE_CURRENT_LIST_DIR}/src/lwipopts.h
+)
+
 set(WWWSRCS
 	${CMAKE_CURRENT_LIST_DIR}/www/index.html
 	${CMAKE_CURRENT_LIST_DIR}/www/picow.css
@@ -32,12 +39,7 @@ set(WWWSRCS
 ## threadsafe background mode
 ##
 
-add_executable(picow-http-example-background
-	${CMAKE_CURRENT_LIST_DIR}/src/main.c
-	${CMAKE_CURRENT_LIST_DIR}/src/handlers.c
-	${CMAKE_CURRENT_LIST_DIR}/src/handlers.h
-	${CMAKE_CURRENT_LIST_DIR}/src/lwipopts.h
-)
+add_executable(picow-http-example-background ${SRCS})
 
 target_compile_definitions(picow-http-example-background PRIVATE
 	WIFI_SSID=\"${WIFI_SSID}\"
@@ -76,12 +78,7 @@ picoprobe_add_flash_target(picow-http-example-background)
 ## poll mode
 ##
 
-add_executable(picow-http-example-poll
-	${CMAKE_CURRENT_LIST_DIR}/src/main.c
-	${CMAKE_CURRENT_LIST_DIR}/src/handlers.c
-	${CMAKE_CURRENT_LIST_DIR}/src/handlers.h
-	${CMAKE_CURRENT_LIST_DIR}/src/lwipopts.h
-)
+add_executable(picow-http-example-poll ${SRCS})
 
 target_compile_definitions(picow-http-example-poll PRIVATE
 	WIFI_SSID=\"${WIFI_SSID}\"
