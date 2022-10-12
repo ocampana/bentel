@@ -11,7 +11,7 @@
 
 #include "handlers.h"
 
-#define MAX_INT_LEN (STRLEN_LITERAL("−2147483648"))
+#define MAX_INT_LEN (STRLEN_LTRL("−2147483648"))
 
 err_t
 temp_handler(struct http *http, void *p)
@@ -36,8 +36,8 @@ temp_handler(struct http *http, void *p)
 		HTTP_LOG_ERROR("http_resp_set_len() failed: %d", err);
 		return http_resp_err(http, HTTP_STATUS_INTERNAL_SERVER_ERROR);
 	}
-	if ((err = http_resp_set_type_literal(resp, "text/plain")) != ERR_OK) {
-		HTTP_LOG_ERROR("http_resp_set_type_literal() failed: %d", err);
+	if ((err = http_resp_set_type_ltrl(resp, "text/plain")) != ERR_OK) {
+		HTTP_LOG_ERROR("http_resp_set_type_ltrl() failed: %d", err);
 		return http_resp_err(http, HTTP_STATUS_INTERNAL_SERVER_ERROR);
 	}
 	return http_resp_send_buf(http, body, body_len, false);
@@ -45,9 +45,9 @@ temp_handler(struct http *http, void *p)
 
 static const char *bit_str[] = { "0", "1" };
 
-#define ON_LEN (STRLEN_LITERAL("on"))
-#define OFF_LEN (STRLEN_LITERAL("off"))
-#define TOGGLE_LEN (STRLEN_LITERAL("toggle"))
+#define ON_LEN (STRLEN_LTRL("on"))
+#define OFF_LEN (STRLEN_LTRL("off"))
+#define TOGGLE_LEN (STRLEN_LTRL("toggle"))
 
 err_t
 led_handler(struct http *http, void *p)
@@ -112,8 +112,8 @@ led_handler(struct http *http, void *p)
 		HTTP_LOG_ERROR("http_resp_set_len() failed: %d", err);
 		return http_resp_err(http, HTTP_STATUS_INTERNAL_SERVER_ERROR);
 	}
-	if ((err = http_resp_set_type_literal(resp, "text/plain")) != ERR_OK) {
-		HTTP_LOG_ERROR("http_resp_set_type_literal() failed: %d", err);
+	if ((err = http_resp_set_type_ltrl(resp, "text/plain")) != ERR_OK) {
+		HTTP_LOG_ERROR("http_resp_set_type_ltrl() failed: %d", err);
 		return http_resp_err(http, HTTP_STATUS_INTERNAL_SERVER_ERROR);
 	}
 	return http_resp_send_buf(http, bit_str[idx], 1, true);
@@ -126,7 +126,7 @@ static const char *json_fmt =
 
 #define JSON_MAX							\
 	("{\"ssid\":\"" WIFI_SSID "\",\"have_rssi\":false,\"rssi\":-32768}")
-#define JSON_MAX_LEN (STRLEN_LITERAL(JSON_MAX))
+#define JSON_MAX_LEN (STRLEN_LTRL(JSON_MAX))
 
 err_t
 ap_handler(struct http *http, void *p)
@@ -146,9 +146,9 @@ ap_handler(struct http *http, void *p)
 		HTTP_LOG_ERROR("http_resp_set_len() failed: %d", err);
 		return http_resp_err(http, HTTP_STATUS_INTERNAL_SERVER_ERROR);
 	}
-	if ((err = http_resp_set_type_literal(resp, "application/json"))
+	if ((err = http_resp_set_type_ltrl(resp, "application/json"))
 	    != ERR_OK) {
-		HTTP_LOG_ERROR("http_resp_set_type_literal() failed: %d", err);
+		HTTP_LOG_ERROR("http_resp_set_type_ltrl() failed: %d", err);
 		return http_resp_err(http, HTTP_STATUS_INTERNAL_SERVER_ERROR);
 	}
 	return http_resp_send_buf(http, body, body_len, false);
