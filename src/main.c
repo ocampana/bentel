@@ -141,7 +141,6 @@ main(void)
 {
 	struct server *srv;
 	struct server_cfg cfg;
-	struct ntp_cfg ntp_cfg;
 	int link_status = CYW43_LINK_DOWN;
 	err_t err;
 
@@ -207,9 +206,9 @@ main(void)
 		return -1;
 	}
 
-	http_default_cfg(&cfg, &ntp_cfg);
+	cfg = http_default_cfg();
 #ifdef NTP_SERVER
-	ntp_cfg.server = NTP_SERVER;
+	cfg.ntp_cfg.server = NTP_SERVER;
 #endif
 	cfg.idle_tmo_s = 30;
 	while ((err = http_srv_init(&srv, &cfg)) != ERR_OK)
