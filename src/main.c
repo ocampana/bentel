@@ -188,34 +188,22 @@ main(void)
 	critical_section_exit(&linkup_critsec);
 	HTTP_LOG_INFO("Connected to " WIFI_SSID);
 
-	if ((err = register_hndlr("/temp", temp_handler, HTTP_METHOD_GET, NULL))
+	if ((err = register_hndlr_methods("/temp", temp_handler,
+					  HTTP_METHODS_GET_HEAD, NULL))
 	    != ERR_OK) {
-		HTTP_LOG_ERROR("register_hndlr GET /temp: %d", err);
+		HTTP_LOG_ERROR("Register /temp: %d", err);
 		return -1;
 	}
-	if ((err = register_hndlr("/temp", temp_handler, HTTP_METHOD_HEAD,
-				  NULL)) != ERR_OK) {
-		HTTP_LOG_ERROR("register_hndlr HEAD /temp: %d", err);
+	if ((err = register_hndlr_methods("/led", led_handler,
+					  HTTP_METHODS_GET_HEAD, NULL))
+	    != ERR_OK) {
+		HTTP_LOG_ERROR("Register /led: %d", err);
 		return -1;
 	}
-	if ((err = register_hndlr("/led", led_handler, HTTP_METHOD_GET, NULL))
+	if ((err = register_hndlr_methods("/ap", ap_handler,
+					  HTTP_METHODS_GET_HEAD, NULL))
 	    != ERR_OK) {
-		HTTP_LOG_ERROR("register_hndlr GET /led: %d", err);
-		return -1;
-	}
-	if ((err = register_hndlr("/led", led_handler, HTTP_METHOD_HEAD, NULL))
-	    != ERR_OK) {
-		HTTP_LOG_ERROR("register_hndlr HEAD /led: %d", err);
-		return -1;
-	}
-	if ((err = register_hndlr("/ap", ap_handler, HTTP_METHOD_GET, NULL))
-	    != ERR_OK) {
-		HTTP_LOG_ERROR("register_hndlr GET /ap: %d", err);
-		return -1;
-	}
-	if ((err = register_hndlr("/ap", led_handler, HTTP_METHOD_HEAD, NULL))
-	    != ERR_OK) {
-		HTTP_LOG_ERROR("register_hndlr HEAD /ap: %d", err);
+		HTTP_LOG_ERROR("Register /ap: %d", err);
 		return -1;
 	}
 
