@@ -167,7 +167,7 @@ async function updateAP() {
     if (data.have_rssi) {
         rssiElem.textContent = data.rssi.toString();
         ssElem.textContent
-            = Math.max(Math.min(2 * (100 + data.rssi), 0), 100).toString();
+            = Math.min(Math.max(2 * (100 + data.rssi), 0), 100).toString();
         rssiTextElem.style.display = "inline";
     }
 }
