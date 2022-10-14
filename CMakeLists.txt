@@ -31,7 +31,7 @@ set(SRCS
 set(WWWSRCS
 	${CMAKE_CURRENT_LIST_DIR}/www/index.html
 	${CMAKE_CURRENT_LIST_DIR}/www/picow.css
-	${CMAKE_CURRENT_LIST_DIR}/www/favicon.png
+	${CMAKE_CURRENT_LIST_DIR}/www/img/favicon.png
 	${CMAKE_CURRENT_LIST_DIR}/www/sample_app.js
 )
 

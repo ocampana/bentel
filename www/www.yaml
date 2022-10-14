@@ -5,7 +5,7 @@
     file: picow.css
 
 - static:
-    file: favicon.png
+    file: img/favicon.png
 
 - static:
     file: sample_app.js
