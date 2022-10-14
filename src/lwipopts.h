@@ -12,7 +12,7 @@
 #define NO_SYS                      1
 #endif
 
-#define MAX_CONCURRENT_CX_HINT      6
+#define MAX_CONCURRENT_CX_HINT      8
 #define NUM_SERVER_HINT             1
 
 #ifndef LWIP_SOCKET
