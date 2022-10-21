@@ -25,7 +25,12 @@ set(SRCS
 	${CMAKE_CURRENT_LIST_DIR}/src/main.c
 	${CMAKE_CURRENT_LIST_DIR}/src/handlers.c
 	${CMAKE_CURRENT_LIST_DIR}/src/handlers.h
-	${CMAKE_CURRENT_LIST_DIR}/src/lwipopts.h
+	${CMAKE_CURRENT_LIST_DIR}/lib/picow-http/etc/lwipopts.h
+)
+
+set(INCLUDES
+	${CMAKE_CURRENT_LIST_DIR}/src
+	${CMAKE_CURRENT_LIST_DIR}/lib/picow-http/etc
 )
 
 set(WWWSRCS
@@ -46,9 +51,7 @@ target_compile_definitions(picow-http-example-background PRIVATE
 	WIFI_PASSWORD=\"${WIFI_PASSWORD}\"
 )
 
-target_include_directories(picow-http-example-background PRIVATE
-	${CMAKE_CURRENT_LIST_DIR}/src
-)
+target_include_directories(picow-http-example-background PRIVATE ${INCLUDES})
 
 target_link_libraries(picow-http-example-background
 	picow_http
@@ -85,9 +88,7 @@ target_compile_definitions(picow-http-example-poll PRIVATE
 	WIFI_PASSWORD=\"${WIFI_PASSWORD}\"
 )
 
-target_include_directories(picow-http-example-poll PRIVATE
-	${CMAKE_CURRENT_LIST_DIR}/src
-)
+target_include_directories(picow-http-example-poll PRIVATE ${INCLUDES})
 
 target_link_libraries(picow-http-example-poll
 	picow_http
