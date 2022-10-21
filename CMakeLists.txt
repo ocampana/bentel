@@ -40,6 +40,16 @@ set(WWWSRCS
 	${CMAKE_CURRENT_LIST_DIR}/www/sample_app.js
 )
 
+set(LIBS
+	picow_http
+	pico_stdio
+	pico_stdlib
+	pico_multicore
+	hardware_adc
+	hardware_irq
+	hardware_sync
+)
+
 ##
 ## threadsafe background mode
 ##
@@ -54,14 +64,8 @@ target_compile_definitions(picow-http-example-background PRIVATE
 target_include_directories(picow-http-example-background PRIVATE ${INCLUDES})
 
 target_link_libraries(picow-http-example-background
-	picow_http
 	pico_cyw43_arch_lwip_threadsafe_background
-	pico_stdio
-	pico_stdlib
-	pico_multicore
-	hardware_adc
-	hardware_irq
-	hardware_sync
+	${LIBS}
 )
 
 picow_http_gen_handlers(picow-http-example-background
@@ -91,14 +95,8 @@ target_compile_definitions(picow-http-example-poll PRIVATE
 target_include_directories(picow-http-example-poll PRIVATE ${INCLUDES})
 
 target_link_libraries(picow-http-example-poll
-	picow_http
 	pico_cyw43_arch_lwip_poll
-	pico_stdio
-	pico_stdlib
-	pico_multicore
-	hardware_adc
-	hardware_irq
-	hardware_sync
+	${LIBS}
 )
 
 picow_http_gen_handlers(picow-http-example-poll
