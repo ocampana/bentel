@@ -103,6 +103,16 @@ button {
     }
 }
 
+#toast {
+    color: red;
+    text-align: center;
+}
+
+#toast.row:after {
+    content: "";
+    margin-bottom: 2vh;
+}
+
 footer {
     width: 100%;
     text-align: center;

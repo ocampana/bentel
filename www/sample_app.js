@@ -34,6 +34,23 @@ const ssidElem = document.getElementById("ssid");
 const rssiElem = document.getElementById("rssi");
 const ssElem = document.getElementById("ss_pct");
 
+const toastElem = document.getElementById("toast");
+const errMsgElem = document.getElementById("errMsg");
+
+const TOAST_INTVL_MS = 5000;
+let toastTimeout = -1;
+
+function toast(err) {
+    if (toastTimeout != -1) {
+        clearTimeout(toastTimeout);
+    }
+    errMsgElem.textContent = err.message;
+    toastElem.style.display = "block";
+    toastTimeout = setTimeout(() => {
+        toastElem.style.display = "none";
+    }, TOAST_INTVL_MS);
+}
+
 async function getResp(url) {
     let response = await fetch(url);
     if (!response.ok)
@@ -74,9 +91,7 @@ async function updateTemp() {
         renderTemp(tempK, scalePref);
     }
     catch (ex) {
-        /* XXX toast */
-        console.log(ex);
-        return;
+        toast(ex);
     }
 }
 
@@ -94,8 +109,7 @@ function doScale(scale) {
         renderTemp(tempK, scalePref);
     }
     catch (err) {
-        /* XXX toast */
-        console.log(err);
+        toast(err);
     }
 }
 
@@ -121,8 +135,7 @@ async function doLed(url) {
             throw new Error(url + " response body: " + body);
     }
     catch (ex) {
-        /* XXX toast */
-        console.log(ex);
+        toast(ex);
         return;
     }
 
@@ -165,8 +178,7 @@ async function updateAP() {
         data = await response.json();
     }
     catch (ex) {
-        /* XXX toast */
-        console.log(ex);
+        toast(ex);
         return;
     }
 
