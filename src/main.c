@@ -56,7 +56,7 @@ get_temp(void)
 		return UINT32_MAX;
 	if ((raw & ADC_FIFO_ERR_BITS) != 0)
 		return UINT32_MAX;
-	return 2909703 - 1917 * raw;
+	return 11638810 - 7670 * raw;
 }
 
 int16_t

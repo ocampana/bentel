@@ -87,10 +87,10 @@ async function updateTemp() {
     try {
         let response = await getResp("/temp");
         let body = await response.text();
-        let tempK_q20_12 = parseInt(body);
-        if (tempK_q20_12 == NaN)
+        let tempK_q18_14 = parseInt(body);
+        if (tempK_q18_14 == NaN)
             throw new Error("/temp response body: " + body);
-        tempK = tempK_q20_12 / 4096.0;
+        tempK = tempK_q18_14 / 16384.0;
         renderTemp(tempK, scalePref);
     }
     catch (ex) {
