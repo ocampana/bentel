@@ -60,6 +60,10 @@ function renderTemp(tmpK, scale) {
 }
 
 async function updateTemp() {
+    if (document.visibilityState === "hidden") {
+        return;
+    }
+
     try {
         let response = await getResp("/temp");
         let body = await response.text();
@@ -151,6 +155,10 @@ async function ledDoToggle() {
 }
 
 async function updateAP() {
+    if (document.visibilityState === "hidden") {
+        return;
+    }
+
     let data = null;
     try {
         let response = await getResp("/ap");
@@ -172,10 +180,21 @@ async function updateAP() {
     }
 }
 
+async function updateOnVisible() {
+    if (document.visibilityState === "hidden") {
+        return;
+    }
+
+    await updateTemp();
+    await updateAP();
+}
+
 async function init() {
     await updateTemp();
     await updateLed();
     await updateAP();
+
+    document.addEventListener("visibilitychange", updateOnVisible);
 
     scaleBtnK.addEventListener("click", doScaleK);
     scaleBtnC.addEventListener("click", doScaleC);
