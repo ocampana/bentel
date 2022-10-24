@@ -8,7 +8,10 @@
 const TEMP_UPDATE_INTVL_MS = 2 * 2718;
 const AP_UPDATE_INTVL_MS = 3 * 3141;
 
-let scalePref = 'K';
+const SCALE_PREF_KEY = "scalePref";
+const DEFAULT_SCALE_PREF = 'K';
+
+let scalePref = DEFAULT_SCALE_PREF;
 let tempK = 0.0;
 
 const tempValElem = document.getElementById("tempValue");
@@ -95,6 +98,11 @@ async function updateTemp() {
     }
 }
 
+function updateScalePref(pref) {
+    scalePref = pref;
+    localStorage.setItem(SCALE_PREF_KEY, pref);
+}
+
 function doScale(scale) {
     if (scale == scalePref)
         return;
@@ -103,7 +111,7 @@ function doScale(scale) {
     let prevBtn = scale2Btn[scalePref];
     prevBtn.classList.replace("scaleActive", "btnPlain");
     btn.classList.replace("btnPlain", "scaleActive");
-    scalePref = scale;
+    updateScalePref(scale);
 
     try {
         renderTemp(tempK, scalePref);
@@ -203,6 +211,11 @@ async function updateOnVisible() {
 
 async function init() {
     await updateTemp();
+    let scale = localStorage.getItem(SCALE_PREF_KEY);
+    if (scale == null) {
+        scale = DEFAULT_SCALE_PREF;
+    }
+    doScale(scale);
     await updateLed();
     await updateAP();
 
