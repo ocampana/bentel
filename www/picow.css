@@ -92,6 +92,17 @@ button {
     background-color: var(--raspberry-red);
 }
 
+/* On a small device, show only one column (no cow) at full width. */
+@media only screen and (max-width: 480px) {
+    #cow_column {
+        display: none;
+    }
+
+    .column {
+        width: 100%;
+    }
+}
+
 footer {
     width: 100%;
     text-align: center;
