@@ -52,6 +52,7 @@ h1 {
 button {
     margin: 1vh auto;
     width: 75%;
+    border: 2px solid black;
 }
 
 /* Buttons in a column */
