@@ -6,7 +6,7 @@
  */
 
 const TEMP_UPDATE_INTVL_MS = 2 * 2718;
-const AP_UPDATE_INTVL_MS = 3 * 3141;
+const RSSI_UPDATE_INTVL_MS = 3 * 3141;
 
 const SCALE_PREF_KEY = "scalePref";
 const DEFAULT_SCALE_PREF = 'K';
@@ -31,8 +31,11 @@ const ledBtnOn = document.getElementById("ledBtnOn");
 const ledBtnOff = document.getElementById("ledBtnOff");
 const ledBtnToggle = document.getElementById("ledBtnToggle");
 
-const ssidTextElem = document.getElementById("ssid_text");
+const infoTextElem = document.getElementById("info_text");
 const rssiTextElem = document.getElementById("rssi_text");
+const hostElem = document.getElementById("host");
+const ipElem = document.getElementById("ip");
+const macElem = document.getElementById("mac");
 const ssidElem = document.getElementById("ssid");
 const rssiElem = document.getElementById("rssi");
 const ssElem = document.getElementById("ss_pct");
@@ -175,14 +178,14 @@ async function ledDoToggle() {
     await doLed("/led?op=toggle");
 }
 
-async function updateAP() {
+async function updateNetinfo() {
     if (document.visibilityState === "hidden") {
         return;
     }
 
     let data = null;
     try {
-        let response = await getResp("/ap");
+        let response = await getResp("/netinfo");
         data = await response.json();
     }
     catch (ex) {
@@ -190,9 +193,29 @@ async function updateAP() {
         return;
     }
 
+    hostElem.textContent = data.host;
+    ipElem.textContent = data.ip;
+    macElem.textContent = data.mac;
     ssidElem.textContent = data.ssid;
-    ssidTextElem.style.display = "inline";
-    if (data.have_rssi) {
+    infoTextElem.style.display = "inline";
+}
+
+async function updateRssi() {
+    if (document.visibilityState === "hidden") {
+        return;
+    }
+
+    let data = null;
+    try {
+        let response = await getResp("/rssi");
+        data = await response.json();
+    }
+    catch (ex) {
+        toast(ex);
+        return;
+    }
+
+    if (data.valid) {
         rssiElem.textContent = data.rssi.toString();
         ssElem.textContent
             = Math.min(Math.max(2 * (100 + data.rssi), 0), 100).toString();
@@ -206,7 +229,7 @@ async function updateOnVisible() {
     }
 
     await updateTemp();
-    await updateAP();
+    await updateRssi();
 }
 
 async function init() {
@@ -217,7 +240,8 @@ async function init() {
     }
     doScale(scale);
     await updateLed();
-    await updateAP();
+    await updateNetinfo();
+    await updateRssi();
 
     document.addEventListener("visibilitychange", updateOnVisible);
 
@@ -230,7 +254,7 @@ async function init() {
     ledBtnToggle.addEventListener("click", ledDoToggle);
 
     setInterval(updateTemp, TEMP_UPDATE_INTVL_MS);
-    setInterval(updateAP, AP_UPDATE_INTVL_MS);
+    setInterval(updateRssi, RSSI_UPDATE_INTVL_MS);
 }
 
 if (document.readyState !== "loading") {

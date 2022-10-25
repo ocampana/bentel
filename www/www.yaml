@@ -23,7 +23,13 @@
     - HEAD
 
 - custom:
-    path: /ap
+    path: /rssi
+    methods:
+    - GET
+    - HEAD
+
+- custom:
+    path: /netinfo
     methods:
     - GET
     - HEAD

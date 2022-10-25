@@ -31,6 +31,7 @@
 static volatile uint16_t temp_adc_raw = UINT16_MAX;
 static volatile bool linkup = false;
 static volatile int16_t rssi = INT16_MAX;
+static struct netinfo netinfo;
 static critical_section_t temp_critsec, rssi_critsec, linkup_critsec;
 static repeating_timer_t scan_timer;
 
@@ -142,6 +143,8 @@ main(void)
 	struct server *srv;
 	struct server_cfg cfg;
 	int link_status = CYW43_LINK_DOWN;
+	struct netif *netif;
+	uint8_t mac[6];
 	err_t err;
 
 	critical_section_init(&temp_critsec);
@@ -187,6 +190,25 @@ main(void)
 	critical_section_exit(&linkup_critsec);
 	HTTP_LOG_INFO("Connected to " WIFI_SSID);
 
+	INIT_OBJ(&netinfo, NETINFO_MAGIC);
+	cyw43_arch_lwip_begin();
+	netif = &cyw43_state.netif[CYW43_ITF_STA];
+	strncpy(netinfo.ip, ipaddr_ntoa(netif_ip_addr4(netif)),
+		IPADDR_STRLEN_MAX);
+	if (cyw43_wifi_get_mac(&cyw43_state, CYW43_ITF_STA, mac) == 0)
+		snprintf(netinfo.mac, MAC_ADDR_LEN,
+			 "%02x:%02x:%02x:%02x:%02x:%02x", mac[0], mac[1],
+			 mac[2], mac[3], mac[4], mac[5]);
+	else
+		HTTP_LOG_ERROR("Could not get mac address");
+	cyw43_arch_lwip_end();
+
+	if ((err = register_hndlr_methods("/netinfo", netinfo_handler,
+					  HTTP_METHODS_GET_HEAD, &netinfo))
+	    != ERR_OK) {
+		HTTP_LOG_ERROR("Register /netinfo: %d", err);
+		return -1;
+	}
 	if ((err = register_hndlr_methods("/temp", temp_handler,
 					  HTTP_METHODS_GET_HEAD, NULL))
 	    != ERR_OK) {
@@ -199,10 +221,10 @@ main(void)
 		HTTP_LOG_ERROR("Register /led: %d", err);
 		return -1;
 	}
-	if ((err = register_hndlr_methods("/ap", ap_handler,
+	if ((err = register_hndlr_methods("/rssi", rssi_handler,
 					  HTTP_METHODS_GET_HEAD, NULL))
 	    != ERR_OK) {
-		HTTP_LOG_ERROR("Register /ap: %d", err);
+		HTTP_LOG_ERROR("Register /rssi: %d", err);
 		return -1;
 	}
 

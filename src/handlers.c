@@ -121,27 +121,55 @@ led_handler(struct http *http, void *p)
 
 static const char *bool_str[] = { "false", "true" };
 
-static const char *json_fmt =
-	"{\"ssid\":\"" WIFI_SSID "\",\"have_rssi\":%s,\"rssi\":%d}";
-
-#define JSON_MAX							\
-	("{\"ssid\":\"" WIFI_SSID "\",\"have_rssi\":false,\"rssi\":-32768}")
-#define JSON_MAX_LEN (STRLEN_LTRL(JSON_MAX))
+#define RSSI_FMT ("{\"valid\":%s,\"rssi\":%d}")
+#define RSSI_MAX ("{\"valid\":false,\"rssi\":-32768}")
+#define RSSI_MAX_LEN (STRLEN_LTRL(RSSI_MAX))
 
 err_t
-ap_handler(struct http *http, void *p)
+rssi_handler(struct http *http, void *p)
 {
 	struct resp *resp = http_resp(http);
 	err_t err;
 	int16_t rssi;
 	int idx;
-	char body[JSON_MAX_LEN];
+	char body[RSSI_MAX_LEN];
 	size_t body_len;
 	(void)p;
 
 	rssi = get_rssi();
 	idx = bool_to_bit(rssi != INT16_MAX);
-	body_len = snprintf(body, JSON_MAX_LEN, json_fmt, bool_str[idx], rssi);
+	body_len = snprintf(body, RSSI_MAX_LEN, RSSI_FMT, bool_str[idx], rssi);
+	if ((err = http_resp_set_len(resp, body_len)) != ERR_OK) {
+		HTTP_LOG_ERROR("http_resp_set_len() failed: %d", err);
+		return http_resp_err(http, HTTP_STATUS_INTERNAL_SERVER_ERROR);
+	}
+	if ((err = http_resp_set_type_ltrl(resp, "application/json"))
+	    != ERR_OK) {
+		HTTP_LOG_ERROR("http_resp_set_type_ltrl() failed: %d", err);
+		return http_resp_err(http, HTTP_STATUS_INTERNAL_SERVER_ERROR);
+	}
+	return http_resp_send_buf(http, body, body_len, false);
+}
+
+#define INFO_FMT \
+	("{\"ssid\":\"" WIFI_SSID "\",\"host\":\"" CYW43_HOST_NAME "\"," \
+	 "\"ip\":\"%s\",\"mac\":\"%s\"}")
+#define INFO_STR \
+	("{\"ssid\":\"" WIFI_SSID "\",\"host\":\"" CYW43_HOST_NAME "\"," \
+	 "\"ip\":\"\",\"mac\":\"\"}")
+#define INFO_MAX_LEN (STRLEN_LTRL(INFO_STR) + IPADDR_STRLEN_MAX + MAC_ADDR_LEN)
+
+err_t
+netinfo_handler(struct http *http, void *p)
+{
+	struct resp *resp = http_resp(http);
+	struct netinfo *info;
+	char body[INFO_MAX_LEN];
+	size_t body_len;
+	err_t err;
+
+	CAST_OBJ_NOTNULL(info, p, NETINFO_MAGIC);
+	body_len = snprintf(body, INFO_MAX_LEN, INFO_FMT, info->ip, info->mac);
 	if ((err = http_resp_set_len(resp, body_len)) != ERR_OK) {
 		HTTP_LOG_ERROR("http_resp_set_len() failed: %d", err);
 		return http_resp_err(http, HTTP_STATUS_INTERNAL_SERVER_ERROR);
