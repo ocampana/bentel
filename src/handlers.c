@@ -169,6 +169,13 @@ netinfo_handler(struct http *http, void *p)
 	err_t err;
 
 	CAST_OBJ_NOTNULL(info, p, NETINFO_MAGIC);
+
+	if ((err = http_resp_set_hdr_ltrl(resp, "Cache-Control",
+					  "public, max-age=3600")) != ERR_OK) {
+		HTTP_LOG_ERROR("Set header Cache-Control failed: %d", err);
+		return http_resp_err(http, HTTP_STATUS_INTERNAL_SERVER_ERROR);
+	}
+
 	body_len = snprintf(body, INFO_MAX_LEN, INFO_FMT, info->ip, info->mac);
 	if ((err = http_resp_set_len(resp, body_len)) != ERR_OK) {
 		HTTP_LOG_ERROR("http_resp_set_len() failed: %d", err);
