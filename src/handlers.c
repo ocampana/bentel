@@ -159,21 +159,63 @@ rssi_handler(struct http *http, void *p)
 	 "\"ip\":\"\",\"mac\":\"\"}")
 #define INFO_MAX_LEN (STRLEN_LTRL(INFO_STR) + IPADDR_STRLEN_MAX + MAC_ADDR_LEN)
 
+#define ETAG_LEN (sizeof("\"12345678\""))
+
+static inline uint32_t
+update_hash(const char *p, uint32_t h)
+{
+	for (; *p != '\0'; p++)
+		h = 31 * h + *p;
+	return h;
+}
+
+static void
+set_etag(char etag[], struct netinfo *info)
+{
+	uint32_t hash = 0;
+
+	hash = update_hash(info->ip, hash);
+	hash = update_hash(info->mac, hash);
+	hash = update_hash(WIFI_SSID, hash);
+	hash = update_hash(CYW43_HOST_NAME, hash);
+	snprintf(etag, ETAG_LEN, "\"%08x\"", hash);
+}
+
 err_t
 netinfo_handler(struct http *http, void *p)
 {
+	struct req *req = http_req(http);
 	struct resp *resp = http_resp(http);
 	struct netinfo *info;
+	static char etag[ETAG_LEN] = { '\0' };
 	char body[INFO_MAX_LEN];
 	size_t body_len;
 	err_t err;
 
 	CAST_OBJ_NOTNULL(info, p, NETINFO_MAGIC);
 
+	if (etag[0] == '\0')
+		set_etag(etag, info);
+	if ((err = http_resp_set_hdr(resp, "ETag", STRLEN_LTRL("ETag"), etag,
+				     ETAG_LEN - 1)) != ERR_OK) {
+		HTTP_LOG_ERROR("Set header ETag failed: %d", err);
+		return http_resp_err(http, HTTP_STATUS_INTERNAL_SERVER_ERROR);
+	}
 	if ((err = http_resp_set_hdr_ltrl(resp, "Cache-Control",
 					  "public, max-age=3600")) != ERR_OK) {
 		HTTP_LOG_ERROR("Set header Cache-Control failed: %d", err);
 		return http_resp_err(http, HTTP_STATUS_INTERNAL_SERVER_ERROR);
+	}
+
+	if (http_req_hdr_eq(req, "If-None-Match", STRLEN_LTRL("If-None-Match"),
+			    etag, ETAG_LEN - 1)) {
+		err = http_resp_set_status(resp, HTTP_STATUS_NOT_MODIFIED);
+		if (err != ERR_OK) {
+			HTTP_LOG_ERROR("Set status 304 failed: %d", err);
+			return http_resp_err(http,
+					     HTTP_STATUS_INTERNAL_SERVER_ERROR);
+		}
+		return http_resp_send_hdr(http);
 	}
 
 	body_len = snprintf(body, INFO_MAX_LEN, INFO_FMT, info->ip, info->mac);
