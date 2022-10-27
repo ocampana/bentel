@@ -144,3 +144,75 @@ $ make -j
 
 If all goes well, then you have now built binaries that are ready to
 deploy.
+
+## Deploying the app
+
+This project builds _two_ versions of the binary:
+
+  * `picow-http-example-background`
+  * `picow-http-example-poll`
+
+These use the two network architectures that are currently supported
+by picow-http: threadsafe background mode and poll mode; see the [SDK
+docs](https://raspberrypi.github.io/pico-sdk-doxygen/group__pico__cyw43__arch.html)
+for details. The two versions are otherwise identical. Most
+applications will choose just one network architecture, but the
+example app shows how to use either of them.
+
+After a successful invocation of `make`, the build directory contains
+the binary artifacts for the two versions. These can be loaded on the
+PicoW in any of the usual ways for a PicoW or Pico; for example by
+copying the `*.uf2` file to the `RPI-RP2` USB device that is presented
+when the board is in boot select mode. See the [Getting
+Started](https://datasheets.raspberrypi.com/pico/getting-started-with-pico.pdf)
+document for details.
+
+If you are using a picoprobe (see Appendix A in Getting Started), the
+build environment [defines](picoprobe_targets.cmake) two targets that
+flash the binaries to the PicoW:
+
+```shell
+# For use with a picoprobe
+$ make flash-picow-http-example-background
+
+# or:
+$ make flash-picow-http-example-poll
+```
+
+These commands encapsulate the `openocd` calls that load the binary code.
+
+After loading the binary, point a browser to `http://picow` (or a URL
+with the `HOSTNAME` defined in the `cmake` invocation as shown above)
+to view the application.
+
+## Monitoring the log
+
+The application is configured to use
+[UART](https://raspberrypi.github.io/pico-sdk-doxygen/group__pico__stdio__uart.html)
+for log output. The means of viewing UART output are platform
+dependent; see the [Getting
+Started](https://datasheets.raspberrypi.com/pico/getting-started-with-pico.pdf)
+document for suggestions that apply to Linux, MacOS and Windows.
+
+When the application starts up after load, the log output is similar
+to:
+
+```
+Connecting to my_wifi ...
+Connected to my_wifi
+http started
+192.168.1.1 - - [27/Oct/2022:20:40:10 +0000] "GET / HTTP/1.1" 200 729
+192.168.1.1 - - [27/Oct/2022:20:40:10 +0000] "GET /sample_app.js HTTP/1.1" 200 1497
+192.168.1.1 - - [27/Oct/2022:20:40:10 +0000] "GET /picow.css HTTP/1.1" 200 506
+192.168.1.1 - - [27/Oct/2022:20:40:10 +0000] "GET /temp HTTP/1.1" 200 7
+192.168.1.1 - - [27/Oct/2022:20:40:10 +0000] "GET /img/favicon.png HTTP/1.1" 200 255
+192.168.1.1 - - [27/Oct/2022:20:40:10 +0000] "GET /led HTTP/1.1" 200 1
+192.168.1.1 - - [27/Oct/2022:20:40:10 +0000] "GET /rssi HTTP/1.1" 200 28
+```
+
+By default, request logs in [Common Log
+Format](https://en.wikipedia.org/wiki/Common_Log_Format) are emitted with dates and
+times in the [UTC time zone](https://en.wikipedia.org/wiki/Coordinated_Universal_Time)
+(and hence the time zone offset is always `+0000`). See the [log API
+docs](https://slimhazard.gitlab.io/picow_http/group__log.html) for details about
+setting the log verbosity at compile time in a picow-http application.
