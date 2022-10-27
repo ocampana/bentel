@@ -40,6 +40,11 @@ temp_handler(struct http *http, void *p)
 		HTTP_LOG_ERROR("http_resp_set_type_ltrl() failed: %d", err);
 		return http_resp_err(http, HTTP_STATUS_INTERNAL_SERVER_ERROR);
 	}
+	if ((err = http_resp_set_hdr_ltrl(resp, "Cache-Control", "no-store"))
+	    != ERR_OK) {
+		HTTP_LOG_ERROR("Set header Cache-Control failed: %d", err);
+		return http_resp_err(http, HTTP_STATUS_INTERNAL_SERVER_ERROR);
+	}
 	return http_resp_send_buf(http, body, body_len, false);
 }
 
@@ -116,6 +121,11 @@ led_handler(struct http *http, void *p)
 		HTTP_LOG_ERROR("http_resp_set_type_ltrl() failed: %d", err);
 		return http_resp_err(http, HTTP_STATUS_INTERNAL_SERVER_ERROR);
 	}
+	if ((err = http_resp_set_hdr_ltrl(resp, "Cache-Control", "no-store"))
+	    != ERR_OK) {
+		HTTP_LOG_ERROR("Set header Cache-Control failed: %d", err);
+		return http_resp_err(http, HTTP_STATUS_INTERNAL_SERVER_ERROR);
+	}
 	return http_resp_send_buf(http, bit_str[idx], 1, true);
 }
 
@@ -146,6 +156,11 @@ rssi_handler(struct http *http, void *p)
 	if ((err = http_resp_set_type_ltrl(resp, "application/json"))
 	    != ERR_OK) {
 		HTTP_LOG_ERROR("http_resp_set_type_ltrl() failed: %d", err);
+		return http_resp_err(http, HTTP_STATUS_INTERNAL_SERVER_ERROR);
+	}
+	if ((err = http_resp_set_hdr_ltrl(resp, "Cache-Control", "no-store"))
+	    != ERR_OK) {
+		HTTP_LOG_ERROR("Set header Cache-Control failed: %d", err);
 		return http_resp_err(http, HTTP_STATUS_INTERNAL_SERVER_ERROR);
 	}
 	return http_resp_send_buf(http, body, body_len, false);
