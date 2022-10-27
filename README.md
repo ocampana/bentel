@@ -56,3 +56,91 @@ For more information about the picow-http server library, see:
   * the picow-http [project
     Wiki](https://gitlab.com/slimhazard/picow_http/-/wikis/home)
   * the [public API documentation](https://slimhazard.gitlab.io/picow_http/)
+
+# Build/Install
+
+## Requirements
+
+The [Pico C SDK](https://raspberrypi.github.io/pico-sdk-doxygen/index.html)
+and its toolchain are required to build the app. picow-http also requires
+some [additional
+software](https://gitlab.com/slimhazard/picow_http/-/wikis/required-software);
+see the link (at the [picow-http project
+Wiki](https://gitlab.com/slimhazard/picow_http/-/wikis/home)) for details.
+
+## Building the app
+
+Start by cloning the repository:
+
+```shell
+# Clones the repository into a new directory 'picow-http-example',
+# and updates the picow-http submodule.
+$ git clone --recurse-submodules https://gitlab.com/slimhazard/picow-http-example.git
+```
+
+picow-http is a [git
+submodule](https://git-scm.com/book/en/v2/Git-Tools-Submodules) in the
+repo at the path [`lib/picow-http`](lib/picow-http); it is
+automatically updated when the `--recurse-submodules` option is used
+with the `git clone` command.
+
+Like many projects based on the Pico SDK, this project includes [CMake
+code](pico_sdk_import.cmake) that integrates the SDK into the
+build. This usually requires that the path of the SDK is in the
+`PICO_SDK_PATH` environment variable, or it may be passed in as a `-D`
+command-line definition in the `cmake` command shown below. With one
+of these options, the SDK is integrated transparently when `cmake` is
+invoked. See the
+[docs](https://datasheets.raspberrypi.com/picow/connecting-to-the-internet-with-pico-w.pdf)
+for details. In the following, we will assume that `PICO_SDK_PATH` is
+set in the environment.
+
+In the project repo, create a build subdirectory, and call `cmake` in
+that directory:
+
+```shell
+$ cd picow-http-example
+$ mkdir build
+$ cd build
+$ cmake -DPICO_BOARD=pico_w -DWIFI_SSID=my_wifi -DWIFI_PASSWORD=wifi_pass ..
+```
+
+The three `-D` command-line options in the `cmake` invocation shown
+above are required. `PICO_BOARD=pico_w` identifies the PicoW for the
+SDK as the target hardware. This project follows the PicoW examples in
+the [`pico-examples`](https://github.com/raspberrypi/pico-examples)
+repository by setting WiFi credentials via CMake definitions. Set
+`WIFI_SSID` to the SSID of the access point (the network name of your
+WiFi router), and `WIFI_PASSWORD` to its password.
+
+There are two optional parameters for `-D` on the `cmake` command line:
+
+  * `HOSTNAME`: host name for the PicoW
+  * `NTP_SERVER`: server to be used for [time
+    synchronization](https://slimhazard.gitlab.io/picow_http/group__ntp.html)
+
+If you set `HOSTNAME=my_host`, the HTTP server can be reached after
+deployment at `http://my_host`. The default hostname is `PicoW`.
+
+The default value of `NTP_SERVER` is a generic pool; it is usually
+much better to specify an NTP server or pool that is "closer" to the
+location where the PicoW will be deployed. If your WiFi router
+provides NTP synchronization, then that is the ideal choice.
+
+This invocation of `cmake` specifies both optional parameters:
+
+```shell
+# Set the hostname to picow-sample, and use the regional NTP server pool
+# in Germany.
+$ cmake -DPICO_BOARD=pico_w -DWIFI_SSID=my_wifi -DWIFI_PASSWORD=wifi_pass \
+        -DHOSTNAME=picow-sample -DNTP_SERVER=de.pool.ntp.org ..
+```
+
+After the `cmake` call, the software is built with `make`:
+
+```shell
+$ make -j
+```
+
+If all goes well, then you have now built binaries that are ready to
+deploy.
