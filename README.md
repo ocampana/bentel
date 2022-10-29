@@ -1,3 +1,5 @@
+# picow-http-example
+
 picow-http-example is a sample application to demonstrate
 [picow-http](https://gitlab.com/slimhazard/picow_http) -- an HTTP server
 for the [Raspberry Pi Pico W
@@ -10,16 +12,13 @@ The sample is a single-page application for a web browser that displays:
   * Measurements from the PicoW's onboard temperature sensor.
     * The user can choose the temperature scale (Kelvin, Celsius, or
       Fahrenheit).
-  * Information about the PicoW's network connection:
-    * hostname
-    * IP address
-    * MAC address
-    * SSID of the WiFi access point
-    * [rssi](https://en.wikipedia.org/wiki/Received_signal_strength_indication)
-      / signal strength of the access point
+  * Information about the PicoW's network connection, including the
+    signal strength of the access point, displayed in percent and as
+    [rssi](https://en.wikipedia.org/wiki/Received_signal_strength_indication)
+    in dBm.
 
-While the app is visible in a browser window, the temperature and rssi
-measurements are updated every few seconds.
+While the app is visible in a browser window, the temperature and
+signal strength measurements are updated every few seconds.
 
 See the [project
 Wiki](https://gitlab.com/slimhazard/picow-http-example/-/wikis/Home) for
@@ -57,9 +56,30 @@ For more information about the picow-http server library, see:
     Wiki](https://gitlab.com/slimhazard/picow_http/-/wikis/home)
   * the [public API documentation](https://slimhazard.gitlab.io/picow_http/)
 
-# Build/Install
+## Build/Install
 
-## Requirements
+### Quick start
+
+Ensure that [requirements](#requirements) are fulfilled. Then:
+
+```shell
+$ git clone --recurse-submodules https://gitlab.com/slimhazard/picow-http-example.git
+$ cd picow-http-example
+$ mkdir build
+$ cd build
+$ cmake -DPICO_BOARD=pico_w -DWIFI_SSID=my_wifi -DWIFI_PASSWORD=wifi_pass ..
+$ make -j
+```
+
+On successful build, [load one of the binaries](#deploying-the-app) to
+your board in any of the usual ways for the PicoW.
+
+Finally point your browser to `http://PicoW`. The [server
+log](#monitoring-the-log) can be viewed via UART.
+
+In the following we go over the process step by step.
+
+### Requirements
 
 The [Pico C SDK](https://raspberrypi.github.io/pico-sdk-doxygen/index.html)
 and its toolchain are required to build the app. picow-http also requires
@@ -68,7 +88,7 @@ software](https://gitlab.com/slimhazard/picow_http/-/wikis/required-software);
 see the link (at the [picow-http project
 Wiki](https://gitlab.com/slimhazard/picow_http/-/wikis/home)) for details.
 
-## Building the app
+### Building the app
 
 Start by cloning the repository:
 
@@ -88,9 +108,7 @@ Like many projects based on the Pico SDK, this project includes [CMake
 code](pico_sdk_import.cmake) that integrates the SDK into the
 build. This usually requires that the path of the SDK is in the
 `PICO_SDK_PATH` environment variable, or it may be passed in as a `-D`
-command-line definition in the `cmake` command shown below. With one
-of these options, the SDK is integrated transparently when `cmake` is
-invoked. See the
+command-line definition in the `cmake` command shown below. See the
 [docs](https://datasheets.raspberrypi.com/picow/connecting-to-the-internet-with-pico-w.pdf)
 for details. In the following, we will assume that `PICO_SDK_PATH` is
 set in the environment.
@@ -145,7 +163,7 @@ $ make -j
 If all goes well, then you have now built binaries that are ready to
 deploy.
 
-## Deploying the app
+### Deploying the app
 
 This project builds _two_ versions of the binary:
 
@@ -185,7 +203,7 @@ After loading the binary, point a browser to `http://picow` (or a URL
 with the `HOSTNAME` defined in the `cmake` invocation as shown above)
 to view the application.
 
-## Monitoring the log
+### Monitoring the log
 
 The application is configured to use
 [UART](https://raspberrypi.github.io/pico-sdk-doxygen/group__pico__stdio__uart.html)
