@@ -125,3 +125,34 @@ pico_set_program_description(picow-http-example-poll
 pico_set_program_url(picow-http-example-poll
 	"https://gitlab.com/slimhazard/picow-http-example"
 )
+
+##
+## Use the output of 'git describe', if available, as the version
+## string
+##
+set(PROGRAM_VERSION "unknown")
+find_program(GIT git)
+if (NOT GIT_FOUND)
+	execute_process(COMMAND ${GIT} describe --always
+		OUTPUT_VARIABLE GIT_DESCRIBE_OUTPUT
+		OUTPUT_STRIP_TRAILING_WHITESPACE
+		RESULT_VARIABLE GIT_DESCRIBE_RESULT
+	)
+	if (GIT_DESCRIBE_RESULT EQUAL "0")
+		set(PROGRAM_VERSION ${GIT_DESCRIBE_OUTPUT})
+	else()
+		message(WARNING "git describe returned ${GIT_DESCRIBE_RESULT}")
+	endif()
+else()
+	message(WARNING "git not found")
+endif()
+message("version: ${PROGRAM_VERSION}")
+
+target_compile_definitions(picow-http-example-background PRIVATE
+	PROGRAM_VERSION="${PROGRAM_VERSION}"
+)
+target_compile_definitions(picow-http-example-poll PRIVATE
+	PROGRAM_VERSION="${PROGRAM_VERSION}"
+)
+pico_set_program_version(picow-http-example-background ${PROGRAM_VERSION})
+pico_set_program_version(picow-http-example-poll ${PROGRAM_VERSION})
