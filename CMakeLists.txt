@@ -81,6 +81,13 @@ pico_add_extra_outputs(picow-http-example-background)
 
 picoprobe_add_flash_target(picow-http-example-background)
 
+pico_set_program_description(picow-http-example-background
+	"example app for the picow-http library, threadsafe background mode"
+)
+pico_set_program_url(picow-http-example-background
+	"https://gitlab.com/slimhazard/picow-http-example"
+)
+
 ##
 ## poll mode
 ##
@@ -111,3 +118,10 @@ pico_enable_stdio_uart(picow-http-example-poll 1)
 pico_add_extra_outputs(picow-http-example-poll)
 
 picoprobe_add_flash_target(picow-http-example-poll)
+
+pico_set_program_description(picow-http-example-poll
+	"example app for the picow-http library, poll mode"
+)
+pico_set_program_url(picow-http-example-poll
+	"https://gitlab.com/slimhazard/picow-http-example"
+)

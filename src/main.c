@@ -12,6 +12,7 @@
 #include "pico/cyw43_arch.h"
 #include "pico/multicore.h"
 #include "pico/sync.h"
+#include "pico/binary_info.h"
 #include "hardware/adc.h"
 #include "hardware/regs/adc.h"
 #include "hardware/sync.h"
@@ -146,6 +147,11 @@ main(void)
 	struct netif *netif;
 	uint8_t mac[6];
 	err_t err;
+
+	/* For picotool info */
+	bi_decl(bi_program_feature("hostname: " CYW43_HOST_NAME));
+	bi_decl(bi_program_feature("AP SSID: " WIFI_SSID));
+	bi_decl(bi_program_feature("picow-http version: " PICOW_HTTP_VERSION));
 
 	critical_section_init(&temp_critsec);
 	critical_section_init(&linkup_critsec);
