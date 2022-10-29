@@ -234,3 +234,30 @@ times in the [UTC time zone](https://en.wikipedia.org/wiki/Coordinated_Universal
 (and hence the time zone offset is always `+0000`). See the [log API
 docs](https://slimhazard.gitlab.io/picow_http/group__log.html) for details about
 setting the log verbosity at compile time in a picow-http application.
+
+### View binary info
+
+The example app uses the [binary
+info](https://raspberrypi.github.io/pico-sdk-doxygen/group__pico__binary__info.html)
+facility of the SDK to store meta-information that can be viewed with the
+[picotool](https://github.com/raspberrypi/picotool). That can be used, for
+example, to find out the WiFi SSID for which the app was built, or the
+version of the picow-http library that was linked:
+
+```shell
+$ picotool info -b -p picow-http-example-poll.bin
+File picow-http-example-poll.bin:
+
+Program Information
+ name:         picow-http-example-poll
+ version:      0.1.0
+ web site:     https://gitlab.com/slimhazard/picow-http-example
+ description:  example app for the picow-http library, poll mode
+ features:     hostname: picow-sample
+               AP SSID: my_wifi
+               picow-http version: 0.1.0
+               UART stdout
+
+Fixed Pin Information
+ 0:  UART0 TX
+```
