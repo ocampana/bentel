@@ -434,7 +434,7 @@ rssi_handler(struct http *http, void *p)
 	 "\"ip\":\"\",\"mac\":\"\"}")
 #define INFO_MAX_LEN (STRLEN_LTRL(INFO_STR) + IPADDR_STRLEN_MAX + MAC_ADDR_LEN)
 
-/* The next handler will set an ETag handler with a 32-bit value in hex. */
+/* The next handler will set an ETag header with a 32-bit value in hex. */
 #define ETAG_LEN (sizeof("\"12345678\""))
 
 /* Simple string hash used to generate an ETag header. */
@@ -572,10 +572,10 @@ netinfo_handler(struct http *http, void *p)
 					     HTTP_STATUS_INTERNAL_SERVER_ERROR);
 		}
 		/*
-		 * http_resp_send_hdr() sends the response header. Generally
-		 * is possible to also send a response body after calling
-		 * http_resp_send_hdr(); but since we return from here, only
-		 * the header is sent.
+		 * http_resp_send_hdr() sends the response
+		 * header. Generally it is possible to also send a
+		 * response body after calling http_resp_send_hdr(); but
+		 * since we return from here, only the header is sent.
 		 *
 		 * See: https://slimhazard.gitlab.io/picow_http/group__resp.html#ga8131543f91511d845a4e657b0bead6fc
 		 */
