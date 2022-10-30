@@ -1,3 +1,20 @@
+# If you are using a picoprobe, this code defines targets that
+# encapsulate the openocd invocations to load binaries to the board,
+# and to restart the running application.
+#
+# This has *nothing* to do with picow-http, and is not required.
+#
+# For information about picoprobe, see Appendix A of Getting Started:
+# https://datasheets.raspberrypi.com/pico/getting-started-with-pico.pdf
+
+# Without any configuration, CMake attempts to find openocd on your
+# system. That usually works if it is installed at a standard
+# location.
+#
+# Otherwise, you can pass in the path for openocd, either with
+#	-DOPENOCD_PATH=/path/to/openocd
+# in the cmake invocation, or with the path in the OPENOCD_PATH
+# environment variable.
 if (NOT OPENOCD_PATH)
   if (DEFINED ENV{OPENOCD_PATH})
     set(OPENOCD_PATH $ENV{OPENOCD_PATH})
@@ -10,6 +27,12 @@ if (NOT OPENOCD_PATH)
   endif ()
 endif ()
 
+# If the openocd path can be found, you may also specify its search path
+# (the value for openocd's -s/--search option) by setting
+#	-DOPENOCD_SEARCH_PATH=/path/to/openocd/config/dir
+# in the cmake invocation, or in the OPENOCD_SEARCH_PATH environment
+# variable. This may not be necessary for a standard installation,
+# since openocd may find the path on its own.
 if (OPENOCD_PATH)
   message(STATUS "openocd: ${OPENOCD_PATH}")
   if (DEFINED ENV{OPENOCD_SEARCH_PATH} AND (NOT OPENOCD_SEARCH_PATH))
@@ -24,6 +47,13 @@ if (OPENOCD_PATH)
   endif ()
 endif ()
 
+# Creates a target to flash binary code to the board.
+#
+# CMakeLists.txt should include:
+#	picoprobe_add_flash_target(my_executable)
+# for a target defined in add_executable().
+# Then this target encapsulates the openocd invocation that loads the code:
+#	make flash-my_executable
 function(picoprobe_add_flash_target EXECUTABLE_NAME)
   if (NOT OPENOCD_PATH)
     message(WARNING "not generating flash target for ${EXECUTABLE_NAME}: openocd not found or set")
@@ -38,6 +68,7 @@ function(picoprobe_add_flash_target EXECUTABLE_NAME)
   )
 endfunction()
 
+# Creates the target 'make reset' to restart a running application.
 function(picoprobe_add_reset_target)
   if (NOT OPENOCD_PATH)
     message(WARNING "not generating reset target: openocd not found or set")
