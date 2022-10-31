@@ -277,10 +277,6 @@ async function ledDoToggle() {
  * fetch the data once at initialization, and on page reload.
  */
 async function updateNetinfo() {
-    if (document.visibilityState === "hidden") {
-        return;
-    }
-
     let data = null;
     try {
         let response = await getResp("/netinfo");
