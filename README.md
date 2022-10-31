@@ -261,3 +261,14 @@ Program Information
 Fixed Pin Information
  0:  UART0 TX
 ```
+
+## How it works
+
+The source code is commented (a bit verbosely) to explain the workings
+in detail. See the comments in:
+
+  * the [C source files](src/)
+  * [CMakeLists.txt](CMakeLists.txt)
+  * the build-time configuration in [`www.yaml`](www/www.yaml)
+  * the [Javascript source](www/sample_app.js) for
+    client-side/presentation logic
