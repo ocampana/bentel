@@ -418,6 +418,6 @@ main(void)
 #endif
 	}
 
-	cyw43_arch_deinit();
+	/* Unreachable */
 	return 0;
 }
