@@ -17,6 +17,9 @@
 #include "hardware/regs/adc.h"
 #include "hardware/sync.h"
 
+/* For LWIP_VERSION_STRING */
+#include "lwip/init.h"
+
 /*
  * Code using picow-http must include picow_http/http.h.
  * cmake configuration ensures that it is on the include path.
@@ -266,6 +269,12 @@ main(void)
 	bi_decl(bi_program_feature("hostname: " CYW43_HOST_NAME));
 	bi_decl(bi_program_feature("AP SSID: " WIFI_SSID));
 	bi_decl(bi_program_feature("picow-http version: " PICOW_HTTP_VERSION));
+	bi_decl(bi_program_feature("lwIP version: " LWIP_VERSION_STRING));
+#if PICO_CYW43_ARCH_POLL
+	bi_decl(bi_program_feature("arch: poll"));
+#elif PICO_CYW43_ARCH_THREADSAFE_BACKGROUND
+	bi_decl(bi_program_feature("arch: threadsafe background"));
+#endif
 
 	/* Initialize the critical sections */
 	critical_section_init(&temp_critsec);

@@ -140,7 +140,7 @@ pico_add_extra_outputs(picow-http-example-background)
 picoprobe_add_flash_target(picow-http-example-background)
 
 pico_set_program_description(picow-http-example-background
-	"example app for the picow-http library, without TLS, threadsafe background mode"
+	"example app for the picow-http library, without TLS"
 )
 pico_set_program_url(picow-http-example-background
 	"https://gitlab.com/slimhazard/picow-http-example"
@@ -182,7 +182,7 @@ pico_add_extra_outputs(picow-http-example-poll)
 picoprobe_add_flash_target(picow-http-example-poll)
 
 pico_set_program_description(picow-http-example-poll
-	"example app for the picow-http library, without TLS, poll mode"
+	"example app for the picow-http library, without TLS"
 )
 pico_set_program_url(picow-http-example-poll
 	"https://gitlab.com/slimhazard/picow-http-example"
@@ -242,7 +242,7 @@ pico_add_extra_outputs(picow-https-example-background)
 picoprobe_add_flash_target(picow-https-example-background)
 
 pico_set_program_description(picow-https-example-background
-	"example app for the picow-http library, with TLS, threadsafe background mode"
+	"example app for the picow-http library, with TLS"
 )
 pico_set_program_url(picow-https-example-background
 	"https://gitlab.com/slimhazard/picow-http-example"
@@ -282,7 +282,7 @@ pico_add_extra_outputs(picow-https-example-poll)
 picoprobe_add_flash_target(picow-https-example-poll)
 
 pico_set_program_description(picow-https-example-poll
-	"example app for the picow-http library, with TLS, poll mode"
+	"example app for the picow-http library, with TLS"
 )
 pico_set_program_url(picow-https-example-poll
 	"https://gitlab.com/slimhazard/picow-http-example"
