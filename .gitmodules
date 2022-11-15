@@ -1,3 +1,6 @@
 [submodule "lib/picow-http"]
 	path = lib/picow-http
 	url = https://gitlab.com/slimhazard/picow_http.git
+[submodule "lib/mbedtls"]
+	path = lib/mbedtls
+	url = https://github.com/Mbed-TLS/mbedtls.git
