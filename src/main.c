@@ -45,6 +45,10 @@
  */
 #define AP_SCAN_INTVL_MS (10 * 1000)
 
+/* The SDK apparently defines no symbol for the number of hardware alarms. */
+#define N_HARDWARE_ALARMS (4)
+#define ALARM_NUM_NONE (~0)
+
 /* The following values are shared between the two cores. */
 
 /* Raw ADC reading for the temperature sensor. */
@@ -163,12 +167,16 @@ __time_critical_func(scan_start)(repeating_timer_t *rt)
 
 	/* Assert that rt is not NULL. */
 	AN(rt);
-	if (cyw43_wifi_scan_active(&cyw43_state))
+	cyw43_arch_lwip_begin();
+	if (cyw43_wifi_scan_active(&cyw43_state)) {
+		cyw43_arch_lwip_end();
 		return true;
+	}
 	if (cyw43_wifi_scan(&cyw43_state, &opts, rt->user_data, scan_result)
 	    != 0)
 		/* HTTP_LOG_ERROR() from picow_http/log.h */
 		HTTP_LOG_ERROR("cyw43_wifi_scan() failed");
+	cyw43_arch_lwip_end();
 	return true;
 }
 
@@ -186,6 +194,8 @@ __time_critical_func(scan_start)(repeating_timer_t *rt)
 void
 core1_main(void)
 {
+	unsigned rssi_alarm_num = ALARM_NUM_NONE;
+
 	/* Initiate asynchronous ADC temperature sensor reads */
 	adc_init();
 	adc_set_temp_sensor_enabled(true);
@@ -212,14 +222,31 @@ core1_main(void)
 	}
 
 	/*
-	 * Start the repeating_timer to periodically run AP scans.
-	 * This is where WIFI_SSID is passed to the user_data pointer
-	 * of the repeating_timer_t, which in turn is passed on as
-	 * private data in the AP scan callback.
+	 * Since this is core1, we cannot use the default alarm pool.
+	 * Find an unclaimed alarm number. It will be claimed in
+	 * alarm_pool_create().
 	 */
-	if (!add_repeating_timer_ms(AP_SCAN_INTVL_MS, scan_start, WIFI_SSID,
-				    &scan_timer))
-		HTTP_LOG_ERROR("Failed to start timer for AP scan");
+	for (unsigned i = 0; i < N_HARDWARE_ALARMS; i++)
+		if (!hardware_alarm_is_claimed(i)) {
+			rssi_alarm_num = i;
+			break;
+		}
+	if (rssi_alarm_num == ALARM_NUM_NONE)
+		HTTP_LOG_ERROR("Could not claim alarm number for AP scan");
+	else {
+		/*
+		 * Start the repeating_timer to periodically run AP scans.
+		 * This is where WIFI_SSID is passed to the user_data
+		 * pointer of the repeating_timer_t, which in turn is
+		 * passed on as private data in the AP scan callback.
+		 */
+		alarm_pool_t *pool = alarm_pool_create(rssi_alarm_num, 1);
+		AN(pool);
+		if (!alarm_pool_add_repeating_timer_ms(
+			    pool, AP_SCAN_INTVL_MS, scan_start, WIFI_SSID,
+			    &scan_timer))
+			HTTP_LOG_ERROR("Failed to start timer for AP scan");
+	}
 
 	for (;;)
 		__wfi();
