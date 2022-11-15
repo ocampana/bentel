@@ -1,0 +1,89 @@
+# Copyright (c) 2022 Geoff Simmons <geoff@simmons.de>
+#
+# SPDX-License-Identifier: BSD-2-Clause
+# See LICENSE
+
+# This file is the build-time configuration of static resources and
+# custom response handlers to be used in the application with TLS
+# support.
+#
+# See: https://gitlab.com/slimhazard/picow_http/-/wikis/Build-time-configuration
+#
+# This file is identical to the YAML file for the application without
+# TLS (see www.yaml in the current directory), except:
+#
+# - brotli encoding is specified for the compressible static resources.
+# - this file includes the "certificate" object, to configure the
+#   server certificate and private key.
+#
+# For the TLS version we use brotli compression, since the common
+# browsers include "br" in the Accept-Encoding request header if the
+# request is sent via TLS. brotli compression usually results in
+# smaller files than gzip compression -- this is true of all of the
+# static files in the sample app. The advantages are a smaller
+# footprint for embedding the static objects in flash, and smaller
+# HTTP responses to send over the network.
+#
+# The "certificate" configuration is required for an HTTP server that
+# supports TLS.
+#
+# Otherwise the present configuration is identical to www.yaml in the
+# current directory. See the comments in www.yaml for details about
+# the configuration of static resources and custom response handlers.
+
+# The "static" elements for compressible resources specify "br" in the
+# "encodings" field, as discussed above.
+- static:
+    file: index.html
+    encodings:
+    - br
+
+- static:
+    file: picow.css
+    encodings:
+    - br
+
+- static:
+    file: img/favicon.png
+
+- static:
+    file: sample_app.js
+    encodings:
+    - br
+
+# "custom" elements exactly as in www.yaml in the current directory.
+- custom:
+    path: /temp
+    methods:
+    - GET
+    - HEAD
+
+- custom:
+    path: /led
+    methods:
+    - GET
+    - HEAD
+
+- custom:
+    path: /rssi
+    methods:
+    - GET
+    - HEAD
+
+- custom:
+    path: /netinfo
+    methods:
+    - GET
+    - HEAD
+
+# The "certificate" element has two fields "crt" and "key", both
+# required. Both of them specify files on paths relative to the "www"
+# directory. The two files MUST be in DER (binary) format. See:
+#
+# https://en.wikipedia.org/wiki/X.690#DER_encoding
+#
+# "crt" is the path of the server certificate, and "key" is the
+# server's private key.
+- certificate:
+    crt: crt/picow-sample.crt
+    key: crt/picow-sample.key

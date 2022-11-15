@@ -42,9 +42,10 @@ if (DEFINED HOSTNAME)
 endif()
 
 # This project has targets for more than one executable, which differ
-# only in the choice of network architecture; see the SDK docs for
-# pico_cyw43_arch. Most apps will choose just one, but the example
-# includes more for demonstration purposes.
+# in the choice of network architecture (see the SDK docs for
+# pico_cyw43_arch), and in TLS support. Most apps will choose just one
+# network architecture, and whether or not to support TLS, but the
+# example includes all of the combinations for demonstration purposes.
 #
 # The following definitions summarize elements that the different
 # excutables have in common.
@@ -60,7 +61,7 @@ set(SRCS
 )
 
 # Include paths
-# Must include the path at which lwipopts.h is located.
+# Must include the path at which lwipopts.h and is located.
 set(INCLUDES
 	${CMAKE_CURRENT_LIST_DIR}/src
 	${CMAKE_CURRENT_LIST_DIR}/lib/picow-http/etc
@@ -75,10 +76,10 @@ set(WWWSRCS
 )
 
 # Libraries to be linked
-# The different versions link different choices for pico_cyw43_arch_lwip_*,
-# otherwise the libs are the same.
+# The different versions link either picow_http (without TLS support)
+# or picow_https (with TLS), and different choices for
+# pico_cyw43_arch_lwip_*, otherwise the libs are the same.
 set(LIBS
-	picow_http
 	pico_stdio
 	pico_stdlib
 	pico_multicore
@@ -92,7 +93,7 @@ set(LIBS
 # with picow-http.
 
 ##
-## threadsafe background mode
+## threadsafe background mode, without TLS
 ##
 
 add_executable(picow-http-example-background ${SRCS})
@@ -104,9 +105,11 @@ target_compile_definitions(picow-http-example-background PRIVATE
 
 target_include_directories(picow-http-example-background PRIVATE ${INCLUDES})
 
+# picow_http links the HTTP server without TLS support.
 # pico_cyw43_arch_lwip_threadsafe_background sets the network
 # architecture.
 target_link_libraries(picow-http-example-background
+	picow_http
 	pico_cyw43_arch_lwip_threadsafe_background
 	${LIBS}
 )
@@ -137,14 +140,14 @@ pico_add_extra_outputs(picow-http-example-background)
 picoprobe_add_flash_target(picow-http-example-background)
 
 pico_set_program_description(picow-http-example-background
-	"example app for the picow-http library, threadsafe background mode"
+	"example app for the picow-http library, without TLS, threadsafe background mode"
 )
 pico_set_program_url(picow-http-example-background
 	"https://gitlab.com/slimhazard/picow-http-example"
 )
 
 ##
-## poll mode
+## poll mode, without TLS
 ##
 
 add_executable(picow-http-example-poll ${SRCS})
@@ -159,6 +162,7 @@ target_include_directories(picow-http-example-poll PRIVATE ${INCLUDES})
 # pico_cyw43_arch_lwip_poll sets the network architecture tp poll
 # mode.
 target_link_libraries(picow-http-example-poll
+	picow_http
 	pico_cyw43_arch_lwip_poll
 	${LIBS}
 )
@@ -178,9 +182,69 @@ pico_add_extra_outputs(picow-http-example-poll)
 picoprobe_add_flash_target(picow-http-example-poll)
 
 pico_set_program_description(picow-http-example-poll
-	"example app for the picow-http library, poll mode"
+	"example app for the picow-http library, without TLS, poll mode"
 )
 pico_set_program_url(picow-http-example-poll
+	"https://gitlab.com/slimhazard/picow-http-example"
+)
+
+##
+## threadsafe background mode, with TLS
+##
+
+# For TLS, mbedtls_config.h must be included. We use the sample in the
+# picow-http's etc/ directory. The etc/ directory is on the INCLUDES
+# list defined above.
+set(HTTPS_SRCS
+	${SRCS}
+	${CMAKE_CURRENT_LIST_DIR}/lib/picow-http/etc/mbedtls_config.h
+)
+
+# For TLS, add the server certificate and private key to the WWW
+# sources.
+set(HTTPS_WWWSRCS
+	${WWWSRCS}
+	${CMAKE_CURRENT_LIST_DIR}/www/crt/picow-sample.crt
+	${CMAKE_CURRENT_LIST_DIR}/www/crt/picow-sample.key
+)
+
+add_executable(picow-https-example-background ${HTTPS_SRCS})
+
+target_compile_definitions(picow-https-example-background PRIVATE
+	WIFI_SSID=\"${WIFI_SSID}\"
+	WIFI_PASSWORD=\"${WIFI_PASSWORD}\"
+)
+
+target_include_directories(picow-https-example-background PRIVATE ${INCLUDES})
+
+# Link picow-https for TLS support.
+target_link_libraries(picow-https-example-background
+	picow_https
+	pico_cyw43_arch_lwip_threadsafe_background
+	${LIBS}
+)
+
+# For TLS, we use a version of the WWW yaml that includes a
+# specification of the certificate and key. The YAML also specifies
+# brotli compression for compressible static resources, since common
+# browsers accept brotli in responses sent over TLS connections.
+picow_http_gen_handlers(picow-https-example-background
+	${CMAKE_CURRENT_SOURCE_DIR}/www/www_https.yaml
+	${CMAKE_CURRENT_SOURCE_DIR}/www
+	${WWWSRCS}
+)
+
+pico_enable_stdio_usb(picow-https-example-background 0)
+pico_enable_stdio_uart(picow-https-example-background 1)
+
+pico_add_extra_outputs(picow-https-example-background)
+
+picoprobe_add_flash_target(picow-https-example-background)
+
+pico_set_program_description(picow-https-example-background
+	"example app for the picow-http library, with TLS, threadsafe background mode"
+)
+pico_set_program_url(picow-https-example-background
 	"https://gitlab.com/slimhazard/picow-http-example"
 )
 
@@ -212,5 +276,9 @@ target_compile_definitions(picow-http-example-background PRIVATE
 target_compile_definitions(picow-http-example-poll PRIVATE
 	PROGRAM_VERSION="${PROGRAM_VERSION}"
 )
+target_compile_definitions(picow-http-example-background PRIVATE
+	PROGRAM_VERSION="${PROGRAM_VERSION}"
+)
 pico_set_program_version(picow-http-example-background ${PROGRAM_VERSION})
 pico_set_program_version(picow-http-example-poll ${PROGRAM_VERSION})
+pico_set_program_version(picow-https-example-background ${PROGRAM_VERSION})
