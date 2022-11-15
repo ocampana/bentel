@@ -98,9 +98,11 @@ set(LIBS
 
 add_executable(picow-http-example-background ${SRCS})
 
+# PICOW_HTTPS indicates TLS support (used for binary info).
 target_compile_definitions(picow-http-example-background PRIVATE
 	WIFI_SSID=\"${WIFI_SSID}\"
 	WIFI_PASSWORD=\"${WIFI_PASSWORD}\"
+	PICOW_HTTPS=0
 )
 
 target_include_directories(picow-http-example-background PRIVATE ${INCLUDES})
@@ -140,7 +142,7 @@ pico_add_extra_outputs(picow-http-example-background)
 picoprobe_add_flash_target(picow-http-example-background)
 
 pico_set_program_description(picow-http-example-background
-	"example app for the picow-http library, without TLS"
+	"example app for the picow-http library"
 )
 pico_set_program_url(picow-http-example-background
 	"https://gitlab.com/slimhazard/picow-http-example"
@@ -155,6 +157,7 @@ add_executable(picow-http-example-poll ${SRCS})
 target_compile_definitions(picow-http-example-poll PRIVATE
 	WIFI_SSID=\"${WIFI_SSID}\"
 	WIFI_PASSWORD=\"${WIFI_PASSWORD}\"
+	PICOW_HTTPS=0
 )
 
 target_include_directories(picow-http-example-poll PRIVATE ${INCLUDES})
@@ -182,7 +185,7 @@ pico_add_extra_outputs(picow-http-example-poll)
 picoprobe_add_flash_target(picow-http-example-poll)
 
 pico_set_program_description(picow-http-example-poll
-	"example app for the picow-http library, without TLS"
+	"example app for the picow-http library"
 )
 pico_set_program_url(picow-http-example-poll
 	"https://gitlab.com/slimhazard/picow-http-example"
@@ -213,6 +216,7 @@ add_executable(picow-https-example-background ${HTTPS_SRCS})
 target_compile_definitions(picow-https-example-background PRIVATE
 	WIFI_SSID=\"${WIFI_SSID}\"
 	WIFI_PASSWORD=\"${WIFI_PASSWORD}\"
+	PICOW_HTTPS=1
 )
 
 target_include_directories(picow-https-example-background PRIVATE ${INCLUDES})
@@ -242,7 +246,7 @@ pico_add_extra_outputs(picow-https-example-background)
 picoprobe_add_flash_target(picow-https-example-background)
 
 pico_set_program_description(picow-https-example-background
-	"example app for the picow-http library, with TLS"
+	"example app for the picow-http library"
 )
 pico_set_program_url(picow-https-example-background
 	"https://gitlab.com/slimhazard/picow-http-example"
@@ -257,6 +261,7 @@ add_executable(picow-https-example-poll ${HTTPS_SRCS})
 target_compile_definitions(picow-https-example-poll PRIVATE
 	WIFI_SSID=\"${WIFI_SSID}\"
 	WIFI_PASSWORD=\"${WIFI_PASSWORD}\"
+	PICOW_HTTPS=1
 )
 
 target_include_directories(picow-https-example-poll PRIVATE ${INCLUDES})
@@ -282,7 +287,7 @@ pico_add_extra_outputs(picow-https-example-poll)
 picoprobe_add_flash_target(picow-https-example-poll)
 
 pico_set_program_description(picow-https-example-poll
-	"example app for the picow-http library, with TLS"
+	"example app for the picow-http library"
 )
 pico_set_program_url(picow-https-example-poll
 	"https://gitlab.com/slimhazard/picow-http-example"

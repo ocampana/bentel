@@ -20,6 +20,11 @@
 /* For LWIP_VERSION_STRING */
 #include "lwip/init.h"
 
+/* For MBEDTLS_VERSION_STRING */
+#if PICOW_HTTPS
+#include "mbedtls/version.h"
+#endif
+
 /*
  * Code using picow-http must include picow_http/http.h.
  * cmake configuration ensures that it is on the include path.
@@ -274,6 +279,12 @@ main(void)
 	bi_decl(bi_program_feature("arch: poll"));
 #elif PICO_CYW43_ARCH_THREADSAFE_BACKGROUND
 	bi_decl(bi_program_feature("arch: threadsafe background"));
+#endif
+#if PICOW_HTTPS
+	bi_decl(bi_program_feature("TLS: yes"));
+	bi_decl(bi_program_feature("mbedtls version: " MBEDTLS_VERSION_STRING));
+#else
+	bi_decl(bi_program_feature("TLS: no"));
 #endif
 
 	/* Initialize the critical sections */
