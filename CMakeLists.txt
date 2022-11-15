@@ -249,6 +249,46 @@ pico_set_program_url(picow-https-example-background
 )
 
 ##
+## poll mode, with TLS
+##
+
+add_executable(picow-https-example-poll ${HTTPS_SRCS})
+
+target_compile_definitions(picow-https-example-poll PRIVATE
+	WIFI_SSID=\"${WIFI_SSID}\"
+	WIFI_PASSWORD=\"${WIFI_PASSWORD}\"
+)
+
+target_include_directories(picow-https-example-poll PRIVATE ${INCLUDES})
+
+# Link picow-https for TLS support.
+target_link_libraries(picow-https-example-poll
+	picow_https
+	pico_cyw43_arch_lwip_poll
+	${LIBS}
+)
+
+picow_http_gen_handlers(picow-https-example-poll
+	${CMAKE_CURRENT_SOURCE_DIR}/www/www_https.yaml
+	${CMAKE_CURRENT_SOURCE_DIR}/www
+	${WWWSRCS}
+)
+
+pico_enable_stdio_usb(picow-https-example-poll 0)
+pico_enable_stdio_uart(picow-https-example-poll 1)
+
+pico_add_extra_outputs(picow-https-example-poll)
+
+picoprobe_add_flash_target(picow-https-example-poll)
+
+pico_set_program_description(picow-https-example-poll
+	"example app for the picow-http library, with TLS, poll mode"
+)
+pico_set_program_url(picow-https-example-poll
+	"https://gitlab.com/slimhazard/picow-http-example"
+)
+
+##
 ## Use the output of 'git describe', if available, as the version
 ## string
 ##
@@ -276,9 +316,13 @@ target_compile_definitions(picow-http-example-background PRIVATE
 target_compile_definitions(picow-http-example-poll PRIVATE
 	PROGRAM_VERSION="${PROGRAM_VERSION}"
 )
-target_compile_definitions(picow-http-example-background PRIVATE
+target_compile_definitions(picow-https-example-background PRIVATE
+	PROGRAM_VERSION="${PROGRAM_VERSION}"
+)
+target_compile_definitions(picow-https-example-poll PRIVATE
 	PROGRAM_VERSION="${PROGRAM_VERSION}"
 )
 pico_set_program_version(picow-http-example-background ${PROGRAM_VERSION})
 pico_set_program_version(picow-http-example-poll ${PROGRAM_VERSION})
 pico_set_program_version(picow-https-example-background ${PROGRAM_VERSION})
+pico_set_program_version(picow-https-example-poll ${PROGRAM_VERSION})
