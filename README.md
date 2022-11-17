@@ -296,6 +296,12 @@ The client can then be pointed to `https://picow-sample` to view the
 application. The hostname `picow-sample` is required, since the
 certificate is only valid for that name.
 
+Details of the server certificate and CA, such as fingerprints and
+validity dates, can be displayed in most browsers, usually by clicking
+the "padlock" icon and following controls such as "View Certificate".
+The details should match the information shown in the [project
+Wiki](https://gitlab.com/slimhazard/picow-http-example/-/wikis/Certificate-Details).
+
 Consider removing the test CA from your browser configuration after
 testing the app.
 
