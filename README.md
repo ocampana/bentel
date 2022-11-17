@@ -81,9 +81,9 @@ $ make -j
 On successful build, [load one of the binaries](#deploying-the-app) to
 your board in any of the usual ways for the PicoW.
 
-To test a version that supports TLS, use the [test CA
-certificate](www/crt/testca.crt) that was used to sign the server
-certificate (the certificate is not self-signed).
+To [test a version that supports TLS](#testing-tls-support), use the
+[test CA certificate](www/crt/testca.crt) that was used to sign the
+server certificate (the certificate is not self-signed).
 
 Finally point your browser to `http://picow-sample`, if a version
 without TLS support was loaded, or `https://picow-sample` for a
