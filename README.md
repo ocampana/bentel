@@ -35,6 +35,10 @@ The example illustrates:
   * Configuring and embedding static resources: HTML, CSS, Javascript
     and a PNG image.
   * Implementing custom response handlers for dynamic content.
+  * Optionally supporting TLS (https) for secure communication. The
+    example can be built with or without TLS support.
+    * TLS support encompasses embedding a server certificate and
+      private key in flash memory.
   * Basic guidelines for separation of concerns:
     * Presentation logic on the client side (in Javascript)
     * Utilizing the browser cache
@@ -46,6 +50,8 @@ Specifically in the sample app:
   * Static resources in the [`www/`](www/) subdirectory are embedded.
   * Four [custom response handlers](src/handlers.c) are implemented for
     temperature, the LED, rssi, and network information.
+  * When the build enables TLS support, the server certificate and
+    private key in [`www/crt/`](www/crt/) are embedded.
   * Static resources and custom handlers are configured in
     [`www.yaml`](www/www.yaml).
 
@@ -67,15 +73,22 @@ $ git clone --recurse-submodules https://gitlab.com/slimhazard/picow-http-exampl
 $ cd picow-http-example
 $ mkdir build
 $ cd build
-$ cmake -DPICO_BOARD=pico_w -DWIFI_SSID=my_wifi -DWIFI_PASSWORD=wifi_pass ..
+$ cmake -DPICO_BOARD=pico_w -DWIFI_SSID=my_wifi -DWIFI_PASSWORD=wifi_pass \
+        -DHOSTNAME=picow-sample -DPICO_MBEDTLS_PATH=${PWD}/../lib/mbedtls ..
 $ make -j
 ```
 
 On successful build, [load one of the binaries](#deploying-the-app) to
 your board in any of the usual ways for the PicoW.
 
-Finally point your browser to `http://PicoW`. The [server
-log](#monitoring-the-log) can be viewed via UART.
+To test a version that supports TLS, use the [test CA
+certificate](www/crt/testca.crt) that was used to sign the server
+certificate (the certificate is not self-signed).
+
+Finally point your browser to `http://picow-sample`, if a version
+without TLS support was loaded, or `https://picow-sample` for a
+version with TLS. The [server log](#monitoring-the-log) can be viewed
+via UART.
 
 In the following we go over the process step by step.
 
@@ -120,36 +133,67 @@ that directory:
 $ cd picow-http-example
 $ mkdir build
 $ cd build
-$ cmake -DPICO_BOARD=pico_w -DWIFI_SSID=my_wifi -DWIFI_PASSWORD=wifi_pass ..
+$ cmake -DPICO_BOARD=pico_w -DWIFI_SSID=my_wifi -DWIFI_PASSWORD=wifi_pass \
+        -DHOSTNAME=picow-sample -DPICO_MBEDTLS_PATH=${PWD}/../lib/mbedtls ..
 ```
 
-The three `-D` command-line options in the `cmake` invocation shown
-above are required. `PICO_BOARD=pico_w` identifies the PicoW for the
-SDK as the target hardware. This project follows the PicoW examples in
-the [`pico-examples`](https://github.com/raspberrypi/pico-examples)
-repository by setting WiFi credentials via CMake definitions. Set
-`WIFI_SSID` to the SSID of the access point (the network name of your
-WiFi router), and `WIFI_PASSWORD` to its password.
+Three of the `-D` command-line options in the `cmake` invocation shown
+above are required in any build of the sample app:
 
-There are two optional parameters for `-D` on the `cmake` command line:
+  * `PICO_BOARD=pico_w` identifies the PicoW for the SDK as the target
+    hardware. This is required in any build based on the SDK that
+    targets the PicoW.
+  * `WIFI_SSID` and `WIFI_PASSWORD`: This project follows the PicoW
+    examples in the
+    [`pico-examples`](https://github.com/raspberrypi/pico-examples)
+    repository by setting WiFi credentials via CMake definitions. Set
+    `WIFI_SSID` to the SSID of the access point (the network name of
+    your WiFi router), and `WIFI_PASSWORD` to its password.
 
-  * `HOSTNAME`: host name for the PicoW
-  * `NTP_SERVER`: server to be used for [time
+Two of the `-D` options are required to build versions of the app that
+support TLS. For a build that can create all versions with or without
+TLS (using `make all` or just `make`), they are required, but can be
+left out if only versions without TLS are to be built:
+
+  * `PICO_MBEDTLS_PATH` specifies the path of an
+    [mbedtls](https://github.com/Mbed-TLS/mbedtls) source repository,
+    which is included in this project as a
+    [git submodule](https://git-scm.com/book/en/v2/Git-Tools-Submodules)
+    in [`lib/mbedtls`](lib/mbedtls/). The CMake definition is not
+    strictly required, since `PICO_MBEDTLS_PATH` may also be set
+    as an environment variable. See the [picow-http
+    Wiki](https://gitlab.com/slimhazard/picow_http/-/wikis/required-software#mbedtls)
+    for details.
+  * `HOSTNAME` sets host name for the PicoW. For a version of the
+    app with TLS support, the host name must be `picow-sample`,
+    because the server certificate only verifies connections for
+    that name. For a version without TLS, `HOSTNAME` may be left
+    out, or set to another name. The default hostname is `PicoW`.
+
+There is another optional parameter for `-D` on the `cmake` command line:
+
+  * `NTP_SERVER`: the server to be used for [time
     synchronization](https://slimhazard.gitlab.io/picow_http/group__ntp.html)
-
-If you set `HOSTNAME=my_host`, the HTTP server can be reached after
-deployment at `http://my_host`. The default hostname is `PicoW`.
 
 The default value of `NTP_SERVER` is a generic pool; it is usually
 much better to specify an NTP server or pool that is "closer" to the
 location where the PicoW will be deployed. If your WiFi router
 provides NTP synchronization, then that is the ideal choice.
 
-This invocation of `cmake` specifies both optional parameters:
+For the alternative invocation of `cmake` shown below, the mbedtls
+path is set in an environment variable, and the parameter for the NTP
+server is specified:
 
 ```shell
-# Set the hostname to picow-sample, and use the regional NTP server pool
-# in Germany.
+# Set the mbedtls path in the environment:
+# In the project root directory:
+$ export PICO_MBEDTLS_PATH=${PWD}/lib/mbedtls
+
+# Create the build directory.
+$ mkdir build
+$ cd build
+
+# Use the regional NTP server pool in Germany.
 $ cmake -DPICO_BOARD=pico_w -DWIFI_SSID=my_wifi -DWIFI_PASSWORD=wifi_pass \
         -DHOSTNAME=picow-sample -DNTP_SERVER=de.pool.ntp.org ..
 ```
@@ -165,43 +209,108 @@ deploy.
 
 ### Deploying the app
 
-This project builds _two_ versions of the binary:
+This project builds _four_ versions of the binary:
 
   * `picow-http-example-background`
   * `picow-http-example-poll`
+  * `picow-https-example-background`
+  * `picow-https-example-poll`
 
-These use the two network architectures that are currently supported
-by picow-http: threadsafe background mode and poll mode; see the [SDK
-docs](https://raspberrypi.github.io/pico-sdk-doxygen/group__pico__cyw43__arch.html)
-for details. The two versions are otherwise identical. Most
-applications will choose just one network architecture, but the
-example app shows how to use either of them.
+These result from permutations of:
+
+  * the two network architectures that are currently supported
+    by picow-http: threadsafe background mode and poll mode; see the [SDK
+    docs](https://raspberrypi.github.io/pico-sdk-doxygen/group__pico__cyw43__arch.html)
+    for details. 
+  * versions with or without TLS support (linking with `picow_https`
+    or `picow_http`, respectively)
+
+The different versions are functionally identical. Their code is
+almost entirely the same; the different choices are realized by
+configuration in `CMakeLists.txt`. Most applications will choose just
+one network architecture, and make one choice about TLS support.
+Since this is an example app, it demonstrates how to realize the
+various possibilities.
+
+To build specific versions, rather than all of them at once, use one
+of the binary names shown above as the `make` target:
+
+```shell
+# Build the version with poll mode, and without TLS
+$ make -j picow-http-example-poll
+```
 
 After a successful invocation of `make`, the build directory contains
-the binary artifacts for the two versions. These can be loaded on the
-PicoW in any of the usual ways for a PicoW or Pico; for example by
-copying the `*.uf2` file to the `RPI-RP2` USB device that is presented
-when the board is in boot select mode. See the [Getting
+the binary artifacts. These can be loaded on the PicoW in any of the
+usual ways for a PicoW or Pico; for example by copying the `*.uf2`
+file to the `RPI-RP2` USB device that is presented when the board is
+in boot select mode. See the [Getting
 Started](https://datasheets.raspberrypi.com/pico/getting-started-with-pico.pdf)
 document for details.
 
 If you are using a picoprobe (see Appendix A in Getting Started), the
-build environment [defines](picoprobe_targets.cmake) two targets that
-flash the binaries to the PicoW:
+build environment [defines](picoprobe_targets.cmake) targets that
+flash the various binaries to the PicoW:
 
 ```shell
 # For use with a picoprobe
+
+# Load the version with threadsafe background mode, without TLS support
 $ make flash-picow-http-example-background
 
-# or:
+# Similarly any of:
 $ make flash-picow-http-example-poll
+$ make flash-picow-https-example-background
+$ make flash-picow-https-example-poll
 ```
 
 These commands encapsulate the `openocd` calls that load the binary code.
 
-After loading the binary, point a browser to `http://picow` (or a URL
-with the `HOSTNAME` defined in the `cmake` invocation as shown above)
-to view the application.
+After loading a binary that does not include TLS support, point a
+browser to `http://picow-sample` (or a URL with the `HOSTNAME` defined
+in the `cmake` invocation as shown above, or `http://PicoW` if the
+default host name was configured) to view the application.
+
+See the next section about testing a version that supports TLS.
+
+### Testing TLS support
+
+To test a version that uses TLS, you must use a client configured with
+the test [certificate
+authority](https://en.wikipedia.org/wiki/Certificate_authority) (CA),
+whose certificate is in this repository at
+[`www/crt/testca.crt`](www/crt/testca.crt). The server certificate is
+signed by the test CA (it is _not_ self-signed), so a client will only
+verify the connection if it is configured to use the CA.
+
+Configuring the CA certificate for some of the common web clients:
+
+  * Firefox: Settings > Privacy & Security > View Certificates >
+    Authorities > Import
+  * Chrome: Settings > Privacy and Security > Security >
+    Manage Certificates > Authorities > Import
+  * curl: invoke with the `--cacert` argument set to the path of
+    the CA certificate, or with `-k` to ignore TLS validation.
+
+The client can then be pointed to `https://picow-sample` to view the
+application. The hostname `picow-sample` is required, since the
+certificate is only valid for that name.
+
+Consider removing the test CA from your browser configuration after
+testing the app.
+
+For your own application using picow-http, options for validation of a
+server certificate with a CA include:
+
+  * having the certificate signed by one of the common CAs that is
+    recognized by most browsers
+  * creating your own CA to sign the certificate, as is done in this
+    project. This requires that clients import the CA certificate, as
+    discussed above.
+  * using a self-signed certificate. This is reported as a security
+    violation by the common browsers, but users can choose to proceed
+    nevertheless. This can only be secure if users can be relied on to
+    carefully check the certificate before proceeding.
 
 ### Monitoring the log
 
@@ -229,11 +338,13 @@ http started
 ```
 
 By default, request logs in [Common Log
-Format](https://en.wikipedia.org/wiki/Common_Log_Format) are emitted with dates and
-times in the [UTC time zone](https://en.wikipedia.org/wiki/Coordinated_Universal_Time)
-(and hence the time zone offset is always `+0000`). See the [log API
-docs](https://slimhazard.gitlab.io/picow_http/group__log.html) for details about
-setting the log verbosity at compile time in a picow-http application.
+Format](https://en.wikipedia.org/wiki/Common_Log_Format) are emitted
+with dates and times in the [UTC time
+zone](https://en.wikipedia.org/wiki/Coordinated_Universal_Time) (and
+hence the time zone offset is always `+0000`). See the [log API
+docs](https://slimhazard.gitlab.io/picow_http/group__log.html) for
+details about setting the log verbosity at compile time in a
+picow-http application.
 
 ### View binary info
 
@@ -245,17 +356,21 @@ example, to find out the WiFi SSID for which the app was built, or the
 version of the picow-http library that was linked:
 
 ```shell
-$ picotool info -b -p picow-http-example-poll.bin
-File picow-http-example-poll.bin:
+$ picotool info -b -p picow-https-example-poll.bin 
+File picow-https-example-poll.bin:
 
 Program Information
- name:         picow-http-example-poll
- version:      0.1.0
+ name:         picow-https-example-poll
+ version:      0.2.0
  web site:     https://gitlab.com/slimhazard/picow-http-example
- description:  example app for the picow-http library, poll mode
+ description:  example app for the picow-http library
  features:     hostname: picow-sample
                AP SSID: my_wifi
-               picow-http version: 0.1.0
+               picow-http version: 0.2.0
+               lwIP version: 2.2.0d
+               arch: poll
+               TLS: yes
+               mbedtls version: 2.28.1
                UART stdout
 
 Fixed Pin Information
