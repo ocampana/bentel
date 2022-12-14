@@ -33,48 +33,50 @@
 
 # The "static" elements for compressible resources specify "br" in the
 # "encodings" field, as discussed above.
-- static:
-    file: index.html
-    encodings:
-    - br
+- server:
 
-- static:
-    file: picow.css
-    encodings:
-    - br
+  - static:
+      file: index.html
+      encodings:
+      - br
 
-- static:
-    file: img/favicon.png
+  - static:
+      file: picow.css
+      encodings:
+      - br
 
-- static:
-    file: sample_app.js
-    encodings:
-    - br
+  - static:
+      file: img/favicon.png
+
+  - static:
+      file: sample_app.js
+      encodings:
+      - br
 
 # "custom" elements exactly as in www.yaml in the current directory.
-- custom:
-    path: /temp
-    methods:
-    - GET
-    - HEAD
+  - custom:
+      path: /temp
+      methods:
+      - GET
+      - HEAD
 
-- custom:
-    path: /led
-    methods:
-    - GET
-    - HEAD
+  - custom:
+      path: /led
+      methods:
+      - GET
+      - HEAD
 
-- custom:
-    path: /rssi
-    methods:
-    - GET
-    - HEAD
+  - custom:
+      path: /rssi
+      methods:
+      - GET
+      - HEAD
 
-- custom:
-    path: /netinfo
-    methods:
-    - GET
-    - HEAD
+  - custom:
+      path: /netinfo
+      methods:
+      - GET
+      - HEAD
 
 # The "certificate" element has two fields "crt" and "key", both
 # required. Both of them specify files on paths relative to the "www"
@@ -84,6 +86,6 @@
 #
 # "crt" is the path of the server certificate, and "key" is the
 # server's private key.
-- certificate:
-    crt: crt/picow-sample.crt
-    key: crt/picow-sample.key
+  - certificate:
+      crt: crt/picow-sample.crt
+      key: crt/picow-sample.key

@@ -377,48 +377,6 @@ main(void)
 	cyw43_arch_lwip_end();
 
 	/*
-	 * Before the http server starts, register the custom handlers for
-	 * the URL paths /netinfo, /temp, /rssi and /led. Each of them is
-	 * registered for the methods GET and HEAD.
-	 *
-	 * For /netinfo, we pass in the address of the netinfo object that
-	 * was just initialized. The other handlers do not use private
-	 * data, so we pass in NULL.
-	 *
-	 * Custom handlers can be registered after the server starts; for
-	 * any requests for a path with an unregistered handler, the
-	 * server returns a 404 ("Not found") error response. By
-	 * registering before server start, we ensure that the handlers
-	 * are available right away.
-	 *
-	 * See: https://slimhazard.gitlab.io/picow_http/group__resp.html#gac4ee42ee6a8559778bb486dcb6253cfe
-	 */
-	if ((err = register_hndlr_methods("/netinfo", netinfo_handler,
-					  HTTP_METHODS_GET_HEAD, &netinfo))
-	    != ERR_OK) {
-		HTTP_LOG_ERROR("Register /netinfo: %d", err);
-		return -1;
-	}
-	if ((err = register_hndlr_methods("/temp", temp_handler,
-					  HTTP_METHODS_GET_HEAD, NULL))
-	    != ERR_OK) {
-		HTTP_LOG_ERROR("Register /temp: %d", err);
-		return -1;
-	}
-	if ((err = register_hndlr_methods("/led", led_handler,
-					  HTTP_METHODS_GET_HEAD, NULL))
-	    != ERR_OK) {
-		HTTP_LOG_ERROR("Register /led: %d", err);
-		return -1;
-	}
-	if ((err = register_hndlr_methods("/rssi", rssi_handler,
-					  HTTP_METHODS_GET_HEAD, NULL))
-	    != ERR_OK) {
-		HTTP_LOG_ERROR("Register /rssi: %d", err);
-		return -1;
-	}
-
-	/*
 	 * Start with the default configuration for the HTTP server.
 	 *
 	 * If an NTP server was named at compile time, set it here.  We
@@ -436,6 +394,48 @@ main(void)
 	cfg.ntp_cfg.server = NTP_SERVER;
 #endif
 	cfg.idle_tmo_s = 30;
+
+	/*
+	 * Before the http server starts, register the custom handlers for
+	 * the URL paths /netinfo, /temp, /rssi and /led. Each of them is
+	 * registered for the methods GET and HEAD.
+	 *
+	 * For /netinfo, we pass in the address of the netinfo object that
+	 * was just initialized. The other handlers do not use private
+	 * data, so we pass in NULL.
+	 *
+	 * Custom handlers can be registered after the server starts; for
+	 * any requests for a path with an unregistered handler, the
+	 * server returns a 404 ("Not found") error response. By
+	 * registering before server start, we ensure that the handlers
+	 * are available right away.
+	 *
+	 * See: https://slimhazard.gitlab.io/picow_http/group__resp.html#gac4ee42ee6a8559778bb486dcb6253cfe
+	 */
+	if ((err = register_hndlr_methods(&cfg, "/netinfo", netinfo_handler,
+					  HTTP_METHODS_GET_HEAD, &netinfo))
+	    != ERR_OK) {
+		HTTP_LOG_ERROR("Register /netinfo: %d", err);
+		return -1;
+	}
+	if ((err = register_hndlr_methods(&cfg, "/temp", temp_handler,
+					  HTTP_METHODS_GET_HEAD, NULL))
+	    != ERR_OK) {
+		HTTP_LOG_ERROR("Register /temp: %d", err);
+		return -1;
+	}
+	if ((err = register_hndlr_methods(&cfg, "/led", led_handler,
+					  HTTP_METHODS_GET_HEAD, NULL))
+	    != ERR_OK) {
+		HTTP_LOG_ERROR("Register /led: %d", err);
+		return -1;
+	}
+	if ((err = register_hndlr_methods(&cfg, "/rssi", rssi_handler,
+					  HTTP_METHODS_GET_HEAD, NULL))
+	    != ERR_OK) {
+		HTTP_LOG_ERROR("Register /rssi: %d", err);
+		return -1;
+	}
 
 	/*
 	 * Start the server, and turn on the onboard LED when it's

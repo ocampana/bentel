@@ -17,6 +17,7 @@
 # The top-level item is an array (or YAML "series"), so each element
 # is preceded by "-". Each element must be "static" or "custom".
 
+- server:
 # A "static" element names a file in the www/ directory to be embedded
 # in the application, and configures its properties. The "file" field
 # is required. A number of other fields may be set (see the Wiki link
@@ -39,32 +40,32 @@
 #
 # The ETag response header is formed from a hash of the file before
 # any minification and/or compression (true of all static resources).
-- static:
-    file: index.html
+  - static:
+      file: index.html
 
 # Defaults for picow.css are:
 # - URL path "/picow.css"
 # - Content-Type "text/css", inferred from the .css extension.
 # - Cache-Control "public, max-age=604800" (cacheable for one week).
 # - Contents are minified and gzip compressed (due to the type "text/css").
-- static:
-    file: picow.css
+  - static:
+      file: picow.css
 
 # Defaults for img/favicon.png are:
 # - URL path "/img/favicon.png"
 # - Content-Type "image/png", inferred from the .png extension.
 # - Cache-Control "public, max-age=604800" (cacheable for one week).
 # - Contents are neither minified nor compressed (due to "image/png").
-- static:
-    file: img/favicon.png
+  - static:
+      file: img/favicon.png
 
 # Defaults for sample_app.js are:
 # - URL path "/sample_app.js"
 # - Content-Type "text/javascript", inferred from the .js extension.
 # - Cache-Control "public, max-age=604800" (cacheable for one week).
 # - Contents are minified and gzip compressed (due to "text/javascript").
-- static:
-    file: sample_app.js
+  - static:
+      file: sample_app.js
 
 # "custom" elements have two required fields "path" and "methods".
 #
@@ -89,35 +90,35 @@
 
 # Handler for GET/HEAD /temp
 # Return the most recent temperature sensor reading.
-- custom:
-    path: /temp
-    methods:
-    - GET
-    - HEAD
+  - custom:
+      path: /temp
+      methods:
+      - GET
+      - HEAD
 
 # Handler for GET/HEAD /led
 # Return the current state of the onboard LED (on/off).
 # With a query string, the LED may be turned on, turned off, or toggled.
-- custom:
-    path: /led
-    methods:
-    - GET
-    - HEAD
+  - custom:
+      path: /led
+      methods:
+      - GET
+      - HEAD
 
 # Handler for GET/HEAD /rssi
 # Return the most recent reading of the rssi (signal strength) of the
 # access point to which the PicoW is connected.
-- custom:
-    path: /rssi
-    methods:
-    - GET
-    - HEAD
+  - custom:
+      path: /rssi
+      methods:
+      - GET
+      - HEAD
 
 # Handler for GET/HEAD /netinfo
 # Return the hostname, IP address and MAC address of the PicoW; and
 # the SSID (network name) of the access point.
-- custom:
-    path: /netinfo
-    methods:
-    - GET
-    - HEAD
+  - custom:
+      path: /netinfo
+      methods:
+      - GET
+      - HEAD
