@@ -367,16 +367,16 @@ File picow-https-example-poll.bin:
 
 Program Information
  name:         picow-https-example-poll
- version:      0.2.0
+ version:      0.4.1
  web site:     https://gitlab.com/slimhazard/picow-http-example
  description:  example app for the picow-http library
  features:     hostname: picow-sample
                AP SSID: my_wifi
-               picow-http version: 0.2.0
+               picow-http version: 0.4.0
                lwIP version: 2.2.0d
                arch: poll
                TLS: yes
-               mbedtls version: 2.28.1
+               mbedtls version: 2.28.2
                UART stdout
 
 Fixed Pin Information
