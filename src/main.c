@@ -34,48 +34,53 @@
 #include "picow_http/http.h"
 #include "handlers.h"
 
+#if PICO_CYW43_ARCH_POLL
+#define POLL_SLEEP_MS (1)
+#endif
+
 #define ADC_TEMP_CH (4)
 /*
- * Maximum value for the ADC clock divider. Results in about 732.4 Hz, or
- * approximately one measurement every 1 1/3 ms.
+ * Maximum value for the ADC clock divider. Results in about 7.6 Hz, or
+ * approximately one measurement every 131 ms.
  */
 #define ADC_MAX_CLKDIV (65535.f + 255.f/256.f)
 
 /*
- * Currently the only "official" way to get the AP's rssi is to scan for
- * _all_ access points, since the scan result is the only object in the
- * API with an rssi field. So we run a scan periodically and save the rssi
- * for "our" AP.
- * see: https://github.com/georgerobotics/cyw43-driver/issues/35
- *
- * AP_SCAN_INTVL_MS is the interval between scans in ms (for a
- * repeating_timer).
+ * Interval between rssi updates in ms (for a repeating_timer).
  */
-#define AP_SCAN_INTVL_MS (10 * 1000)
-
-/* The SDK apparently defines no symbol for the number of hardware alarms. */
-#define N_HARDWARE_ALARMS (4)
-#define ALARM_NUM_NONE (~0)
+#define RSSI_INTVL_MS (5 * 1000)
 
 /* The following values are shared between the two cores. */
 
 /* Raw ADC reading for the temperature sensor. */
 static volatile uint16_t temp_adc_raw = UINT16_MAX;
 /*
+ * In threadsafe background mode, rssi updates are run from core1, and
+ * require a wifi link.
  * linkup is true when the TCP/IP link is up, so that core1 knows that the
- * periodic AP scans may begin.
+ * periodic rssi updates may begin.
  */
 static volatile bool linkup = false;
-/* The most recent rssi value for "our" AP */
-static volatile int16_t rssi = INT16_MAX;
+/* The most recent rssi value for our access point */
+static volatile int32_t rssi = INT32_MAX;
 /* Struct for network information, passed to the /netinfo handler */
 static struct netinfo netinfo;
 
 /* Critical sections to protect access to shared data */
 static critical_section_t temp_critsec, rssi_critsec, linkup_critsec;
 
-/* repeating_timer object for AP scans */
-static repeating_timer_t scan_timer;
+/* repeating_timer object for rssi updates */
+static repeating_timer_t rssi_timer;
+
+#if PICO_CYW43_ARCH_POLL
+/*
+ * In poll mode, rssi updates must be called from the main loop. So the
+ * repeating timer is only used to pace the updates. The timer sets this
+ * boolean to true, and the main loop resets it to false after getting the
+ * update.
+ */
+static volatile bool rssi_ready = false;
+#endif
 
 /*
  * ISR for ADC_IRQ_FIFO, called when the ADC writes a value to its
@@ -122,10 +127,10 @@ get_temp(void)
 /*
  * See the comment in handler.h
  */
-int16_t
+int32_t
 get_rssi(void)
 {
-	int16_t val;
+	int32_t val;
 
 	critical_section_enter_blocking(&rssi_critsec);
 	val = rssi;
@@ -134,58 +139,53 @@ get_rssi(void)
 }
 
 /*
- * This is the callback for cyw43_wifi_scan().
- * Skip unless the AP is "our" access point. Save our rssi value.
- *
- * The private pointer p points to the WIFI_SSID string.
- */
-static int
-__time_critical_func(scan_result)(void *p, const cyw43_ev_scan_result_t *result)
-{
-	const char *ssid = p;
-
-	/*
-	 * Using AN() from picow_http/assertion.h (for "assert not null")
-	 * to check that none of the pointers are NULL.
-	 */
-	AN(ssid);
-	AN(result);
-	AN(result->ssid);
-
-	if (strncmp(ssid, result->ssid, result->ssid_len) != 0)
-		return 0;
-
-	critical_section_enter_blocking(&rssi_critsec);
-	rssi = result->rssi;
-	critical_section_exit(&rssi_critsec);
-	return 0;
-}
-
-/*
- * Callback for the repeating_timer, to invoke an AP scan as way to get
- * the rssi for "our" access point.
- *
- * Pass the user_data pointer (the WIFI_SSID string) to the private
- * pointer in the scan callback.
+ * Callback for the repeating_timer used in background mode, to update the
+ * AP rssi.
  */
 static bool
-__time_critical_func(scan_start)(repeating_timer_t *rt)
+__time_critical_func(rssi_update)(repeating_timer_t *rt)
 {
-	cyw43_wifi_scan_options_t opts = { 0 };
+	int32_t val;
+	(void)rt;
 
-	/* Assert that rt is not NULL. */
-	AN(rt);
-	cyw43_arch_lwip_begin();
-	if (cyw43_wifi_scan_active(&cyw43_state)) {
-		cyw43_arch_lwip_end();
-		return true;
-	}
-	if (cyw43_wifi_scan(&cyw43_state, &opts, rt->user_data, scan_result)
-	    != 0)
-		/* HTTP_LOG_ERROR() from picow_http/log.h */
-		HTTP_LOG_ERROR("cyw43_wifi_scan() failed");
-	cyw43_arch_lwip_end();
+	if (cyw43_wifi_get_rssi(&cyw43_state, &val) != 0)
+		val = INT32_MAX;
+
+	critical_section_enter_blocking(&rssi_critsec);
+	rssi = val;
+	critical_section_exit(&rssi_critsec);
 	return true;
+}
+
+#if PICO_CYW43_ARCH_POLL
+/*
+ * Callback for the repeating_timer in poll mode. Just sets the boolean to
+ * indicate that the timeout has expired.
+ */
+static bool
+__time_critical_func(rssi_poll)(repeating_timer_t *rt)
+{
+	(void)rt;
+	rssi_ready = true;
+	return true;
+}
+#endif
+
+static void
+start_rssi_poll(repeating_timer_callback_t cb)
+{
+	/* Get the initial rssi value. */
+	(void)rssi_update(NULL);
+
+	/*
+	 * Since this may be core1, we cannot use the default alarm pool.
+	 * Panics on failure.
+	 */
+	alarm_pool_t *pool = alarm_pool_create_with_unused_hardware_alarm(1);
+	AN(pool);
+	if (!alarm_pool_add_repeating_timer_ms(pool, -RSSI_INTVL_MS, cb, NULL,
+					       &rssi_timer))
+		HTTP_LOG_ERROR("Failed to start timer to poll rssi");
 }
 
 /*
@@ -195,15 +195,13 @@ __time_critical_func(scan_start)(repeating_timer_t *rt)
  * sensor, and set the ADC FIFO to length 1. Configure temp_isr() as
  * the interrupt handler to run when the ADC writes to the FIFO.
  *
- * When the network link is up, start a repeating timer (from the SDK's
- * pico_time) to periodically run the WiFi scan that gets the current rssi
- * value.
+ * In background mode, the repeating timer (from the SDK's pico_time) runs
+ * periodically to get the current rssi value. Wait until the network link
+ * is up before starting the timer.
  */
 void
 core1_main(void)
 {
-	unsigned rssi_alarm_num = ALARM_NUM_NONE;
-
 	/* Initiate asynchronous ADC temperature sensor reads */
 	adc_init();
 	adc_set_temp_sensor_enabled(true);
@@ -217,6 +215,7 @@ core1_main(void)
 	irq_set_enabled(ADC_IRQ_FIFO, true);
 	adc_run(true);
 
+#if PICO_CYW43_ARCH_THREADSAFE_BACKGROUND
 	/* Wait for the other core to signal that the network link is up. */
 	for (;;) {
 		bool up = false;
@@ -228,33 +227,8 @@ core1_main(void)
 			break;
 		sleep_ms(100);
 	}
-
-	/*
-	 * Since this is core1, we cannot use the default alarm pool.
-	 * Find an unclaimed alarm number. It will be claimed in
-	 * alarm_pool_create().
-	 */
-	for (unsigned i = 0; i < N_HARDWARE_ALARMS; i++)
-		if (!hardware_alarm_is_claimed(i)) {
-			rssi_alarm_num = i;
-			break;
-		}
-	if (rssi_alarm_num == ALARM_NUM_NONE)
-		HTTP_LOG_ERROR("Could not claim alarm number for AP scan");
-	else {
-		/*
-		 * Start the repeating_timer to periodically run AP scans.
-		 * This is where WIFI_SSID is passed to the user_data
-		 * pointer of the repeating_timer_t, which in turn is
-		 * passed on as private data in the AP scan callback.
-		 */
-		alarm_pool_t *pool = alarm_pool_create(rssi_alarm_num, 1);
-		AN(pool);
-		if (!alarm_pool_add_repeating_timer_ms(
-			    pool, AP_SCAN_INTVL_MS, scan_start, WIFI_SSID,
-			    &scan_timer))
-			HTTP_LOG_ERROR("Failed to start timer for AP scan");
-	}
+	start_rssi_poll(rssi_update);
+#endif
 
 	for (;;)
 		__wfi();
@@ -297,9 +271,9 @@ main(void)
 	 * ensures that core1 is properly reset when a reset is initiated
 	 * by openocd.
 	 */
-	sleep_ms(10);
+	sleep_ms(5);
 	multicore_reset_core1();
-	sleep_ms(10);
+	sleep_ms(5);
 	multicore_launch_core1(core1_main);
 
 	/*
@@ -345,10 +319,19 @@ main(void)
 		} while (link_status != CYW43_LINK_UP);
 	} while (link_status != CYW43_LINK_UP);
 
-	/* Set linkup to true, so that core1 knows. */
+#if PICO_CYW43_ARCH_THREADSAFE_BACKGROUND
+	/*
+	 * In background mode, set linkup to true, so that core1 knows to
+	 * start the timer.
+	 */
 	critical_section_enter_blocking(&linkup_critsec);
 	linkup = true;
 	critical_section_exit(&linkup_critsec);
+#else
+	/* In poll mode, start the timer on core0. */
+	start_rssi_poll(rssi_poll);
+#endif
+
 	HTTP_LOG_INFO("Connected to " WIFI_SSID);
 
 	/*
@@ -448,22 +431,29 @@ main(void)
 	HTTP_LOG_INFO("http started");
 	cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, true);
 
+#if PICO_CYW43_ARCH_POLL
 	/*
 	 * After the server starts, in poll mode we must periodically call
-	 * cyw43_arch_poll().
-	 *
-	 * This is not necessary for background mode, which is entirely
-	 * interrupt-driven. So we use WFI to let the processor sleep
-	 * until an interrupt is called.
+	 * cyw43_arch_poll(). Check if the timer has set the boolean to
+	 * indicate that timeout for rssi updates has expired.
 	 */
 	for (;;) {
-#if PICO_CYW43_ARCH_POLL
 		cyw43_arch_poll();
-		sleep_ms(1);
+		if (rssi_ready) {
+			rssi_ready = false;
+			(void)rssi_update(NULL);
+		}
+		cyw43_arch_wait_for_work_until(
+			make_timeout_time_ms(POLL_SLEEP_MS));
+	}
 #else
+	/*
+	 * Background mode is entirely interrupt-driven. So we use WFI to
+	 * let the processor sleep until an interrupt is called.
+	 */
+	for (;;)
 		__wfi();
 #endif
-	}
 
 	/* Unreachable */
 	return 0;

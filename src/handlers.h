@@ -40,10 +40,10 @@ struct netinfo {
 uint32_t get_temp(void);
 
 /*
- * Return the most recent rssi value for "our" access point, or UINT16_MAX
+ * Return the most recent rssi value for "our" access point, or INT32_MAX
  * if no rssi value has been read.
  */
-int16_t get_rssi(void);
+int32_t get_rssi(void);
 
 /*
  * Custom response handlers for the URL paths:

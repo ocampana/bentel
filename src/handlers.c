@@ -342,7 +342,7 @@ static const char *bool_str[] = { "false", "true" };
  * a proper library for more sophisticated implementations of JSON.
  */
 #define RSSI_FMT ("{\"valid\":%s,\"rssi\":%d}")
-#define RSSI_MAX ("{\"valid\":false,\"rssi\":-32768}")
+#define RSSI_MAX ("{\"valid\":false,\"rssi\":-2147483648}")
 #define RSSI_MAX_LEN (STRLEN_LTRL(RSSI_MAX))
 
 /*
@@ -363,7 +363,7 @@ rssi_handler(struct http *http, void *p)
 	/* As above, get the resp object from http_resp(). */
 	struct resp *resp = http_resp(http);
 	err_t err;
-	int16_t rssi;
+	int32_t rssi;
 	int idx;
 	char body[RSSI_MAX_LEN];
 	size_t body_len;
@@ -376,7 +376,7 @@ rssi_handler(struct http *http, void *p)
 	rssi = get_rssi();
 
 	/* bool_str[idx] will be the value of the "valid" field. */
-	idx = bool_to_bit(rssi != INT16_MAX);
+	idx = bool_to_bit(rssi != INT32_MAX);
 
 	/*
 	 * Format the response body. The return value of snprintf() will
