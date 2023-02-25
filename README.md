@@ -74,7 +74,7 @@ $ cd picow-http-example
 $ mkdir build
 $ cd build
 $ cmake -DPICO_BOARD=pico_w -DWIFI_SSID=my_wifi -DWIFI_PASSWORD=wifi_pass \
-        -DHOSTNAME=picow-sample -DPICO_MBEDTLS_PATH=${PWD}/../lib/mbedtls ..
+        -DHOSTNAME=picow-sample ..
 $ make -j
 ```
 
@@ -94,12 +94,14 @@ In the following we go over the process step by step.
 
 ### Requirements
 
-The [Pico C SDK](https://raspberrypi.github.io/pico-sdk-doxygen/index.html)
-and its toolchain are required to build the app. picow-http also requires
-some [additional
+The [Pico C
+SDK](https://raspberrypi.github.io/pico-sdk-doxygen/index.html) since
+version 1.5.0 and its toolchain are required to build the
+app. picow-http also requires some [additional
 software](https://gitlab.com/slimhazard/picow_http/-/wikis/required-software);
 see the link (at the [picow-http project
-Wiki](https://gitlab.com/slimhazard/picow_http/-/wikis/home)) for details.
+Wiki](https://gitlab.com/slimhazard/picow_http/-/wikis/home)) for
+details.
 
 ### Building the app
 
@@ -134,7 +136,7 @@ $ cd picow-http-example
 $ mkdir build
 $ cd build
 $ cmake -DPICO_BOARD=pico_w -DWIFI_SSID=my_wifi -DWIFI_PASSWORD=wifi_pass \
-        -DHOSTNAME=picow-sample -DPICO_MBEDTLS_PATH=${PWD}/../lib/mbedtls ..
+        -DHOSTNAME=picow-sample ..
 ```
 
 Three of the `-D` command-line options in the `cmake` invocation shown
@@ -150,27 +152,18 @@ above are required in any build of the sample app:
     `WIFI_SSID` to the SSID of the access point (the network name of
     your WiFi router), and `WIFI_PASSWORD` to its password.
 
-Two of the `-D` options are required to build versions of the app that
-support TLS. For a build that can create all versions with or without
-TLS (using `make all` or just `make`), they are required, but can be
-left out if only versions without TLS are to be built:
+One of the `-D` options is required to build versions of the app that
+support TLS. It is required for a build that can create all versions
+with or without TLS (using `make all` or just `make`), but can be left
+out if only versions without TLS are to be built:
 
-  * `PICO_MBEDTLS_PATH` specifies the path of an
-    [mbedtls](https://github.com/Mbed-TLS/mbedtls) source repository,
-    which is included in this project as a
-    [git submodule](https://git-scm.com/book/en/v2/Git-Tools-Submodules)
-    in [`lib/mbedtls`](lib/mbedtls/). The CMake definition is not
-    strictly required, since `PICO_MBEDTLS_PATH` may also be set
-    as an environment variable. See the [picow-http
-    Wiki](https://gitlab.com/slimhazard/picow_http/-/wikis/required-software#mbedtls)
-    for details.
-  * `HOSTNAME` sets host name for the PicoW. For a version of the
+  * `HOSTNAME` sets the host name for the PicoW. For a version of the
     app with TLS support, the host name must be `picow-sample`,
     because the server certificate only verifies connections for
     that name. For a version without TLS, `HOSTNAME` may be left
     out, or set to another name. The default hostname is `PicoW`.
 
-There is another optional parameter for `-D` on the `cmake` command line:
+There is an optional parameter for `-D` on the `cmake` command line:
 
   * `NTP_SERVER`: the server to be used for [time
     synchronization](https://slimhazard.gitlab.io/picow_http/group__ntp.html)
@@ -179,24 +172,6 @@ The default value of `NTP_SERVER` is a generic pool; it is usually
 much better to specify an NTP server or pool that is "closer" to the
 location where the PicoW will be deployed. If your WiFi router
 provides NTP synchronization, then that is the ideal choice.
-
-For the alternative invocation of `cmake` shown below, the mbedtls
-path is set in an environment variable, and the parameter for the NTP
-server is specified:
-
-```shell
-# Set the mbedtls path in the environment:
-# In the project root directory:
-$ export PICO_MBEDTLS_PATH=${PWD}/lib/mbedtls
-
-# Create the build directory.
-$ mkdir build
-$ cd build
-
-# Use the regional NTP server pool in Germany.
-$ cmake -DPICO_BOARD=pico_w -DWIFI_SSID=my_wifi -DWIFI_PASSWORD=wifi_pass \
-        -DHOSTNAME=picow-sample -DNTP_SERVER=de.pool.ntp.org ..
-```
 
 After the `cmake` call, the software is built with `make`:
 
@@ -367,16 +342,16 @@ File picow-https-example-poll.bin:
 
 Program Information
  name:         picow-https-example-poll
- version:      0.4.1
+ version:      0.5.0
  web site:     https://gitlab.com/slimhazard/picow-http-example
  description:  example app for the picow-http library
  features:     hostname: picow-sample
                AP SSID: my_wifi
-               picow-http version: 0.4.0
+               picow-http version: 0.5.0
                lwIP version: 2.2.0d
                arch: poll
                TLS: yes
-               mbedtls version: 2.28.2
+               mbedtls version: 2.28.1
                UART stdout
 
 Fixed Pin Information
