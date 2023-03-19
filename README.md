@@ -4,13 +4,13 @@
 ottavio@DESKTOP-IQN5CEB:~/Projects/pico$ mkdir /home/ottavio/Projects/pico
 ottavio@DESKTOP-IQN5CEB:~/Projects/pico$ cd /home/ottavio/Projects/pico
 ottavio@DESKTOP-IQN5CEB:~/Projects/pico$ sudo apt install cmake gcc-arm-none-eabi libnewlib-arm-none-eabi libstdc++-arm-none-eabi-newlib yaml python3-brotli python3-yaml python3-jinja2
-ottavio@DESKTOP-IQN5CEB:~/Projects/pico$ git clonse https://github.com/raspberrypi/pico-sdk.git
-ottavio@DESKTOP-IQN5CEB:~/Projects/pico$ git clone --recurse-submodules https://gitlab.com/slimhazard/picow-http-example.git
-ottavio@DESKTOP-IQN5CEB:~/Projects/pico$ cd picow-http-example
-ottavio@DESKTOP-IQN5CEB:~/Projects/pico/picow-http-example$ export PICO_SDK=../pico-sdk/
-ottavio@DESKTOP-IQN5CEB:~/Projects/pico/picow-http-example$ mkdir build
-ottavio@DESKTOP-IQN5CEB:~/Projects/pico/picow-http-example$ cd build
-ottavio@DESKTOP-IQN5CEB:~/Projects/pico/picow-http-example/build$ cmake -DPICO_BOARD=pico_w -DWIFI_SSID=ssid -DWIFI_PASSWORD=password -DHOSTNAME=bentel ..
+ottavio@DESKTOP-IQN5CEB:~/Projects/pico$ git close https://github.com/raspberrypi/pico-sdk.git
+ottavio@DESKTOP-IQN5CEB:~/Projects/pico$ git clone --recurse-submodules git@github.com:ocampana/bentel.git
+ottavio@DESKTOP-IQN5CEB:~/Projects/pico$ cd bentel
+ottavio@DESKTOP-IQN5CEB:~/Projects/pico/bentel$ export PICO_SDK=../pico-sdk/
+ottavio@DESKTOP-IQN5CEB:~/Projects/pico/bentel$ mkdir build
+ottavio@DESKTOP-IQN5CEB:~/Projects/pico/bentel$ cd build
+ottavio@DESKTOP-IQN5CEB:~/Projects/pico/bentel/build$ cmake -DPICO_BOARD=pico_w -DWIFI_SSID=ssid -DWIFI_PASSWORD=password -DHOSTNAME=bentel ..
 ```
 
 # picow-http-example
