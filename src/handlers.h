@@ -61,3 +61,5 @@ err_t temp_handler(struct http *http, void *p);
 err_t led_handler(struct http *http, void *p);
 err_t rssi_handler(struct http *http, void *p);
 err_t netinfo_handler(struct http *http, void *p);
+err_t ha_handler(struct http *http, void *p);
+err_t bootloader_handler(struct http *http, void *p);
