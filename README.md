@@ -7,7 +7,7 @@ ottavio@DESKTOP-IQN5CEB:~/Projects/pico$ sudo apt install cmake gcc-arm-none-eab
 ottavio@DESKTOP-IQN5CEB:~/Projects/pico$ git clone --recurse-submodules git@github.com:ocampana/bentel.git
 ottavio@DESKTOP-IQN5CEB:~/Projects/pico$ cd bentel
 ottavio@DESKTOP-IQN5CEB:~/Projects/pico/bentel$ git clone --recurse-submodules https://github.com/raspberrypi/pico-sdk.git
-ottavio@DESKTOP-IQN5CEB:~/Projects/pico/bentel$ export PICO_SDK=../pico-sdk/
+ottavio@DESKTOP-IQN5CEB:~/Projects/pico/bentel$ export PICO_SDK_PATH=../pico-sdk/
 ottavio@DESKTOP-IQN5CEB:~/Projects/pico/bentel$ mkdir build
 ottavio@DESKTOP-IQN5CEB:~/Projects/pico/bentel$ cd build
 ottavio@DESKTOP-IQN5CEB:~/Projects/pico/bentel/build$ cmake -DPICO_BOARD=pico_w -DWIFI_SSID=ssid -DWIFI_PASSWORD=password -DHOSTNAME=bentel ..

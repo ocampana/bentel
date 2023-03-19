@@ -57,6 +57,15 @@ set(SRCS
 	${CMAKE_CURRENT_LIST_DIR}/src/main.c
 	${CMAKE_CURRENT_LIST_DIR}/src/handlers.c
 	${CMAKE_CURRENT_LIST_DIR}/src/handlers.h
+	${CMAKE_CURRENT_LIST_DIR}/src/configuration.c
+	${CMAKE_CURRENT_LIST_DIR}/src/configuration.h
+	${CMAKE_CURRENT_LIST_DIR}/src/bentel_layer.c
+	${CMAKE_CURRENT_LIST_DIR}/src/bentel_layer.h
+	${CMAKE_CURRENT_LIST_DIR}/src/bentel_layer_private.c
+	${CMAKE_CURRENT_LIST_DIR}/src/bentel_layer_private.h
+	${CMAKE_CURRENT_LIST_DIR}/src/uart_layer.c
+	${CMAKE_CURRENT_LIST_DIR}/src/uart_layer.h
+	${CMAKE_CURRENT_LIST_DIR}/src/variables.c
 	${CMAKE_CURRENT_LIST_DIR}/lib/picow-http/etc/lwipopts.h
 )
 
