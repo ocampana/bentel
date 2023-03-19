@@ -45,3 +45,10 @@ bentel_message_encode (bentel_message_t * bentel_message,
 
     return to_return;
 }
+
+int
+bentel_message_decode (bentel_message_t * bentel_message,
+                       unsigned char * buffer, int len)
+{
+    return -1;
+}

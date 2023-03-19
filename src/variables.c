@@ -4,6 +4,9 @@
 
 configuration_t configuration;
 
+/* forward declaration of uart_layer */
+uart_layer_t uart_layer;
+
 bentel_layer_ops_t bentel_layer_ops =
 {
     .to_lower_layer_start_layer = uart_layer_start,
@@ -14,6 +17,12 @@ bentel_layer_ops_t bentel_layer_ops =
 bentel_layer_t bentel_layer =
 {
     .ops = &bentel_layer_ops,
+    .lower_layer = &uart_layer,
+};
+
+uart_layer_ops_t uart_layer_ops =
+{
+    .to_upper_layer_received_message = &bentel_layer_received_message,
 };
 
 uart_layer_t uart_layer =
@@ -22,5 +31,8 @@ uart_layer_t uart_layer =
     .speed = 9600,
     .tx_pin = 4,
     .rx_pin = 5,
+    .cts = false,
+    .rts = false,
     .upper_layer = &bentel_layer,
+    .ops = &uart_layer_ops,
 };

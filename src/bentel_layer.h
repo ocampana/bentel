@@ -37,6 +37,7 @@ struct _bentel_layer_ops_t
     int (*to_lower_layer_start_layer) (void * layer);
     void (*to_lower_layer_stop_layer) (void * layer);
     int (*to_lower_layer_send_message) (void * layer, void * message, int len);
+    int (*to_upper_layer_received_message) (void * layer, void * message);
 };
 
 typedef struct _bentel_layer_t bentel_layer_t;
@@ -48,6 +49,7 @@ struct _bentel_layer_t
     bentel_layer_ops_t * ops;
 
     unsigned char buffer[128];
+    int buffer_index;
 };
 
 int bentel_layer_start (void * layer);
@@ -55,5 +57,7 @@ int bentel_layer_start (void * layer);
 void bentel_layer_stop (void * layer);
 
 int bentel_layer_send_message (void * layer, void * message);
+
+void bentel_layer_received_message (void * layer, void * message, int len);
 
 #endif /* _bentel_layer_h_ */
