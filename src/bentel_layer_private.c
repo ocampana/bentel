@@ -1,4 +1,5 @@
 #include <string.h>
+#include <stdint.h>
 
 #include "bentel_layer.h"
 #include "bentel_layer_private.h"
@@ -50,5 +51,30 @@ int
 bentel_message_decode (bentel_message_t * bentel_message,
                        unsigned char * buffer, int len)
 {
+    uint32_t command_id;
+
+    if (buffer[0] != 0xf0)
+    {
+        /* error, we are out of sync */
+        return -1;
+    }
+
+    command_id = (buffer[1] << 24) + (buffer[2] << 16) + (buffer[3] << 8) + buffer[4];
+
+    switch (command_id)
+    {
+        case 0x00000b00:
+            /* BENTEL_GET_MODEL_RESPONSE */
+            if (buffer[5] != evaluate_checksum (buffer, 5))
+            {
+                return -1;
+            }
+
+            break;
+
+        default:
+            break;
+    }
+
     return -1;
 }

@@ -1,6 +1,8 @@
 #include <pico/stdlib.h>
 #include <string.h>
 
+#include "picow_http/http.h"
+
 #include "bentel_layer.h"
 #include "bentel_layer_private.h"
 
@@ -76,18 +78,42 @@ bentel_layer_received_message (void * layer, void * message, int len)
     unsigned char * buffer;
     bentel_message_t bentel_message;
 
+    HTTP_LOG_ERROR("bentel_layer_received_message: %d characters", len);
+
     bentel_layer = (bentel_layer_t *) layer;
     buffer = (unsigned char *) message;
 
     i = (bentel_layer->buffer_index + len) % 128;
 
     memcpy (&(bentel_layer->buffer[bentel_layer->buffer_index]), buffer, i);
+    bentel_layer->buffer_index += i;
+
+    /*
+     * the buffer should start with 0xf0, if not, we need to hift data to
+     * align the incoming message
+     */
+    for (i = 0 ; i < bentel_layer->buffer_index ; i++)
+    {
+        if (bentel_layer->buffer[i] == 0xf0)
+        {
+            break;
+        }
+    }
+
+    if (i > 0)
+    {
+        memmove (bentel_layer->buffer, &bentel_layer->buffer[i],
+                 sizeof (bentel_layer->buffer) - i);
+
+        bentel_layer->buffer_index -= i;
+    }
 
     memset (&bentel_message, 0, sizeof (bentel_message));
 
-    if (bentel_message_decode (&bentel_message, buffer, len))
+    if (i = bentel_message_decode (&bentel_message, bentel_layer->buffer,
+                                   bentel_layer->buffer_index))
     {
-        if (bentel_layer->upper_layer != NULL &&
+        if (i != -1 && bentel_layer->upper_layer != NULL &&
             bentel_layer->ops != NULL &&
 	    bentel_layer->ops->to_upper_layer_received_message != NULL)
         {

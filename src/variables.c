@@ -1,8 +1,11 @@
 #include "configuration.h"
 #include "bentel_layer.h"
+#include "state_machine.h"
 #include "uart_layer.h"
 
 configuration_t configuration;
+
+state_machine_t state_machine;
 
 /* forward declaration of uart_layer */
 uart_layer_t uart_layer;

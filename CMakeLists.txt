@@ -63,6 +63,8 @@ set(SRCS
 	${CMAKE_CURRENT_LIST_DIR}/src/bentel_layer.h
 	${CMAKE_CURRENT_LIST_DIR}/src/bentel_layer_private.c
 	${CMAKE_CURRENT_LIST_DIR}/src/bentel_layer_private.h
+	${CMAKE_CURRENT_LIST_DIR}/src/state_machine.c
+	${CMAKE_CURRENT_LIST_DIR}/src/state_machine.h
 	${CMAKE_CURRENT_LIST_DIR}/src/uart_layer.c
 	${CMAKE_CURRENT_LIST_DIR}/src/uart_layer.h
 	${CMAKE_CURRENT_LIST_DIR}/src/variables.c
