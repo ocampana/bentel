@@ -1,7 +1,7 @@
 #include <pico/stdlib.h>
 #include <string.h>
 
-#include "picow_http/http.h"
+#include <stdio.h>
 
 #include "bentel_layer.h"
 #include "bentel_layer_private.h"
@@ -19,7 +19,7 @@ bentel_layer_start (void * layer)
 
     if (bentel_layer->lower_layer != NULL &&
         bentel_layer->ops != NULL &&
-	bentel_layer->ops->to_lower_layer_start_layer != NULL)
+        bentel_layer->ops->to_lower_layer_start_layer != NULL)
     {
         i = bentel_layer->ops->to_lower_layer_start_layer
             (bentel_layer->lower_layer);
@@ -37,7 +37,7 @@ bentel_layer_stop (void * layer)
 
     if (bentel_layer->lower_layer != NULL &&
         bentel_layer->ops != NULL &&
-	bentel_layer->ops->to_lower_layer_stop_layer != NULL)
+        bentel_layer->ops->to_lower_layer_stop_layer != NULL)
     {
         bentel_layer->ops->to_lower_layer_stop_layer
             (bentel_layer->lower_layer);
@@ -56,7 +56,7 @@ bentel_layer_send_message (void * layer, void * message)
 
     if (bentel_layer->lower_layer != NULL &&
         bentel_layer->ops != NULL &&
-	bentel_layer->ops->to_lower_layer_send_message != NULL)
+        bentel_layer->ops->to_lower_layer_send_message != NULL)
     {
         int len;
         unsigned char buffer[128];
@@ -78,7 +78,7 @@ bentel_layer_received_message (void * layer, void * message, int len)
     unsigned char * buffer;
     bentel_message_t bentel_message;
 
-    HTTP_LOG_ERROR("bentel_layer_received_message: %d characters", len);
+    fprintf (stdout, "bentel_layer_received_message: %d characters\n", len);
 
     bentel_layer = (bentel_layer_t *) layer;
     buffer = (unsigned char *) message;
@@ -115,14 +115,37 @@ bentel_layer_received_message (void * layer, void * message, int len)
     {
         if (i != -1 && bentel_layer->upper_layer != NULL &&
             bentel_layer->ops != NULL &&
-	    bentel_layer->ops->to_upper_layer_received_message != NULL)
+            bentel_layer->ops->to_upper_layer_received_message != NULL)
         {
             i = bentel_layer->ops->to_upper_layer_received_message
                 (bentel_layer->upper_layer, &bentel_message);
         }
 
         /* no matter if we move or not, we empty the buffer */
-	memset (bentel_layer->buffer, 0, sizeof (bentel_layer->buffer));
-	bentel_layer->buffer_index = 0;
+        memset (bentel_layer->buffer, 0, sizeof (bentel_layer->buffer));
+        bentel_layer->buffer_index = 0;
+    }
+}
+
+void
+bentel_layer_dump_message (bentel_message_t * message)
+{
+    switch (message->message_type)
+    {
+        case  BENTEL_GET_MODEL_REQUEST:
+            fprintf (stdout, "message_type: BENTEL_GET_MODEL_REQUEST\n");
+            break;
+
+        case  BENTEL_GET_MODEL_RESPONSE:
+            fprintf (stdout, "message_type: BENTEL_GET_MODEL_RESPONSE\n");
+            fprintf (stdout, "model: %s\n",
+                     message->u.get_model_response.model);
+            fprintf (stdout, "fw: %d.%d\n",
+                     message->u.get_model_response.fw_major,
+                     message->u.get_model_response.fw_minor);
+            break;
+
+        default:
+            fprintf (stdout, "message_type: unknown\n");
     }
 }

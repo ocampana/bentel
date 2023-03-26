@@ -1,9 +1,9 @@
 #include "uart_layer.h"
 
-#include "picow_http/http.h"
-
 #include <pico/stdlib.h>
 #include <hardware/uart.h>
+
+#include <stdio.h>
 
 void on_uart_rx()
 {
@@ -13,7 +13,7 @@ void on_uart_rx()
     {
         uint8_t ch = uart_getc (uart_layer.uart);
 
-        HTTP_LOG_ERROR("on_uart_rx: %c", ch);
+        fprintf (stdout, "on_uart_rx: %c (%2x)\n", ch, ch);
 
 	if (uart_layer.upper_layer != NULL &&
             uart_layer.ops != NULL &&

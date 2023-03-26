@@ -6,7 +6,7 @@ typedef enum _bentel_message_type_t bentel_message_type_t;
 enum _bentel_message_type_t
 {
     BENTEL_GET_MODEL_REQUEST = 1,
-    BENTEL_GET_MODEL_RESPOSE,
+    BENTEL_GET_MODEL_RESPONSE,
 };
 
 typedef struct _bentel_message_t bentel_message_t;
