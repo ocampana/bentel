@@ -8,6 +8,9 @@ typedef struct _configuration_t configuration_t;
 struct _configuration_t
 {
     semaphore_t semaphore;
+    char model[9];
+    int fw_major;
+    int fw_minor;
 };
 
 int configuration_start (void * layer);

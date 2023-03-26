@@ -22,6 +22,9 @@
 
 #include "handlers.h"
 
+#include "configuration.h"
+#include "state_machine.h"
+
 /* Size of the largest string that could result from format_decimal(). */
 #define MAX_INT_LEN (STRLEN_LTRL("−2147483648"))
 
@@ -436,6 +439,14 @@ rssi_handler(struct http *http, void *p)
      "\"ip\":\"\",\"mac\":\"\"}")
 #define INFO_MAX_LEN (STRLEN_LTRL(INFO_STR) + IPADDR_STRLEN_MAX + MAC_ADDR_LEN)
 
+#define HA_FMT \
+    ("{\"ssid\":\"" WIFI_SSID "\",\"host\":\"" CYW43_HOST_NAME "\"," \
+     "\"ip\":\"%s\",\"mac\":\"%s\",\"state_machine\":\"%02d\",\"fw\":\"%d.%02d\",\"model\":\"%s\"}")
+#define HA_STR \
+    ("{\"ssid\":\"" WIFI_SSID "\",\"host\":\"" CYW43_HOST_NAME "\"," \
+     "\"ip\":\"\",\"mac\":\"\",\"state_machine\":\"\",\"fw\":\"\",\"model\":\"\"}")
+#define HA_MAX_LEN (STRLEN_LTRL(HA_STR) + IPADDR_STRLEN_MAX + MAC_ADDR_LEN) + 2 /* state machine */ + 4 /* fw */ + 8 /* model */
+
 /* The next handler will set an ETag header with a 32-bit value in hex. */
 #define ETAG_LEN (sizeof("\"12345678\""))
 
@@ -633,9 +644,11 @@ ha_handler(struct http *http, void *p)
     struct resp *resp = http_resp(http);
     struct netinfo *info;
     static char etag[ETAG_LEN] = { '\0' };
-    char body[INFO_MAX_LEN];
+    char body[HA_MAX_LEN];
     size_t body_len;
     err_t err;
+    extern state_machine_t state_machine;
+    extern configuration_t configuration;
 
     /*
      * Cast the private data pointer to a pointer to an object of type
@@ -733,7 +746,7 @@ ha_handler(struct http *http, void *p)
      * Format the response body in the body array, and use the return
      * value from snprintf() for the body length.
      */
-    body_len = snprintf(body, INFO_MAX_LEN, INFO_FMT, info->ip, info->mac);
+    body_len = snprintf(body, HA_MAX_LEN, HA_FMT, info->ip, info->mac, state_machine.state, configuration.fw_major, configuration.fw_minor, configuration.model);
 
     /*
      * Set the Content-Length header with http_resp_set_len().

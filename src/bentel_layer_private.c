@@ -30,6 +30,7 @@ bentel_message_encode (bentel_message_t * bentel_message,
     switch (bentel_message->message_type)
     {
         case BENTEL_GET_MODEL_REQUEST:
+            /* -> f0 00 00 0b 00 fb */
             buffer[0] = 0xf0;
             buffer[1] = 0x00;
             buffer[2] = 0x00;

@@ -3,7 +3,12 @@
 #include "state_machine.h"
 #include "uart_layer.h"
 
-configuration_t configuration;
+configuration_t configuration =
+{
+    .model = "",
+    .fw_major = 0,
+    .fw_minor = 0,
+};
 
 state_machine_t state_machine;
 

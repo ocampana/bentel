@@ -61,7 +61,7 @@ bentel_layer_send_message (void * layer, void * message)
         int len;
         unsigned char buffer[128];
 
-        bentel_message_encode (bentel_message, buffer, 128);
+        len = bentel_message_encode (bentel_message, buffer, 128);
 
         i = bentel_layer->ops->to_lower_layer_send_message
             (bentel_layer->lower_layer, buffer, len);

@@ -8,6 +8,9 @@
 #include <stdio.h>
 #include <stdint.h>
 
+#include "bentel_layer.h"
+#include "state_machine.h"
+
 #include "pico/stdio_uart.h"
 #include "pico/cyw43_arch.h"
 #include "pico/multicore.h"
@@ -202,6 +205,8 @@ start_rssi_poll(repeating_timer_callback_t cb)
 void
 core1_main(void)
 {
+    extern state_machine_t state_machine;
+
     /* Initiate asynchronous ADC temperature sensor reads */
     adc_init();
     adc_set_temp_sensor_enabled(true);
@@ -231,7 +236,10 @@ core1_main(void)
 #endif
 
     for (;;)
-        __wfi();
+    {
+        //__wfi();
+        state_machine_next (&state_machine);
+    }
 }
 
 int
@@ -243,6 +251,8 @@ main(void)
     struct netif *netif;
     uint8_t mac[6];
     err_t err;
+    extern bentel_layer_t bentel_layer;
+    extern state_machine_t state_machine;
 
     /* For picotool info */
     bi_decl(bi_program_feature("hostname: " CYW43_HOST_NAME));
@@ -265,6 +275,9 @@ main(void)
     critical_section_init(&temp_critsec);
     critical_section_init(&linkup_critsec);
     critical_section_init(&rssi_critsec);
+
+    bentel_layer_start (&bentel_layer);
+    state_machine_init (&state_machine);
 
     /*
      * Launch core1. The code preceding multicore_launch_core1()
@@ -419,8 +432,8 @@ main(void)
         HTTP_LOG_ERROR("Register /rssi: %d", err);
         return -1;
     }
-    if ((err = register_hndlr_methods(&cfg, "/ha", netinfo_handler,
-                      HTTP_METHODS_GET_HEAD, NULL))
+    if ((err = register_hndlr_methods(&cfg, "/ha", ha_handler,
+                      HTTP_METHODS_GET_HEAD, &netinfo))
         != ERR_OK) {
         HTTP_LOG_ERROR("Register /ha: %d", err);
         return -1;
