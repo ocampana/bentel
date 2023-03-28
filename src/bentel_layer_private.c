@@ -13,7 +13,7 @@ evaluate_checksum (unsigned char * buffer, int len)
 
     for (i = 0 ; i < len ; i++) 
     {
-        to_return = (to_return + buffer[i]) & 0xff;
+        to_return = (to_return + buffer[i]) % 256;
     }
 
     return to_return;
@@ -59,7 +59,7 @@ bentel_message_decode (bentel_message_t * bentel_message,
     if (buffer[0] != 0xf0)
     {
         /* error, we are out of sync */
-        return -1;
+        return -3;
     }
 
     command_id = (buffer[1] << 24) + (buffer[2] << 16) + (buffer[3] << 8) + buffer[4];
@@ -89,9 +89,9 @@ bentel_message_decode (bentel_message_t * bentel_message,
             }
 
             /* let's check the second checksum */
-            if (buffer[18] != evaluate_checksum (buffer, 18))
+            if (buffer[18] != evaluate_checksum (&buffer[6], 12))
             {
-                return -1;
+                return -2;
             }
 
             bentel_message->message_type = BENTEL_GET_MODEL_RESPONSE;
@@ -112,5 +112,5 @@ bentel_message_decode (bentel_message_t * bentel_message,
             break;
     }
 
-    return -1;
+    return -4;
 }

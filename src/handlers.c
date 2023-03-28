@@ -746,7 +746,11 @@ ha_handler(struct http *http, void *p)
      * Format the response body in the body array, and use the return
      * value from snprintf() for the body length.
      */
+    sem_acquire_blocking (&configuration.semaphore);
+
     body_len = snprintf(body, HA_MAX_LEN, HA_FMT, info->ip, info->mac, state_machine.state, configuration.fw_major, configuration.fw_minor, configuration.model);
+
+    sem_release (&configuration.semaphore);
 
     /*
      * Set the Content-Length header with http_resp_set_len().

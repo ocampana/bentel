@@ -19,7 +19,7 @@ state_machine_next (state_machine_t * machine)
     switch (machine->state)
     {
         case STATE_START:
-            machine->state = STATE_REQUEST_MODEL;
+            //machine->state = STATE_REQUEST_MODEL;
             break;
 
         case STATE_REQUEST_MODEL:

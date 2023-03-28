@@ -6,6 +6,7 @@
 #include "bentel_layer.h"
 #include "bentel_layer_private.h"
 
+#include "configuration.h"
 int
 bentel_layer_start (void * layer)
 {
@@ -75,18 +76,20 @@ bentel_layer_received_message (void * layer, void * message, int len)
 {
     int i;
     bentel_layer_t *bentel_layer;
-    unsigned char * buffer;
+    const unsigned char * buffer;
     bentel_message_t bentel_message;
 
-    fprintf (stdout, "bentel_layer_received_message: %d characters\n", len);
-
     bentel_layer = (bentel_layer_t *) layer;
-    buffer = (unsigned char *) message;
+    buffer = (const unsigned char *) message;
 
-    i = (bentel_layer->buffer_index + len) % 128;
+    fprintf (stdout, "bentel_layer_received_message: %d characters %02X\n", len, buffer[0]);
 
-    memcpy (&(bentel_layer->buffer[bentel_layer->buffer_index]), buffer, i);
-    bentel_layer->buffer_index += i;
+    for (i = 0 ;
+         i < len && bentel_layer->buffer_index < sizeof (bentel_layer->buffer) ;
+         i++, bentel_layer->buffer_index++)
+    {
+        bentel_layer->buffer[bentel_layer->buffer_index] = buffer[i];
+    }
 
     /*
      * the buffer should start with 0xf0, if not, we need to hift data to
@@ -110,20 +113,19 @@ bentel_layer_received_message (void * layer, void * message, int len)
 
     memset (&bentel_message, 0, sizeof (bentel_message));
 
-    if (i = bentel_message_decode (&bentel_message, bentel_layer->buffer,
-                                   bentel_layer->buffer_index))
-    {
-        if (i != -1 && bentel_layer->upper_layer != NULL &&
-            bentel_layer->ops != NULL &&
-            bentel_layer->ops->to_upper_layer_received_message != NULL)
-        {
-            i = bentel_layer->ops->to_upper_layer_received_message
-                (bentel_layer->upper_layer, &bentel_message);
-        }
+    i = bentel_message_decode (&bentel_message, bentel_layer->buffer,
+                               bentel_layer->buffer_index);
 
-        /* no matter if we move or not, we empty the buffer */
-        memset (bentel_layer->buffer, 0, sizeof (bentel_layer->buffer));
-        bentel_layer->buffer_index = 0;
+    if (i > 0 && bentel_layer->upper_layer != NULL &&
+        bentel_layer->ops != NULL &&
+        bentel_layer->ops->to_upper_layer_received_message != NULL)
+    {
+        bentel_layer->ops->to_upper_layer_received_message
+            (bentel_layer->upper_layer, &bentel_message);
+
+        memmove (bentel_layer->buffer, &bentel_layer[i],
+                 sizeof (bentel_layer->buffer) - i);
+        bentel_layer->buffer_index -= i;
     }
 }
 

@@ -22,6 +22,9 @@ struct _uart_layer_t
     int rx_pin;
     bool cts;
     bool rts;
+    int data_bits;
+    int stop_bits;
+    int parity;
     void * upper_layer;
     uart_layer_ops_t *ops;
 };

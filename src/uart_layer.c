@@ -5,20 +5,22 @@
 
 #include <stdio.h>
 
-void on_uart_rx()
+void
+__time_critical_func(on_uart_rx)(void)
 {
     extern uart_layer_t uart_layer;
 
-    while (uart_is_readable (uart_layer.uart))
+    if (uart_layer.upper_layer != NULL &&
+        uart_layer.ops != NULL &&
+        uart_layer.ops->to_upper_layer_received_message != NULL)
     {
-        uint8_t ch = uart_getc (uart_layer.uart);
+        while (uart_is_readable (uart_layer.uart))
+        {
+            uint8_t ch = uart_getc (uart_layer.uart);
 
-        fprintf (stdout, "on_uart_rx: %c (%2x)\n", ch, ch);
-
-	if (uart_layer.upper_layer != NULL &&
-            uart_layer.ops != NULL &&
-            uart_layer.ops->to_upper_layer_received_message != NULL)
-            uart_layer.ops->to_upper_layer_received_message (&uart_layer.upper_layer, &ch, 1);
+            uart_layer.ops->to_upper_layer_received_message (uart_layer.upper_layer,
+                                                             &ch, 1);
+        }
     }
 }
 
@@ -38,7 +40,10 @@ uart_layer_start (void * layer)
 
     uart_set_hw_flow (uart_layer->uart, uart_layer->cts, uart_layer->rts);
 
-    uart_set_fifo_enabled (uart_layer->uart, false);
+    uart_set_format (uart_layer->uart, uart_layer->data_bits,
+                     uart_layer->stop_bits, uart_layer->parity);
+
+    uart_set_fifo_enabled (uart_layer->uart, true);
 
     if (uart_layer->uart == uart0)
     {
@@ -69,22 +74,12 @@ uart_layer_send_message (void * layer, void * message, int len)
 {
     int i;
     uart_layer_t *uart_layer;
-    unsigned char * buffer;
+    const uint8_t * buffer;
 
     uart_layer = (uart_layer_t *) layer;
-    buffer = (unsigned char *) message;
+    buffer = (const uint8_t *) message;
 
-    for (i = 0 ; i < len ; i++)
-    {
-        if (uart_is_writable (uart_layer->uart))
-        {
-            uart_putc (uart_layer->uart, buffer[i]);
-        }
-	else
-        {
-            return -1;
-        }
-    }
+    uart_write_blocking (uart_layer->uart, buffer, len);
 
     return 0;
 }

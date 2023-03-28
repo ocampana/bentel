@@ -239,6 +239,7 @@ core1_main(void)
     {
         //__wfi();
         state_machine_next (&state_machine);
+	sleep_ms (1000);
     }
 }
 
