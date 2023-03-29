@@ -5,6 +5,7 @@
 
 int handle_bentel_message (void * layer, void * message)
 {
+    int i;
     bentel_message_t * bentel_message;
     extern configuration_t configuration;
 
@@ -19,9 +20,35 @@ int handle_bentel_message (void * layer, void * message)
                 bentel_message->u.get_model_response.fw_major;
             configuration.fw_minor =
                 bentel_message->u.get_model_response.fw_minor;
-	    snprintf (configuration.model,
+            snprintf (configuration.model,
                       sizeof (configuration.model), "%s", 
                       bentel_message->u.get_model_response.model);
+
+            sem_release (&configuration.semaphore);
+            break;
+
+        case BENTEL_GET_PERIPHERALS_RESPONSE:
+            sem_acquire_blocking (&configuration.semaphore);
+
+            for (i = 0 ; i < 16 ; i++)
+            {
+                configuration.readers[i].present =
+                    bentel_message->u.get_peripherals_response.readers[i].present;
+                configuration.readers[i].sabotage =
+                    bentel_message->u.get_peripherals_response.readers[i].sabotage;
+                configuration.readers[i].alive =
+                    bentel_message->u.get_peripherals_response.readers[i].alive;
+            }
+
+            for (i = 0 ; i < 8 ; i++)
+            {
+                configuration.keyboards[i].present =
+                    bentel_message->u.get_peripherals_response.keyboards[i].present;
+                configuration.keyboards[i].sabotage =
+                    bentel_message->u.get_peripherals_response.keyboards[i].sabotage;
+                configuration.keyboards[i].alive =
+                    bentel_message->u.get_peripherals_response.keyboards[i].alive;
+            }
 
             sem_release (&configuration.semaphore);
             break;

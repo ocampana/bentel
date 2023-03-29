@@ -1,12 +1,16 @@
 #ifndef _bentel_layer_h_
 #define _bentel_layer_h_
 
+#include <stdbool.h>
+
 typedef enum _bentel_message_type_t bentel_message_type_t;
 
 enum _bentel_message_type_t
 {
     BENTEL_GET_MODEL_REQUEST = 1,
     BENTEL_GET_MODEL_RESPONSE,
+    BENTEL_GET_PERIPHERALS_REQUEST,
+    BENTEL_GET_PERIPHERALS_RESPONSE,
 };
 
 typedef struct _bentel_message_t bentel_message_t;
@@ -23,10 +27,31 @@ struct _bentel_message_t
 
         struct
         {
-            char model[10];
+            char model[9];
 	    int fw_major;
 	    int fw_minor;
         } get_model_response;
+
+        struct
+        {
+        } get_peripherals_request;
+
+        struct
+        {
+            struct
+            {
+                bool present;
+		bool sabotage;
+		bool alive;
+            } readers[16];
+
+            struct
+            {
+                bool present;
+		bool sabotage;
+		bool alive;
+            } keyboards[8];
+        } get_peripherals_response;
     } u;
 };
 

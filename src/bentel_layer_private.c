@@ -43,6 +43,18 @@ bentel_message_encode (bentel_message_t * bentel_message,
             to_return = 6;
             break;
 
+        case BENTEL_GET_PERIPHERALS_REQUEST:
+            /* -> f0 09 f0 0b 00 fb */
+            buffer[0] = 0xf0;
+            buffer[1] = 0x09;
+            buffer[2] = 0xf0;
+            buffer[3] = 0x0b;
+            buffer[4] = 0x00;
+            buffer[5] = evaluate_checksum (buffer, 5);
+
+            to_return = 6;
+            break;
+
         default:
             to_return = -1;
             break;
@@ -57,6 +69,7 @@ bentel_message_decode (bentel_message_t * bentel_message,
 {
     uint32_t command_id;
     char *c;
+    int i;
 
     if (buffer[0] != 0xf0)
     {
@@ -108,6 +121,73 @@ bentel_message_decode (bentel_message_t * bentel_message,
                 buffer[14] - '0';
             bentel_message->u.get_model_response.fw_minor =
                 (buffer[16] - '0') * 10 + (buffer[17] - '0');
+
+            return 19;
+
+        case 0x09f00b00:
+            /*
+             * BENTEL_GET_PERIPHERALS_RESPONSE
+             *
+             * -> f0 09 f0 0b 00 f4
+             * <- f0 09 f0 0b 00 f4 00 01 02 01 00 00 00 00 00 01 02 01 08
+             *                          |  |  | \------/  |     |  |  |
+             *                 one reader  |  |everything | reader |  |
+             *                  one keyboard  |     OK    | alive  |  |
+             *                          ignored     ignored        |  |
+             *                                        keyboard alive  |
+             *                                                  ignored
+             */
+            if (buffer[5] != evaluate_checksum (buffer, 5))
+            {
+                return -1;
+            }
+
+            if (len < 19)
+            {
+                /*
+                 * incomplete message, we need to wait for more
+                 * characters
+                 */
+                return 0;
+            }
+
+            /* let's check the second checksum */
+            if (buffer[18] != evaluate_checksum (&buffer[6], 12))
+            {
+                return -2;
+            }
+
+            bentel_message->message_type = BENTEL_GET_PERIPHERALS_RESPONSE;
+
+            for (i = 0 ; i < 8 ; i++)
+            {
+                bentel_message->u.get_peripherals_response.readers[i].present =
+                    (buffer[7] & (0x01 << i));
+                bentel_message->u.get_peripherals_response.readers[i].sabotage =
+                    (buffer[11] & (0x01 << i));
+                bentel_message->u.get_peripherals_response.readers[i].alive =
+                    (buffer[15] & (0x01 << i));
+            }
+
+            for (i = 0 ; i < 8 ; i++)
+            {
+                bentel_message->u.get_peripherals_response.readers[i + 8].present =
+                    (buffer[6] & (0x01 << i));
+                bentel_message->u.get_peripherals_response.readers[i + 8].sabotage =
+                    (buffer[10] & (0x01 << i));
+                bentel_message->u.get_peripherals_response.readers[i + 8].alive =
+                    (buffer[14] & (0x01 << i));
+            }
+
+            for (i = 0 ; i < 8 ; i++)
+            {
+                bentel_message->u.get_peripherals_response.keyboards[i].present =
+                    (buffer[8] & (0x01 << i));
+                bentel_message->u.get_peripherals_response.keyboards[i].sabotage =
+                    (buffer[12] & (0x01 << i));
+                bentel_message->u.get_peripherals_response.keyboards[i].alive =
+                    (buffer[16] & (0x01 << i));
+            }
 
             return 19;
 

@@ -441,11 +441,67 @@ rssi_handler(struct http *http, void *p)
 
 #define HA_FMT \
     ("{\"ssid\":\"" WIFI_SSID "\",\"host\":\"" CYW43_HOST_NAME "\"," \
-     "\"ip\":\"%s\",\"mac\":\"%s\",\"state_machine\":\"%02d\",\"fw\":\"%d.%02d\",\"model\":\"%s\"}")
+     "\"ip\":\"%s\",\"mac\":\"%s\",\"state_machine\":\"%02d\"," \
+     "\"fw\":\"%d.%02d\",\"model\":\"%.8s\","\
+     "\"readers\":{"\
+         "\"0\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
+         "\"1\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
+         "\"2\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
+         "\"3\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
+         "\"4\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
+         "\"5\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
+         "\"6\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
+         "\"7\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
+         "\"8\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
+         "\"9\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
+         "\"10\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
+         "\"11\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
+         "\"12\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
+         "\"13\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
+         "\"14\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
+         "\"15\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}}," \
+     "\"keyboards\":{"\
+         "\"0\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
+         "\"1\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
+         "\"2\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
+         "\"3\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
+         "\"4\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
+         "\"5\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
+         "\"6\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
+         "\"7\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}}" \
+     "}")
 #define HA_STR \
     ("{\"ssid\":\"" WIFI_SSID "\",\"host\":\"" CYW43_HOST_NAME "\"," \
-     "\"ip\":\"\",\"mac\":\"\",\"state_machine\":\"\",\"fw\":\"\",\"model\":\"\"}")
-#define HA_MAX_LEN (STRLEN_LTRL(HA_STR) + IPADDR_STRLEN_MAX + MAC_ADDR_LEN) + 2 /* state machine */ + 4 /* fw */ + 8 /* model */
+     "\"ip\":\"\",\"mac\":\"\",\"state_machine\":\"\"," \
+     "\"fw\":\"\",\"model\":\"\"" \
+     "\"readers\":{"\
+         "\"0\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
+         "\"1\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
+         "\"2\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
+         "\"3\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
+         "\"4\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
+         "\"5\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
+         "\"6\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
+         "\"7\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
+         "\"8\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
+         "\"9\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
+         "\"10\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
+         "\"11\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
+         "\"12\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
+         "\"13\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
+         "\"14\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
+         "\"15\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}}," \
+     "\"keyboards\":{"\
+         "\"0\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
+         "\"1\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
+         "\"2\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
+         "\"3\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
+         "\"4\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
+         "\"5\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
+         "\"6\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
+         "\"7\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}}" \
+     "}")
+#define HA_MAX_LEN (STRLEN_LTRL(HA_STR) + IPADDR_STRLEN_MAX + MAC_ADDR_LEN) + 2 /* state machine */ + 4 /* fw */ + 8 /* model */ + (24*3/8) /* readers and keyboards */
 
 /* The next handler will set an ETag header with a 32-bit value in hex. */
 #define ETAG_LEN (sizeof("\"12345678\""))
@@ -748,7 +804,82 @@ ha_handler(struct http *http, void *p)
      */
     sem_acquire_blocking (&configuration.semaphore);
 
-    body_len = snprintf(body, HA_MAX_LEN, HA_FMT, info->ip, info->mac, state_machine.state, configuration.fw_major, configuration.fw_minor, configuration.model);
+    body_len = snprintf (body, HA_MAX_LEN, HA_FMT, info->ip, info->mac,
+                         state_machine.state,
+                         configuration.fw_major, configuration.fw_minor,
+                         configuration.model,
+                         configuration.readers[0].present,
+                         configuration.readers[0].sabotage,
+                         configuration.readers[0].alive,
+                         configuration.readers[1].present,
+                         configuration.readers[1].sabotage,
+                         configuration.readers[1].alive,
+                         configuration.readers[2].present,
+                         configuration.readers[2].sabotage,
+                         configuration.readers[2].alive,
+                         configuration.readers[3].present,
+                         configuration.readers[3].sabotage,
+                         configuration.readers[3].alive,
+                         configuration.readers[4].present,
+                         configuration.readers[4].sabotage,
+                         configuration.readers[4].alive,
+                         configuration.readers[5].present,
+                         configuration.readers[5].sabotage,
+                         configuration.readers[5].alive,
+                         configuration.readers[6].present,
+                         configuration.readers[6].sabotage,
+                         configuration.readers[6].alive,
+                         configuration.readers[7].present,
+                         configuration.readers[7].sabotage,
+                         configuration.readers[7].alive,
+                         configuration.readers[8].present,
+                         configuration.readers[8].sabotage,
+                         configuration.readers[8].alive,
+                         configuration.readers[9].present,
+                         configuration.readers[9].sabotage,
+                         configuration.readers[9].alive,
+                         configuration.readers[10].present,
+                         configuration.readers[10].sabotage,
+                         configuration.readers[10].alive,
+                         configuration.readers[11].present,
+                         configuration.readers[11].sabotage,
+                         configuration.readers[11].alive,
+                         configuration.readers[12].present,
+                         configuration.readers[12].sabotage,
+                         configuration.readers[12].alive,
+                         configuration.readers[13].present,
+                         configuration.readers[13].sabotage,
+                         configuration.readers[13].alive,
+                         configuration.readers[14].present,
+                         configuration.readers[14].sabotage,
+                         configuration.readers[14].alive,
+                         configuration.readers[15].present,
+                         configuration.readers[15].sabotage,
+                         configuration.readers[15].alive,
+                         configuration.keyboards[0].present,
+                         configuration.keyboards[0].sabotage,
+                         configuration.keyboards[0].alive,
+                         configuration.keyboards[1].present,
+                         configuration.keyboards[1].sabotage,
+                         configuration.keyboards[1].alive,
+                         configuration.keyboards[2].present,
+                         configuration.keyboards[2].sabotage,
+                         configuration.keyboards[2].alive,
+                         configuration.keyboards[3].present,
+                         configuration.keyboards[3].sabotage,
+                         configuration.keyboards[3].alive,
+                         configuration.keyboards[4].present,
+                         configuration.keyboards[4].sabotage,
+                         configuration.keyboards[4].alive,
+                         configuration.keyboards[5].present,
+                         configuration.keyboards[5].sabotage,
+                         configuration.keyboards[5].alive,
+                         configuration.keyboards[6].present,
+                         configuration.keyboards[6].sabotage,
+                         configuration.keyboards[6].alive,
+                         configuration.keyboards[7].present,
+                         configuration.keyboards[7].sabotage,
+                         configuration.keyboards[7].alive);
 
     sem_release (&configuration.semaphore);
 

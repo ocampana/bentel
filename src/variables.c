@@ -9,6 +9,133 @@ configuration_t configuration =
     .model = "",
     .fw_major = 0,
     .fw_minor = 0,
+    .readers =
+    {
+        {
+            .present = false,
+            .sabotage = false,
+            .alive = false,	    
+        },
+        {
+            .present = false,
+            .sabotage = false,
+            .alive = false,	    
+        },
+        {
+            .present = false,
+            .sabotage = false,
+            .alive = false,	    
+        },
+        {
+            .present = false,
+            .sabotage = false,
+            .alive = false,	    
+        },
+        {
+            .present = false,
+            .sabotage = false,
+            .alive = false,	    
+        },
+        {
+            .present = false,
+            .sabotage = false,
+            .alive = false,	    
+        },
+        {
+            .present = false,
+            .sabotage = false,
+            .alive = false,	    
+        },
+        {
+            .present = false,
+            .sabotage = false,
+            .alive = false,	    
+        },
+        {
+            .present = false,
+            .sabotage = false,
+            .alive = false,	    
+        },
+        {
+            .present = false,
+            .sabotage = false,
+            .alive = false,	    
+        },
+        {
+            .present = false,
+            .sabotage = false,
+            .alive = false,	    
+        },
+        {
+            .present = false,
+            .sabotage = false,
+            .alive = false,	    
+        },
+        {
+            .present = false,
+            .sabotage = false,
+            .alive = false,	    
+        },
+        {
+            .present = false,
+            .sabotage = false,
+            .alive = false,	    
+        },
+        {
+            .present = false,
+            .sabotage = false,
+            .alive = false,	    
+        },
+        {
+            .present = false,
+            .sabotage = false,
+            .alive = false,	    
+        },
+    },
+
+    .keyboards =
+    {
+        {
+            .present = false,
+            .sabotage = false,
+            .alive = false,	    
+        },
+        {
+            .present = false,
+            .sabotage = false,
+            .alive = false,	    
+        },
+        {
+            .present = false,
+            .sabotage = false,
+            .alive = false,	    
+        },
+        {
+            .present = false,
+            .sabotage = false,
+            .alive = false,	    
+        },
+        {
+            .present = false,
+            .sabotage = false,
+            .alive = false,	    
+        },
+        {
+            .present = false,
+            .sabotage = false,
+            .alive = false,	    
+        },
+        {
+            .present = false,
+            .sabotage = false,
+            .alive = false,	    
+        },
+        {
+            .present = false,
+            .sabotage = false,
+            .alive = false,	    
+        },
+    }
 };
 
 state_machine_t state_machine;
