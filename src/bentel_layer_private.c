@@ -5,6 +5,8 @@
 #include "bentel_layer.h"
 #include "bentel_layer_private.h"
 
+//#include "hardware/uart.h"
+
 static unsigned char
 evaluate_checksum (unsigned char * buffer, int len)
 {
@@ -96,9 +98,10 @@ bentel_message_decode (bentel_message_t * bentel_message,
 
             bentel_message->message_type = BENTEL_GET_MODEL_RESPONSE;
 
-            snprintf (bentel_message->u.get_model_response.model, 8,
-                      "%s", &bentel_message[6]);
-            c = index ((const char *) &bentel_message[6], ' ');
+            snprintf (bentel_message->u.get_model_response.model,
+                      sizeof (bentel_message->u.get_model_response.model),
+                      "%s", &buffer[6]);
+            c = index ((const char *) bentel_message->u.get_model_response.model, ' ');
             *c = 0;
 
             bentel_message->u.get_model_response.fw_major =

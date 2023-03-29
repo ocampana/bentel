@@ -6,7 +6,7 @@ int configuration_start (void * layer)
 
     configuration = (configuration_t *) layer;
 
-    sem_init(&configuration->semaphore, 1, 1);
+    sem_init (&configuration->semaphore, 1, 1);
 
     return 0;
 }

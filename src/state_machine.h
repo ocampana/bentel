@@ -18,6 +18,6 @@ struct _state_machine_t
 
 void state_machine_next (state_machine_t * machine);
 
-void state_machine_init (state_machine_t *machine);
+void state_machine_start (state_machine_t *machine);
 
 #endif /* _state_machine_h */

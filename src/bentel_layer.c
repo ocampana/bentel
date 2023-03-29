@@ -6,7 +6,6 @@
 #include "bentel_layer.h"
 #include "bentel_layer_private.h"
 
-#include "configuration.h"
 int
 bentel_layer_start (void * layer)
 {

@@ -10,6 +10,7 @@
 
 #include "bentel_layer.h"
 #include "state_machine.h"
+#include "configuration.h"
 
 #include "pico/stdio_uart.h"
 #include "pico/cyw43_arch.h"
@@ -254,6 +255,7 @@ main(void)
     err_t err;
     extern bentel_layer_t bentel_layer;
     extern state_machine_t state_machine;
+    extern configuration_t configuration;
 
     /* For picotool info */
     bi_decl(bi_program_feature("hostname: " CYW43_HOST_NAME));
@@ -277,8 +279,9 @@ main(void)
     critical_section_init(&linkup_critsec);
     critical_section_init(&rssi_critsec);
 
+    configuration_start (&configuration);
+    state_machine_start (&state_machine);
     bentel_layer_start (&bentel_layer);
-    state_machine_init (&state_machine);
 
     /*
      * Launch core1. The code preceding multicore_launch_core1()

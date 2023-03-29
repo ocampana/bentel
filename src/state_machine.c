@@ -6,7 +6,7 @@
 extern bentel_layer_t bentel_layer;
 
 void
-state_machine_init (state_machine_t *machine)
+state_machine_start (state_machine_t *machine)
 {
     machine->state = STATE_START;
 }
