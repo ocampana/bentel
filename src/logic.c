@@ -53,6 +53,32 @@ int handle_bentel_message (void * layer, void * message)
             sem_release (&configuration.semaphore);
             break;
 
+        case BENTEL_GET_ZONES_NAMES_RESPONSE:
+            sem_acquire_blocking (&configuration.semaphore);
+
+            for (i = 0 ; i < 32 ; i++)
+            {
+                snprintf (configuration.zones[i].name,
+                          sizeof (configuration.zones[i].name), "%s", 
+                          bentel_message->u.get_zones_names_response.zones[i].name);
+            }
+
+            sem_release (&configuration.semaphore);
+            break;
+
+        case BENTEL_GET_PARTITIONS_NAMES_RESPONSE:
+            sem_acquire_blocking (&configuration.semaphore);
+
+            for (i = 0 ; i < 8 ; i++)
+            {
+                snprintf (configuration.partitions[i].name,
+                          sizeof (configuration.partitions[i].name), "%s", 
+                          bentel_message->u.get_partitions_names_response.partitions[i].name);
+            }
+
+            sem_release (&configuration.semaphore);
+            break;
+
         default:
             break;
     }

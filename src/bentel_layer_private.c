@@ -2,10 +2,28 @@
 #include <stdint.h>
 #include <stdio.h>
 
+#include <ctype.h>
+
 #include "bentel_layer.h"
 #include "bentel_layer_private.h"
 
 //#include "hardware/uart.h"
+
+static void
+right_strip (unsigned char * c, int len)
+{
+    int i;
+
+    for (i = len ; i >= 0 ; i--)
+    {
+        if (isspace (c[i]) == 0)
+        {
+            return;
+        }
+
+        c[i] = 0;
+    }
+}
 
 static unsigned char
 evaluate_checksum (unsigned char * buffer, int len)
@@ -49,6 +67,18 @@ bentel_message_encode (bentel_message_t * bentel_message,
             buffer[1] = 0x09;
             buffer[2] = 0xf0;
             buffer[3] = 0x0b;
+            buffer[4] = 0x00;
+            buffer[5] = evaluate_checksum (buffer, 5);
+
+            to_return = 6;
+            break;
+
+        case BENTEL_GET_ZONES_NAMES_REQUEST:
+            /* -> f0 b0 19 3f 00 f8 */
+            buffer[0] = 0xf0;
+            buffer[1] = 0xb0;
+            buffer[2] = 0x19;
+            buffer[3] = 0x3f;
             buffer[4] = 0x00;
             buffer[5] = evaluate_checksum (buffer, 5);
 
@@ -114,8 +144,8 @@ bentel_message_decode (bentel_message_t * bentel_message,
             snprintf (bentel_message->u.get_model_response.model,
                       sizeof (bentel_message->u.get_model_response.model),
                       "%s", &buffer[6]);
-            c = index ((const char *) bentel_message->u.get_model_response.model, ' ');
-            *c = 0;
+            right_strip (bentel_message->u.get_model_response.model,
+                         sizeof (bentel_message->u.get_model_response.model) - 2);
 
             bentel_message->u.get_model_response.fw_major =
                 buffer[14] - '0';
@@ -190,6 +220,95 @@ bentel_message_decode (bentel_message_t * bentel_message,
             }
 
             return 19;
+
+        case 0xb0193f00:
+            /*
+             * BENTEL_GET_ZONES_NAMES_RESPONSE
+             *
+             * -> f0 b0 19 3f 00 f8
+             * <- f0 b0 19 3f 00 f8 70 ... 20 f7
+             *                      \-------/
+             *         32 contiguous strings 16 characters long,
+             *                  not NULL terminated
+             */
+            if (buffer[5] != evaluate_checksum (buffer, 5))
+            {
+                return -1;
+            }
+
+            if (len < 518)
+            {
+                /*
+                 * incomplete message, we need to wait for more
+                 * characters
+                 */
+                return 0;
+            }
+
+            /* let's check the second checksum */
+            if (buffer[517] != evaluate_checksum (&buffer[6], 512))
+            {
+                return -2;
+            }
+
+            bentel_message->message_type = BENTEL_GET_ZONES_NAMES_RESPONSE;
+
+            for (i = 0 ; i < 32 ; i++)
+            {
+                snprintf (bentel_message->u.get_zones_names_response.zones[i].name,
+                          sizeof (bentel_message->u.get_zones_names_response.zones[i].name),
+                          "%s", &buffer[6+i*16]);
+                bentel_message->u.get_zones_names_response.zones[i].name[16] = 0;
+                right_strip (bentel_message->u.get_zones_names_response.zones[i].name,
+                             sizeof (bentel_message->u.get_zones_names_response.zones[i].name) -2);
+            }
+
+            return 518;
+
+	case 0x50173f00:
+            /*
+             * BENTEL_GET_PARTITIONS_NAMES_RESPONSE
+             *
+             * -> f0 50 17 3f 00 f8
+             * <- f0 50 17 3f 00 96 70 ... 20 f7
+             *                      \-------/
+             *         8 contiguous strings 16 characters long,
+             *                  not NULL terminated
+             */
+            if (buffer[5] != evaluate_checksum (buffer, 5))
+            {
+                return -1;
+            }
+
+            if (len < 134)
+            {
+                /*
+                 * incomplete message, we need to wait for more
+                 * characters
+                 */
+                return 0;
+            }
+
+            /* let's check the second checksum */
+            if (buffer[133] != evaluate_checksum (&buffer[6], 128))
+            {
+                return -2;
+            }
+
+            bentel_message->message_type = BENTEL_GET_PARTITIONS_NAMES_RESPONSE;
+
+            for (i = 0 ; i < 8 ; i++)
+            {
+                snprintf (bentel_message->u.get_partitions_names_response.partitions[i].name,
+                          sizeof (bentel_message->u.get_partitions_names_response.partitions[i].name),
+                          "%s", &buffer[6+i*16]);
+                bentel_message->u.get_partitions_names_response.partitions[i].name[16] = 0;
+                right_strip (bentel_message->u.get_partitions_names_response.partitions[i].name,
+                             sizeof (bentel_message->u.get_partitions_names_response.partitions[i].name) -2);
+            }
+
+            return 134;
+
 
         default:
             break;

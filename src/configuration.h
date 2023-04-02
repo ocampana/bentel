@@ -27,6 +27,39 @@ struct _configuration_t
         bool sabotage;
         bool alive;
     } keyboards[8];
+
+    /** @brief zones are the sensors */
+    struct
+    {
+        char name[17];
+	bool alarm;
+	bool sabotage;
+    } zones[32];
+
+    /**
+     * @brief partition are group of sensors. Bentel also
+     * calls them areas.
+     */
+    struct
+    {
+        char name[17];
+	bool alarm;
+    } partitions[8];
+
+    bool alarm_power;
+    bool alarm_bpi;
+    bool alarm_fuse;
+    bool alarm_battery_low;
+    bool alarm_telephone_line;
+    bool alarm_default_codes;
+    bool alarm_wireless;
+
+    bool sabotage_partition;
+    bool sabotage_fake_key;
+    bool sabotage_bpi;
+    bool sabotage_system;
+    bool sabotage_jam;
+    bool sabotage_wireless;
 };
 
 int configuration_start (void * layer);

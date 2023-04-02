@@ -14,82 +14,82 @@ configuration_t configuration =
         {
             .present = false,
             .sabotage = false,
-            .alive = false,	    
+            .alive = false,
         },
         {
             .present = false,
             .sabotage = false,
-            .alive = false,	    
+            .alive = false,
         },
         {
             .present = false,
             .sabotage = false,
-            .alive = false,	    
+            .alive = false,
         },
         {
             .present = false,
             .sabotage = false,
-            .alive = false,	    
+            .alive = false,
         },
         {
             .present = false,
             .sabotage = false,
-            .alive = false,	    
+            .alive = false,
         },
         {
             .present = false,
             .sabotage = false,
-            .alive = false,	    
+            .alive = false,
         },
         {
             .present = false,
             .sabotage = false,
-            .alive = false,	    
+            .alive = false,
         },
         {
             .present = false,
             .sabotage = false,
-            .alive = false,	    
+            .alive = false,
         },
         {
             .present = false,
             .sabotage = false,
-            .alive = false,	    
+            .alive = false,
         },
         {
             .present = false,
             .sabotage = false,
-            .alive = false,	    
+            .alive = false,
         },
         {
             .present = false,
             .sabotage = false,
-            .alive = false,	    
+            .alive = false,
         },
         {
             .present = false,
             .sabotage = false,
-            .alive = false,	    
+            .alive = false,
         },
         {
             .present = false,
             .sabotage = false,
-            .alive = false,	    
+            .alive = false,
         },
         {
             .present = false,
             .sabotage = false,
-            .alive = false,	    
+            .alive = false,
         },
         {
             .present = false,
             .sabotage = false,
-            .alive = false,	    
+            .alive = false,
         },
         {
             .present = false,
             .sabotage = false,
-            .alive = false,	    
+            .alive = false,
         },
     },
 
@@ -98,44 +98,260 @@ configuration_t configuration =
         {
             .present = false,
             .sabotage = false,
-            .alive = false,	    
+            .alive = false,
         },
         {
             .present = false,
             .sabotage = false,
-            .alive = false,	    
+            .alive = false,
         },
         {
             .present = false,
             .sabotage = false,
-            .alive = false,	    
+            .alive = false,
         },
         {
             .present = false,
             .sabotage = false,
-            .alive = false,	    
+            .alive = false,
         },
         {
             .present = false,
             .sabotage = false,
-            .alive = false,	    
+            .alive = false,
         },
         {
             .present = false,
             .sabotage = false,
-            .alive = false,	    
+            .alive = false,
         },
         {
             .present = false,
             .sabotage = false,
-            .alive = false,	    
+            .alive = false,
         },
         {
             .present = false,
             .sabotage = false,
-            .alive = false,	    
+            .alive = false,
         },
-    }
+    },
+
+    .zones =
+    {
+        {
+            .name = "",
+            .alarm = false,
+            .sabotage = false,
+        },
+        {
+            .name = "",
+            .alarm = false,
+            .sabotage = false,
+        },
+        {
+            .name = "",
+            .alarm = false,
+            .sabotage = false,
+        },
+        {
+            .name = "",
+            .alarm = false,
+            .sabotage = false,
+        },
+        {
+            .name = "",
+            .alarm = false,
+            .sabotage = false,
+        },
+        {
+            .name = "",
+            .alarm = false,
+            .sabotage = false,
+        },
+        {
+            .name = "",
+            .alarm = false,
+            .sabotage = false,
+        },
+        {
+            .name = "",
+            .alarm = false,
+            .sabotage = false,
+        },
+        {
+            .name = "",
+            .alarm = false,
+            .sabotage = false,
+        },
+        {
+            .name = "",
+            .alarm = false,
+            .sabotage = false,
+        },
+        {
+            .name = "",
+            .alarm = false,
+            .sabotage = false,
+        },
+        {
+            .name = "",
+            .alarm = false,
+            .sabotage = false,
+        },
+        {
+            .name = "",
+            .alarm = false,
+            .sabotage = false,
+        },
+        {
+            .name = "",
+            .alarm = false,
+            .sabotage = false,
+        },
+        {
+            .name = "",
+            .alarm = false,
+            .sabotage = false,
+        },
+        {
+            .name = "",
+            .alarm = false,
+            .sabotage = false,
+        },
+        {
+            .name = "",
+            .alarm = false,
+            .sabotage = false,
+        },
+        {
+            .name = "",
+            .alarm = false,
+            .sabotage = false,
+        },
+        {
+            .name = "",
+            .alarm = false,
+            .sabotage = false,
+        },
+        {
+            .name = "",
+            .alarm = false,
+            .sabotage = false,
+        },
+        {
+            .name = "",
+            .alarm = false,
+            .sabotage = false,
+        },
+        {
+            .name = "",
+            .alarm = false,
+            .sabotage = false,
+        },
+        {
+            .name = "",
+            .alarm = false,
+            .sabotage = false,
+        },
+        {
+            .name = "",
+            .alarm = false,
+            .sabotage = false,
+        },
+        {
+            .name = "",
+            .alarm = false,
+            .sabotage = false,
+        },
+        {
+            .name = "",
+            .alarm = false,
+            .sabotage = false,
+        },
+        {
+            .name = "",
+            .alarm = false,
+            .sabotage = false,
+        },
+        {
+            .name = "",
+            .alarm = false,
+            .sabotage = false,
+        },
+        {
+            .name = "",
+            .alarm = false,
+            .sabotage = false,
+        },
+        {
+            .name = "",
+            .alarm = false,
+            .sabotage = false,
+        },
+        {
+            .name = "",
+            .alarm = false,
+            .sabotage = false,
+        },
+        {
+            .name = "",
+            .alarm = false,
+            .sabotage = false,
+        },
+    },
+
+    .partitions =
+    {
+        {
+            .name = "",
+            .alarm = false,
+        },
+        {
+            .name = "",
+            .alarm = false,
+        },
+        {
+            .name = "",
+            .alarm = false,
+        },
+        {
+            .name = "",
+            .alarm = false,
+        },
+        {
+            .name = "",
+            .alarm = false,
+        },
+        {
+            .name = "",
+            .alarm = false,
+        },
+        {
+            .name = "",
+            .alarm = false,
+        },
+        {
+            .name = "",
+            .alarm = false,
+        },
+    },
+
+    .alarm_power = false,
+    .alarm_bpi = false,
+    .alarm_fuse = false,
+    .alarm_battery_low = false,
+    .alarm_telephone_line = false,
+    .alarm_default_codes = false,
+    .alarm_wireless = false,
+
+    .sabotage_partition = false,
+    .sabotage_fake_key = false,
+    .sabotage_bpi = false,
+    .sabotage_system = false,
+    .sabotage_jam = false,
+    .sabotage_wireless = false,
+
 };
 
 state_machine_t state_machine;

@@ -11,6 +11,10 @@ enum _bentel_message_type_t
     BENTEL_GET_MODEL_RESPONSE,
     BENTEL_GET_PERIPHERALS_REQUEST,
     BENTEL_GET_PERIPHERALS_RESPONSE,
+    BENTEL_GET_ZONES_NAMES_REQUEST,
+    BENTEL_GET_ZONES_NAMES_RESPONSE,
+    BENTEL_GET_PARTITIONS_NAMES_REQUEST,
+    BENTEL_GET_PARTITIONS_NAMES_RESPONSE,
 };
 
 typedef struct _bentel_message_t bentel_message_t;
@@ -52,6 +56,30 @@ struct _bentel_message_t
 		bool alive;
             } keyboards[8];
         } get_peripherals_response;
+
+        struct
+        {
+        } get_zones_names_request;
+
+        struct
+        {
+            struct
+	    {
+                char name[17];
+            } zones[32];
+        } get_zones_names_response;
+
+        struct
+        {
+        } get_partitions_names_request;
+
+        struct
+        {
+            struct
+	    {
+                char name[17];
+            } partitions[8];
+        } get_partitions_names_response;
     } u;
 };
 
@@ -73,7 +101,7 @@ struct _bentel_layer_t
     void * lower_layer;
     bentel_layer_ops_t * ops;
 
-    unsigned char buffer[128];
+    unsigned char buffer[524];
     int buffer_index;
 };
 

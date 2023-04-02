@@ -468,40 +468,136 @@ rssi_handler(struct http *http, void *p)
          "\"4\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
          "\"5\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
          "\"6\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
-         "\"7\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}}" \
+         "\"7\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}}," \
+     "\"zones\":{"\
+         "\"0\":{\"name\":\"%.16s\",\"sabotage\":\"%1d\",\"alarm\":\"%1d\"}," \
+         "\"1\":{\"name\":\"%.16s\",\"sabotage\":\"%1d\",\"alarm\":\"%1d\"}," \
+         "\"2\":{\"name\":\"%.16s\",\"sabotage\":\"%1d\",\"alarm\":\"%1d\"}," \
+         "\"3\":{\"name\":\"%.16s\",\"sabotage\":\"%1d\",\"alarm\":\"%1d\"}," \
+         "\"4\":{\"name\":\"%.16s\",\"sabotage\":\"%1d\",\"alarm\":\"%1d\"}," \
+         "\"5\":{\"name\":\"%.16s\",\"sabotage\":\"%1d\",\"alarm\":\"%1d\"}," \
+         "\"6\":{\"name\":\"%.16s\",\"sabotage\":\"%1d\",\"alarm\":\"%1d\"}," \
+         "\"7\":{\"name\":\"%.16s\",\"sabotage\":\"%1d\",\"alarm\":\"%1d\"}," \
+         "\"8\":{\"name\":\"%.16s\",\"sabotage\":\"%1d\",\"alarm\":\"%1d\"}," \
+         "\"9\":{\"name\":\"%.16s\",\"sabotage\":\"%1d\",\"alarm\":\"%1d\"}," \
+         "\"10\":{\"name\":\"%.16s\",\"sabotage\":\"%1d\",\"alarm\":\"%1d\"}," \
+         "\"11\":{\"name\":\"%.16s\",\"sabotage\":\"%1d\",\"alarm\":\"%1d\"}," \
+         "\"12\":{\"name\":\"%.16s\",\"sabotage\":\"%1d\",\"alarm\":\"%1d\"}," \
+         "\"13\":{\"name\":\"%.16s\",\"sabotage\":\"%1d\",\"alarm\":\"%1d\"}," \
+         "\"14\":{\"name\":\"%.16s\",\"sabotage\":\"%1d\",\"alarm\":\"%1d\"}," \
+         "\"15\":{\"name\":\"%.16s\",\"sabotage\":\"%1d\",\"alarm\":\"%1d\"}," \
+         "\"16\":{\"name\":\"%.16s\",\"sabotage\":\"%1d\",\"alarm\":\"%1d\"}," \
+         "\"17\":{\"name\":\"%.16s\",\"sabotage\":\"%1d\",\"alarm\":\"%1d\"}," \
+         "\"18\":{\"name\":\"%.16s\",\"sabotage\":\"%1d\",\"alarm\":\"%1d\"}," \
+         "\"19\":{\"name\":\"%.16s\",\"sabotage\":\"%1d\",\"alarm\":\"%1d\"}," \
+         "\"20\":{\"name\":\"%.16s\",\"sabotage\":\"%1d\",\"alarm\":\"%1d\"}," \
+         "\"21\":{\"name\":\"%.16s\",\"sabotage\":\"%1d\",\"alarm\":\"%1d\"}," \
+         "\"22\":{\"name\":\"%.16s\",\"sabotage\":\"%1d\",\"alarm\":\"%1d\"}," \
+         "\"23\":{\"name\":\"%.16s\",\"sabotage\":\"%1d\",\"alarm\":\"%1d\"}," \
+         "\"24\":{\"name\":\"%.16s\",\"sabotage\":\"%1d\",\"alarm\":\"%1d\"}," \
+         "\"25\":{\"name\":\"%.16s\",\"sabotage\":\"%1d\",\"alarm\":\"%1d\"}," \
+         "\"26\":{\"name\":\"%.16s\",\"sabotage\":\"%1d\",\"alarm\":\"%1d\"}," \
+         "\"27\":{\"name\":\"%.16s\",\"sabotage\":\"%1d\",\"alarm\":\"%1d\"}," \
+         "\"28\":{\"name\":\"%.16s\",\"sabotage\":\"%1d\",\"alarm\":\"%1d\"}," \
+         "\"29\":{\"name\":\"%.16s\",\"sabotage\":\"%1d\",\"alarm\":\"%1d\"}," \
+         "\"30\":{\"name\":\"%.16s\",\"sabotage\":\"%1d\",\"alarm\":\"%1d\"}," \
+         "\"31\":{\"name\":\"%.16s\",\"sabotage\":\"%1d\",\"alarm\":\"%1d\"}}," \
+     "\"partitions\":{"\
+         "\"0\":{\"name\":\"%.16s\",\"alarm\":\"%1d\"}," \
+         "\"1\":{\"name\":\"%.16s\",\"alarm\":\"%1d\"}," \
+         "\"2\":{\"name\":\"%.16s\",\"alarm\":\"%1d\"}," \
+         "\"3\":{\"name\":\"%.16s\",\"alarm\":\"%1d\"}," \
+         "\"4\":{\"name\":\"%.16s\",\"alarm\":\"%1d\"}," \
+         "\"5\":{\"name\":\"%.16s\",\"alarm\":\"%1d\"}," \
+         "\"6\":{\"name\":\"%.16s\",\"alarm\":\"%1d\"}," \
+         "\"7\":{\"name\":\"%.16s\",\"alarm\":\"%1d\"}}," \
+     "\"alarm_power\":\"%1d\",\"alarm_bpi\":\"%1d\", \"alarm_fuse\":\"%1d\"," \
+     "\"alarm_battery_low\":\"%1d\",\"alarm_telephone_line\":\"%1d\"," \
+     "\"alarm_default_codes\":\"%1d\",\"alarm_wireless\":\"%1d\"," \
+     "\"sabotage_partition\":\"%1d\",\"sabotage_fake_key\":\"%1d\"," \
+     "\"sabotage_bpi\":\"%1d\",\"sabotage_system\":\"%1d\"," \
+     "\"sabotage_jam\":\"%1d\",\"sabotage_wireless\":\"%1d\"" \
      "}")
 #define HA_STR \
     ("{\"ssid\":\"" WIFI_SSID "\",\"host\":\"" CYW43_HOST_NAME "\"," \
      "\"ip\":\"\",\"mac\":\"\",\"state_machine\":\"\"," \
      "\"fw\":\"\",\"model\":\"\"" \
      "\"readers\":{"\
-         "\"0\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
-         "\"1\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
-         "\"2\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
-         "\"3\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
-         "\"4\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
-         "\"5\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
-         "\"6\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
-         "\"7\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
-         "\"8\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
-         "\"9\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
-         "\"10\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
-         "\"11\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
-         "\"12\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
-         "\"13\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
-         "\"14\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
-         "\"15\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}}," \
+         "\"0\":{\"present\":\"\",\"sabotage\":\"\",\"alive\":\"\"}," \
+         "\"1\":{\"present\":\"\",\"sabotage\":\"\",\"alive\":\"\"}," \
+         "\"2\":{\"present\":\"\",\"sabotage\":\"\",\"alive\":\"\"}," \
+         "\"3\":{\"present\":\"\",\"sabotage\":\"\",\"alive\":\"\"}," \
+         "\"4\":{\"present\":\"\",\"sabotage\":\"\",\"alive\":\"\"}," \
+         "\"5\":{\"present\":\"\",\"sabotage\":\"\",\"alive\":\"\"}," \
+         "\"6\":{\"present\":\"\",\"sabotage\":\"\",\"alive\":\"\"}," \
+         "\"7\":{\"present\":\"\",\"sabotage\":\"\",\"alive\":\"\"}," \
+         "\"8\":{\"present\":\"\",\"sabotage\":\"\",\"alive\":\"\"}," \
+         "\"9\":{\"present\":\"\",\"sabotage\":\"\",\"alive\":\"\"}," \
+         "\"10\":{\"present\":\"\",\"sabotage\":\"\",\"alive\":\"\"}," \
+         "\"11\":{\"present\":\"\",\"sabotage\":\"\",\"alive\":\"\"}," \
+         "\"12\":{\"present\":\"\",\"sabotage\":\"\",\"alive\":\"\"}," \
+         "\"13\":{\"present\":\"\",\"sabotage\":\"\",\"alive\":\"\"}," \
+         "\"14\":{\"present\":\"\",\"sabotage\":\"\",\"alive\":\"\"}," \
+         "\"15\":{\"present\":\"\",\"sabotage\":\"\",\"alive\":\"\"}}," \
      "\"keyboards\":{"\
-         "\"0\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
-         "\"1\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
-         "\"2\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
-         "\"3\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
-         "\"4\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
-         "\"5\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
-         "\"6\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}," \
-         "\"7\":{\"present\":\"%1d\",\"sabotage\":\"%1d\",\"alive\":\"%1d\"}}" \
+         "\"0\":{\"present\":\"\",\"sabotage\":\"\",\"alive\":\"\"}," \
+         "\"1\":{\"present\":\"\",\"sabotage\":\"\",\"alive\":\"\"}," \
+         "\"2\":{\"present\":\"\",\"sabotage\":\"\",\"alive\":\"\"}," \
+         "\"3\":{\"present\":\"\",\"sabotage\":\"\",\"alive\":\"\"}," \
+         "\"4\":{\"present\":\"\",\"sabotage\":\"\",\"alive\":\"\"}," \
+         "\"5\":{\"present\":\"\",\"sabotage\":\"\",\"alive\":\"\"}," \
+         "\"6\":{\"present\":\"\",\"sabotage\":\"\",\"alive\":\"\"}," \
+         "\"7\":{\"present\":\"\",\"sabotage\":\"\",\"alive\":\"\"}}," \
+     "\"zones\":{"\
+         "\"0\":{\"name\":\"\",\"sabotage\":\"\",\"alarm\":\"\"}," \
+         "\"1\":{\"name\":\"\",\"sabotage\":\"\",\"alarm\":\"\"}," \
+         "\"2\":{\"name\":\"\",\"sabotage\":\"\",\"alarm\":\"\"}," \
+         "\"3\":{\"name\":\"\",\"sabotage\":\"\",\"alarm\":\"\"}," \
+         "\"4\":{\"name\":\"\",\"sabotage\":\"\",\"alarm\":\"\"}," \
+         "\"5\":{\"name\":\"\",\"sabotage\":\"\",\"alarm\":\"\"}," \
+         "\"6\":{\"name\":\"\",\"sabotage\":\"\",\"alarm\":\"\"}," \
+         "\"7\":{\"name\":\"\",\"sabotage\":\"\",\"alarm\":\"\"}," \
+         "\"8\":{\"name\":\"\",\"sabotage\":\"\",\"alarm\":\"\"}," \
+         "\"9\":{\"name\":\"\",\"sabotage\":\"\",\"alarm\":\"\"}," \
+         "\"10\":{\"name\":\"\",\"sabotage\":\"\",\"alarm\":\"\"}," \
+         "\"11\":{\"name\":\"\",\"sabotage\":\"\",\"alarm\":\"\"}," \
+         "\"12\":{\"name\":\"\",\"sabotage\":\"\",\"alarm\":\"\"}," \
+         "\"13\":{\"name\":\"\",\"sabotage\":\"\",\"alarm\":\"\"}," \
+         "\"14\":{\"name\":\"\",\"sabotage\":\"\",\"alarm\":\"\"}," \
+         "\"15\":{\"name\":\"\",\"sabotage\":\"\",\"alarm\":\"\"}," \
+         "\"16\":{\"name\":\"\",\"sabotage\":\"\",\"alarm\":\"\"}," \
+         "\"17\":{\"name\":\"\",\"sabotage\":\"\",\"alarm\":\"\"}," \
+         "\"18\":{\"name\":\"\",\"sabotage\":\"\",\"alarm\":\"\"}," \
+         "\"19\":{\"name\":\"\",\"sabotage\":\"\",\"alarm\":\"\"}," \
+         "\"20\":{\"name\":\"\",\"sabotage\":\"\",\"alarm\":\"\"}," \
+         "\"21\":{\"name\":\"\",\"sabotage\":\"\",\"alarm\":\"\"}," \
+         "\"22\":{\"name\":\"\",\"sabotage\":\"\",\"alarm\":\"\"}," \
+         "\"23\":{\"name\":\"\",\"sabotage\":\"\",\"alarm\":\"\"}," \
+         "\"24\":{\"name\":\"\",\"sabotage\":\"\",\"alarm\":\"\"}," \
+         "\"25\":{\"name\":\"\",\"sabotage\":\"\",\"alarm\":\"\"}," \
+         "\"26\":{\"name\":\"\",\"sabotage\":\"\",\"alarm\":\"\"}," \
+         "\"27\":{\"name\":\"\",\"sabotage\":\"\",\"alarm\":\"\"}," \
+         "\"28\":{\"name\":\"\",\"sabotage\":\"\",\"alarm\":\"\"}," \
+         "\"29\":{\"name\":\"\",\"sabotage\":\"\",\"alarm\":\"\"}," \
+         "\"30\":{\"name\":\"\",\"sabotage\":\"\",\"alarm\":\"\"}," \
+         "\"31\":{\"name\":\"\",\"sabotage\":\"\",\"alarm\":\"\"}}," \
+     "\"partitions\":{"\
+         "\"0\":{\"name\":\"\",\"alarm\":\"\"}," \
+         "\"1\":{\"name\":\"\",\"alarm\":\"\"}," \
+         "\"2\":{\"name\":\"\",\"alarm\":\"\"}," \
+         "\"3\":{\"name\":\"\",\"alarm\":\"\"}," \
+         "\"4\":{\"name\":\"\",\"alarm\":\"\"}," \
+         "\"5\":{\"name\":\"\",\"alarm\":\"\"}," \
+         "\"6\":{\"name\":\"\",\"alarm\":\"\"}," \
+         "\"7\":{\"name\":\"\",\"alarm\":\"\"}}," \
+     "\"alarm_power\":\"\",\"alarm_bpi\":\"\", \"alarm_fuse\":\"\"," \
+     "\"alarm_battery_low\":\"\",\"alarm_telephone_line\":\"\"," \
+     "\"alarm_default_codes\":\"\",\"alarm_wireless\":\"\"," \
+     "\"sabotage_partition\":\"\",\"sabotage_fake_key\":\"\"," \
+     "\"sabotage_bpi\":\"\",\"sabotage_system\":\"\"," \
+     "\"sabotage_jam\":\"\",\"sabotage_wireless\":\"\"" \
      "}")
-#define HA_MAX_LEN (STRLEN_LTRL(HA_STR) + IPADDR_STRLEN_MAX + MAC_ADDR_LEN) + 2 /* state machine */ + 4 /* fw */ + 8 /* model */ + (24*3/8) /* readers and keyboards */
+#define HA_MAX_LEN (STRLEN_LTRL(HA_STR) + IPADDR_STRLEN_MAX + MAC_ADDR_LEN) + 2 /* state machine */ + 4 /* fw */ + 8 /* model */ + (24*3) /* readers and keyboards */ + (32*18) /* zones */ + (8*17) /* partitions */ + 7 /* alarms */ + 6 /* sabotages */
 
 /* The next handler will set an ETag header with a 32-bit value in hex. */
 #define ETAG_LEN (sizeof("\"12345678\""))
@@ -879,7 +975,133 @@ ha_handler(struct http *http, void *p)
                          configuration.keyboards[6].alive,
                          configuration.keyboards[7].present,
                          configuration.keyboards[7].sabotage,
-                         configuration.keyboards[7].alive);
+                         configuration.keyboards[7].alive,
+                         configuration.zones[0].name,
+                         configuration.zones[0].sabotage,
+                         configuration.zones[0].alarm,
+                         configuration.zones[1].name,
+                         configuration.zones[1].sabotage,
+                         configuration.zones[1].alarm,
+                         configuration.zones[2].name,
+                         configuration.zones[2].sabotage,
+                         configuration.zones[2].alarm,
+                         configuration.zones[3].name,
+                         configuration.zones[3].sabotage,
+                         configuration.zones[3].alarm,
+                         configuration.zones[4].name,
+                         configuration.zones[4].sabotage,
+                         configuration.zones[4].alarm,
+                         configuration.zones[5].name,
+                         configuration.zones[5].sabotage,
+                         configuration.zones[5].alarm,
+                         configuration.zones[6].name,
+                         configuration.zones[6].sabotage,
+                         configuration.zones[6].alarm,
+                         configuration.zones[7].name,
+                         configuration.zones[7].sabotage,
+                         configuration.zones[7].alarm,
+                         configuration.zones[8].name,
+                         configuration.zones[8].sabotage,
+                         configuration.zones[8].alarm,
+                         configuration.zones[9].name,
+                         configuration.zones[9].sabotage,
+                         configuration.zones[9].alarm,
+                         configuration.zones[10].name,
+                         configuration.zones[10].sabotage,
+                         configuration.zones[10].alarm,
+                         configuration.zones[11].name,
+                         configuration.zones[11].sabotage,
+                         configuration.zones[11].alarm,
+                         configuration.zones[12].name,
+                         configuration.zones[12].sabotage,
+                         configuration.zones[12].alarm,
+                         configuration.zones[13].name,
+                         configuration.zones[13].sabotage,
+                         configuration.zones[13].alarm,
+                         configuration.zones[14].name,
+                         configuration.zones[14].sabotage,
+                         configuration.zones[14].alarm,
+                         configuration.zones[15].name,
+                         configuration.zones[15].sabotage,
+                         configuration.zones[15].alarm,
+                         configuration.zones[16].name,
+                         configuration.zones[16].sabotage,
+                         configuration.zones[16].alarm,
+                         configuration.zones[17].name,
+                         configuration.zones[17].sabotage,
+                         configuration.zones[17].alarm,
+                         configuration.zones[18].name,
+                         configuration.zones[18].sabotage,
+                         configuration.zones[18].alarm,
+                         configuration.zones[19].name,
+                         configuration.zones[19].sabotage,
+                         configuration.zones[19].alarm,
+
+                         configuration.zones[20].name,
+                         configuration.zones[20].sabotage,
+                         configuration.zones[20].alarm,
+                         configuration.zones[21].name,
+                         configuration.zones[21].sabotage,
+                         configuration.zones[21].alarm,
+                         configuration.zones[22].name,
+                         configuration.zones[22].sabotage,
+                         configuration.zones[22].alarm,
+                         configuration.zones[23].name,
+                         configuration.zones[23].sabotage,
+                         configuration.zones[23].alarm,
+                         configuration.zones[24].name,
+                         configuration.zones[24].sabotage,
+                         configuration.zones[24].alarm,
+                         configuration.zones[25].name,
+                         configuration.zones[25].sabotage,
+                         configuration.zones[25].alarm,
+                         configuration.zones[26].name,
+                         configuration.zones[26].sabotage,
+                         configuration.zones[26].alarm,
+                         configuration.zones[27].name,
+                         configuration.zones[27].sabotage,
+                         configuration.zones[27].alarm,
+                         configuration.zones[28].name,
+                         configuration.zones[28].sabotage,
+                         configuration.zones[28].alarm,
+                         configuration.zones[29].name,
+                         configuration.zones[29].sabotage,
+                         configuration.zones[29].alarm,
+                         configuration.zones[30].name,
+                         configuration.zones[30].sabotage,
+                         configuration.zones[30].alarm,
+                         configuration.zones[31].name,
+                         configuration.zones[31].sabotage,
+                         configuration.zones[31].alarm,
+                         configuration.partitions[0].name,
+                         configuration.partitions[0].alarm,
+                         configuration.partitions[1].name,
+                         configuration.partitions[1].alarm,
+                         configuration.partitions[2].name,
+                         configuration.partitions[2].alarm,
+                         configuration.partitions[3].name,
+                         configuration.partitions[3].alarm,
+                         configuration.partitions[4].name,
+                         configuration.partitions[4].alarm,
+                         configuration.partitions[5].name,
+                         configuration.partitions[5].alarm,
+                         configuration.partitions[6].name,
+                         configuration.partitions[6].alarm,
+                         configuration.partitions[7].name,
+                         configuration.partitions[7].alarm,
+                         configuration.alarm_power,
+                         configuration.alarm_bpi,
+                         configuration.alarm_fuse,
+                         configuration.alarm_battery_low,
+                         configuration.alarm_telephone_line,
+                         configuration.alarm_default_codes,
+                         configuration.alarm_wireless,
+                         configuration.sabotage_partition,
+                         configuration.sabotage_fake_key,
+                         configuration.sabotage_bpi,
+                         configuration.sabotage_system,
+                         configuration.sabotage_jam,
+                         configuration.sabotage_wireless);
 
     sem_release (&configuration.semaphore);
 
