@@ -11,8 +11,22 @@ enum _bentel_message_type_t
     BENTEL_GET_MODEL_RESPONSE,
     BENTEL_GET_PERIPHERALS_REQUEST,
     BENTEL_GET_PERIPHERALS_RESPONSE,
-    BENTEL_GET_ZONES_NAMES_REQUEST,
-    BENTEL_GET_ZONES_NAMES_RESPONSE,
+    BENTEL_GET_ZONES_NAMES_0_3_REQUEST,
+    BENTEL_GET_ZONES_NAMES_0_3_RESPONSE,
+    BENTEL_GET_ZONES_NAMES_4_7_REQUEST,
+    BENTEL_GET_ZONES_NAMES_4_7_RESPONSE,
+    BENTEL_GET_ZONES_NAMES_8_11_REQUEST,
+    BENTEL_GET_ZONES_NAMES_8_11_RESPONSE,
+    BENTEL_GET_ZONES_NAMES_12_15_REQUEST,
+    BENTEL_GET_ZONES_NAMES_12_15_RESPONSE,
+    BENTEL_GET_ZONES_NAMES_16_19_REQUEST,
+    BENTEL_GET_ZONES_NAMES_16_19_RESPONSE,
+    BENTEL_GET_ZONES_NAMES_20_23_REQUEST,
+    BENTEL_GET_ZONES_NAMES_20_23_RESPONSE,
+    BENTEL_GET_ZONES_NAMES_24_27_REQUEST,
+    BENTEL_GET_ZONES_NAMES_24_27_RESPONSE,
+    BENTEL_GET_ZONES_NAMES_28_31_REQUEST,
+    BENTEL_GET_ZONES_NAMES_28_31_RESPONSE,
     BENTEL_GET_PARTITIONS_NAMES_REQUEST,
     BENTEL_GET_PARTITIONS_NAMES_RESPONSE,
 };
@@ -59,15 +73,99 @@ struct _bentel_message_t
 
         struct
         {
-        } get_zones_names_request;
+        } get_zones_names_0_3_request;
 
         struct
         {
             struct
 	    {
                 char name[17];
-            } zones[32];
-        } get_zones_names_response;
+            } zones[4];
+        } get_zones_names_0_3_response;
+
+        struct
+        {
+        } get_zones_names_4_7_request;
+
+        struct
+        {
+            struct
+	    {
+                char name[17];
+            } zones[4];
+        } get_zones_names_4_7_response;
+
+        struct
+        {
+        } get_zones_names_8_11_request;
+
+        struct
+        {
+            struct
+	    {
+                char name[17];
+            } zones[4];
+        } get_zones_names_8_11_response;
+
+        struct
+        {
+        } get_zones_names_12_15_request;
+
+        struct
+        {
+            struct
+	    {
+                char name[17];
+            } zones[4];
+        } get_zones_names_12_15_response;
+
+        struct
+        {
+        } get_zones_names_16_19_request;
+
+        struct
+        {
+            struct
+	    {
+                char name[17];
+            } zones[4];
+        } get_zones_names_16_19_response;
+
+        struct
+        {
+        } get_zones_names_20_23_request;
+
+        struct
+        {
+            struct
+	    {
+                char name[17];
+            } zones[4];
+        } get_zones_names_20_23_response;
+
+        struct
+        {
+        } get_zones_names_24_27_request;
+
+        struct
+        {
+            struct
+	    {
+                char name[17];
+            } zones[4];
+        } get_zones_names_24_27_response;
+
+        struct
+        {
+        } get_zones_names_28_31_request;
+
+        struct
+        {
+            struct
+	    {
+                char name[17];
+            } zones[4];
+        } get_zones_names_28_31_response;
 
         struct
         {

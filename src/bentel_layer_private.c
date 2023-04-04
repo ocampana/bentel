@@ -73,11 +73,95 @@ bentel_message_encode (bentel_message_t * bentel_message,
             to_return = 6;
             break;
 
-        case BENTEL_GET_ZONES_NAMES_REQUEST:
+        case BENTEL_GET_ZONES_NAMES_0_3_REQUEST:
             /* -> f0 b0 19 3f 00 f8 */
             buffer[0] = 0xf0;
             buffer[1] = 0xb0;
             buffer[2] = 0x19;
+            buffer[3] = 0x3f;
+            buffer[4] = 0x00;
+            buffer[5] = evaluate_checksum (buffer, 5);
+
+            to_return = 6;
+            break;
+
+        case BENTEL_GET_ZONES_NAMES_4_7_REQUEST:
+            /* -> f0 f0 19 3f 00 38 */
+            buffer[0] = 0xf0;
+            buffer[1] = 0xf0;
+            buffer[2] = 0x19;
+            buffer[3] = 0x3f;
+            buffer[4] = 0x00;
+            buffer[5] = evaluate_checksum (buffer, 5);
+
+            to_return = 6;
+            break;
+
+        case BENTEL_GET_ZONES_NAMES_8_11_REQUEST:
+            /* -> f0 30 1a 3f 00 79 */
+            buffer[0] = 0xf0;
+            buffer[1] = 0x30;
+            buffer[2] = 0x1a;
+            buffer[3] = 0x3f;
+            buffer[4] = 0x00;
+            buffer[5] = evaluate_checksum (buffer, 5);
+
+            to_return = 6;
+            break;
+
+        case BENTEL_GET_ZONES_NAMES_12_15_REQUEST:
+            /* -> f0 70 1a 3f 00 b9 */
+            buffer[0] = 0xf0;
+            buffer[1] = 0x70;
+            buffer[2] = 0x1a;
+            buffer[3] = 0x3f;
+            buffer[4] = 0x00;
+            buffer[5] = evaluate_checksum (buffer, 5);
+
+            to_return = 6;
+            break;
+
+        case BENTEL_GET_ZONES_NAMES_16_19_REQUEST:
+            /* -> f0 b0 1a 3f 00 f9 */
+            buffer[0] = 0xf0;
+            buffer[1] = 0xb0;
+            buffer[2] = 0x1a;
+            buffer[3] = 0x3f;
+            buffer[4] = 0x00;
+            buffer[5] = evaluate_checksum (buffer, 5);
+
+            to_return = 6;
+            break;
+
+        case BENTEL_GET_ZONES_NAMES_20_23_REQUEST:
+            /* -> f0 f0 1a 3f 00 39 */
+            buffer[0] = 0xf0;
+            buffer[1] = 0xf0;
+            buffer[2] = 0x1a;
+            buffer[3] = 0x3f;
+            buffer[4] = 0x00;
+            buffer[5] = evaluate_checksum (buffer, 5);
+
+            to_return = 6;
+            break;
+
+        case BENTEL_GET_ZONES_NAMES_24_27_REQUEST:
+            /* -> f0 30 1b 3f 00 7a */
+            buffer[0] = 0xf0;
+            buffer[1] = 0x30;
+            buffer[2] = 0x1b;
+            buffer[3] = 0x3f;
+            buffer[4] = 0x00;
+            buffer[5] = evaluate_checksum (buffer, 5);
+
+            to_return = 6;
+            break;
+
+        case BENTEL_GET_ZONES_NAMES_28_31_REQUEST:
+            /* -> f0 70 1b 3f 00 ba */
+            buffer[0] = 0xf0;
+            buffer[1] = 0x70;
+            buffer[2] = 0x1b;
             buffer[3] = 0x3f;
             buffer[4] = 0x00;
             buffer[5] = evaluate_checksum (buffer, 5);
@@ -223,12 +307,12 @@ bentel_message_decode (bentel_message_t * bentel_message,
 
         case 0xb0193f00:
             /*
-             * BENTEL_GET_ZONES_NAMES_RESPONSE
+             * BENTEL_GET_ZONES_NAMES_0_3_RESPONSE
              *
              * -> f0 b0 19 3f 00 f8
              * <- f0 b0 19 3f 00 f8 70 ... 20 f7
              *                      \-------/
-             *         32 contiguous strings 16 characters long,
+             *         4 contiguous strings 16 characters long,
              *                  not NULL terminated
              */
             if (buffer[5] != evaluate_checksum (buffer, 5))
@@ -236,7 +320,7 @@ bentel_message_decode (bentel_message_t * bentel_message,
                 return -1;
             }
 
-            if (len < 518)
+            if (len < 71)
             {
                 /*
                  * incomplete message, we need to wait for more
@@ -246,24 +330,24 @@ bentel_message_decode (bentel_message_t * bentel_message,
             }
 
             /* let's check the second checksum */
-            if (buffer[517] != evaluate_checksum (&buffer[6], 512))
+            if (buffer[70] != evaluate_checksum (&buffer[6], 64))
             {
                 return -2;
             }
 
-            bentel_message->message_type = BENTEL_GET_ZONES_NAMES_RESPONSE;
+            bentel_message->message_type = BENTEL_GET_ZONES_NAMES_0_3_RESPONSE;
 
-            for (i = 0 ; i < 32 ; i++)
+            for (i = 0 ; i < 4 ; i++)
             {
-                snprintf (bentel_message->u.get_zones_names_response.zones[i].name,
-                          sizeof (bentel_message->u.get_zones_names_response.zones[i].name),
+                snprintf (bentel_message->u.get_zones_names_0_3_response.zones[i].name,
+                          sizeof (bentel_message->u.get_zones_names_0_3_response.zones[i].name),
                           "%s", &buffer[6+i*16]);
-                bentel_message->u.get_zones_names_response.zones[i].name[16] = 0;
-                right_strip (bentel_message->u.get_zones_names_response.zones[i].name,
-                             sizeof (bentel_message->u.get_zones_names_response.zones[i].name) -2);
+                bentel_message->u.get_zones_names_0_3_response.zones[i].name[16] = 0;
+                right_strip (bentel_message->u.get_zones_names_0_3_response.zones[i].name,
+                             sizeof (bentel_message->u.get_zones_names_0_3_response.zones[i].name) -2);
             }
 
-            return 518;
+            return 71;
 
 	case 0x50173f00:
             /*

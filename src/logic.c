@@ -21,7 +21,7 @@ int handle_bentel_message (void * layer, void * message)
             configuration.fw_minor =
                 bentel_message->u.get_model_response.fw_minor;
             snprintf (configuration.model,
-                      sizeof (configuration.model), "%s", 
+                      sizeof (configuration.model), "%s",
                       bentel_message->u.get_model_response.model);
 
             sem_release (&configuration.semaphore);
@@ -53,14 +53,105 @@ int handle_bentel_message (void * layer, void * message)
             sem_release (&configuration.semaphore);
             break;
 
-        case BENTEL_GET_ZONES_NAMES_RESPONSE:
+        case BENTEL_GET_ZONES_NAMES_0_3_RESPONSE:
             sem_acquire_blocking (&configuration.semaphore);
 
-            for (i = 0 ; i < 32 ; i++)
+            for (i = 0 ; i < 4 ; i++)
             {
                 snprintf (configuration.zones[i].name,
-                          sizeof (configuration.zones[i].name), "%s", 
-                          bentel_message->u.get_zones_names_response.zones[i].name);
+                          sizeof (configuration.zones[i].name), "%s",
+                          bentel_message->u.get_zones_names_0_3_response.zones[i].name);
+            }
+
+            sem_release (&configuration.semaphore);
+            break;
+
+        case BENTEL_GET_ZONES_NAMES_4_7_RESPONSE:
+            sem_acquire_blocking (&configuration.semaphore);
+
+            for (i = 0 ; i < 4 ; i++)
+            {
+                snprintf (configuration.zones[i + 4].name,
+                          sizeof (configuration.zones[i + 4].name), "%s",
+                          bentel_message->u.get_zones_names_4_7_response.zones[i].name);
+            }
+
+            sem_release (&configuration.semaphore);
+            break;
+
+        case BENTEL_GET_ZONES_NAMES_8_11_RESPONSE:
+            sem_acquire_blocking (&configuration.semaphore);
+
+            for (i = 0 ; i < 4 ; i++)
+            {
+                snprintf (configuration.zones[i + 8].name,
+                          sizeof (configuration.zones[i + 8].name), "%s",
+                          bentel_message->u.get_zones_names_8_11_response.zones[i].name);
+            }
+
+            sem_release (&configuration.semaphore);
+            break;
+
+        case BENTEL_GET_ZONES_NAMES_12_15_RESPONSE:
+            sem_acquire_blocking (&configuration.semaphore);
+
+            for (i = 0 ; i < 4 ; i++)
+            {
+                snprintf (configuration.zones[i + 12].name,
+                          sizeof (configuration.zones[i + 12].name), "%s",
+                          bentel_message->u.get_zones_names_12_15_response.zones[i].name);
+            }
+
+            sem_release (&configuration.semaphore);
+            break;
+
+        case BENTEL_GET_ZONES_NAMES_16_19_RESPONSE:
+            sem_acquire_blocking (&configuration.semaphore);
+
+            for (i = 0 ; i < 4 ; i++)
+            {
+                snprintf (configuration.zones[i + 16].name,
+                          sizeof (configuration.zones[i + 16].name), "%s",
+                          bentel_message->u.get_zones_names_16_19_response.zones[i].name);
+            }
+
+            sem_release (&configuration.semaphore);
+            break;
+
+        case BENTEL_GET_ZONES_NAMES_20_23_RESPONSE:
+            sem_acquire_blocking (&configuration.semaphore);
+
+            for (i = 0 ; i < 4 ; i++)
+            {
+                snprintf (configuration.zones[i + 20].name,
+                          sizeof (configuration.zones[i + 20].name), "%s",
+                          bentel_message->u.get_zones_names_20_23_response.zones[i].name);
+            }
+
+            sem_release (&configuration.semaphore);
+            break;
+
+        case BENTEL_GET_ZONES_NAMES_24_27_RESPONSE:
+            sem_acquire_blocking (&configuration.semaphore);
+
+            for (i = 0 ; i < 4 ; i++)
+            {
+                snprintf (configuration.zones[i + 24].name,
+                          sizeof (configuration.zones[i + 24].name), "%s",
+                          bentel_message->u.get_zones_names_24_27_response.zones[i].name);
+            }
+
+            sem_release (&configuration.semaphore);
+            break;
+
+        case BENTEL_GET_ZONES_NAMES_28_31_RESPONSE:
+            sem_acquire_blocking (&configuration.semaphore);
+
+            for (i = 0 ; i < 4 ; i++)
+            {
+                snprintf (configuration.zones[i + 28].name,
+                          sizeof (configuration.zones[i + 28].name), "%s",
+                          bentel_message->u.get_zones_names_28_31_response.zones[i].name);
             }
 
             sem_release (&configuration.semaphore);
@@ -72,7 +163,7 @@ int handle_bentel_message (void * layer, void * message)
             for (i = 0 ; i < 8 ; i++)
             {
                 snprintf (configuration.partitions[i].name,
-                          sizeof (configuration.partitions[i].name), "%s", 
+                          sizeof (configuration.partitions[i].name), "%s",
                           bentel_message->u.get_partitions_names_response.partitions[i].name);
             }
 
