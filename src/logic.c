@@ -157,15 +157,30 @@ int handle_bentel_message (void * layer, void * message)
             sem_release (&configuration.semaphore);
             break;
 
-        case BENTEL_GET_PARTITIONS_NAMES_RESPONSE:
+        case BENTEL_GET_PARTITIONS_NAMES_0_3_RESPONSE:
             sem_acquire_blocking (&configuration.semaphore);
 
-            for (i = 0 ; i < 8 ; i++)
+            for (i = 0 ; i < 4 ; i++)
             {
                 snprintf (configuration.partitions[i].name,
                           sizeof (configuration.partitions[i].name), "%s",
-                          bentel_message->u.get_partitions_names_response.partitions[i].name);
+                          bentel_message->u.get_partitions_names_0_3_response.partitions[i].name);
             }
+
+
+            sem_release (&configuration.semaphore);
+            break;
+
+        case BENTEL_GET_PARTITIONS_NAMES_4_7_RESPONSE:
+            sem_acquire_blocking (&configuration.semaphore);
+
+            for (i = 0 ; i < 4 ; i++)
+            {
+                snprintf (configuration.partitions[i + 4].name,
+                          sizeof (configuration.partitions[i + 4].name), "%s",
+                          bentel_message->u.get_partitions_names_4_7_response.partitions[i].name);
+            }
+
 
             sem_release (&configuration.semaphore);
             break;

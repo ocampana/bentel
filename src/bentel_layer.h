@@ -27,8 +27,10 @@ enum _bentel_message_type_t
     BENTEL_GET_ZONES_NAMES_24_27_RESPONSE,
     BENTEL_GET_ZONES_NAMES_28_31_REQUEST,
     BENTEL_GET_ZONES_NAMES_28_31_RESPONSE,
-    BENTEL_GET_PARTITIONS_NAMES_REQUEST,
-    BENTEL_GET_PARTITIONS_NAMES_RESPONSE,
+    BENTEL_GET_PARTITIONS_NAMES_0_3_REQUEST,
+    BENTEL_GET_PARTITIONS_NAMES_0_3_RESPONSE,
+    BENTEL_GET_PARTITIONS_NAMES_4_7_REQUEST,
+    BENTEL_GET_PARTITIONS_NAMES_4_7_RESPONSE,
 };
 
 typedef struct _bentel_message_t bentel_message_t;
@@ -169,15 +171,27 @@ struct _bentel_message_t
 
         struct
         {
-        } get_partitions_names_request;
+        } get_partitions_names_0_3_request;
 
         struct
         {
             struct
 	    {
                 char name[17];
-            } partitions[8];
-        } get_partitions_names_response;
+            } partitions[4];
+        } get_partitions_names_0_3_response;
+
+        struct
+        {
+        } get_partitions_names_4_7_request;
+
+        struct
+        {
+            struct
+	    {
+                char name[17];
+            } partitions[4];
+        } get_partitions_names_4_7_response;
     } u;
 };
 

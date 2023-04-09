@@ -169,6 +169,30 @@ bentel_message_encode (bentel_message_t * bentel_message,
             to_return = 6;
             break;
 
+        case BENTEL_GET_PARTITIONS_NAMES_0_3_REQUEST:
+            /* -> f0 50 17 3f 00 96 */
+            buffer[0] = 0xf0;
+            buffer[1] = 0x50;
+            buffer[2] = 0x17;
+            buffer[3] = 0x3f;
+            buffer[4] = 0x00;
+            buffer[5] = evaluate_checksum (buffer, 5);
+
+            to_return = 6;
+            break;
+
+        case BENTEL_GET_PARTITIONS_NAMES_4_7_REQUEST:
+            /* -> f0 90 17 3f 00 d6 */
+            buffer[0] = 0xf0;
+            buffer[1] = 0x90;
+            buffer[2] = 0x17;
+            buffer[3] = 0x3f;
+            buffer[4] = 0x00;
+            buffer[5] = evaluate_checksum (buffer, 5);
+
+            to_return = 6;
+            break;
+
         default:
             to_return = -1;
             break;
@@ -659,12 +683,12 @@ bentel_message_decode (bentel_message_t * bentel_message,
 
 	case 0x50173f00:
             /*
-             * BENTEL_GET_PARTITIONS_NAMES_RESPONSE
+             * BENTEL_GET_PARTITIONS_NAMES_0_3_RESPONSE
              *
-             * -> f0 50 17 3f 00 f8
+             * -> f0 50 17 3f 00 96
              * <- f0 50 17 3f 00 96 70 ... 20 f7
              *                      \-------/
-             *         8 contiguous strings 16 characters long,
+             *         4 contiguous strings 16 characters long,
              *                  not NULL terminated
              */
             if (buffer[5] != evaluate_checksum (buffer, 5))
@@ -672,7 +696,7 @@ bentel_message_decode (bentel_message_t * bentel_message,
                 return -1;
             }
 
-            if (len < 134)
+            if (len < 71)
             {
                 /*
                  * incomplete message, we need to wait for more
@@ -682,25 +706,68 @@ bentel_message_decode (bentel_message_t * bentel_message,
             }
 
             /* let's check the second checksum */
-            if (buffer[133] != evaluate_checksum (&buffer[6], 128))
+            if (buffer[70] != evaluate_checksum (&buffer[6], 64))
             {
                 return -2;
             }
 
-            bentel_message->message_type = BENTEL_GET_PARTITIONS_NAMES_RESPONSE;
+            bentel_message->message_type = BENTEL_GET_PARTITIONS_NAMES_0_3_RESPONSE;
 
-            for (i = 0 ; i < 8 ; i++)
+            for (i = 0 ; i < 4 ; i++)
             {
-                snprintf (bentel_message->u.get_partitions_names_response.partitions[i].name,
-                          sizeof (bentel_message->u.get_partitions_names_response.partitions[i].name),
-                          "%s", &buffer[6+i*16]);
-                bentel_message->u.get_partitions_names_response.partitions[i].name[16] = 0;
-                right_strip (bentel_message->u.get_partitions_names_response.partitions[i].name,
-                             sizeof (bentel_message->u.get_partitions_names_response.partitions[i].name) -2);
+                snprintf (bentel_message->u.get_partitions_names_0_3_response.partitions[i].name,
+                          sizeof (bentel_message->u.get_partitions_names_0_3_response.partitions[i].name),
+                          "%s", &buffer[6 + (i * 16)]);
+                bentel_message->u.get_partitions_names_0_3_response.partitions[i].name[16] = 0;
+                right_strip (bentel_message->u.get_partitions_names_0_3_response.partitions[i].name,
+                             sizeof (bentel_message->u.get_partitions_names_0_3_response.partitions[i].name) - 2);
             }
 
-            return 134;
+            return 71;
 
+	case 0x90173f00:
+            /*
+             * BENTEL_GET_PARTITIONS_NAMES_4_7_RESPONSE
+             *
+             * -> f0 90 17 3f 00 d6
+             * <- f0 90 17 3f 00 d6 70 ... 20 f7
+             *                      \-------/
+             *         4 contiguous strings 16 characters long,
+             *                  not NULL terminated
+             */
+            if (buffer[5] != evaluate_checksum (buffer, 5))
+            {
+                return -1;
+            }
+
+            if (len < 71)
+            {
+                /*
+                 * incomplete message, we need to wait for more
+                 * characters
+                 */
+                return 0;
+            }
+
+            /* let's check the second checksum */
+            if (buffer[70] != evaluate_checksum (&buffer[6], 64))
+            {
+                return -2;
+            }
+
+            bentel_message->message_type = BENTEL_GET_PARTITIONS_NAMES_4_7_RESPONSE;
+
+            for (i = 0 ; i < 4 ; i++)
+            {
+                snprintf (bentel_message->u.get_partitions_names_4_7_response.partitions[i].name,
+                          sizeof (bentel_message->u.get_partitions_names_4_7_response.partitions[i].name),
+                          "%s", &buffer[6 + (i * 16)]);
+                bentel_message->u.get_partitions_names_0_3_response.partitions[i].name[16] = 0;
+                right_strip (bentel_message->u.get_partitions_names_4_7_response.partitions[i].name,
+                             sizeof (bentel_message->u.get_partitions_names_4_7_response.partitions[i].name) - 2);
+            }
+
+            return 71;
 
         default:
             break;
