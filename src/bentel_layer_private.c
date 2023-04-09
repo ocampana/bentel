@@ -341,10 +341,318 @@ bentel_message_decode (bentel_message_t * bentel_message,
             {
                 snprintf (bentel_message->u.get_zones_names_0_3_response.zones[i].name,
                           sizeof (bentel_message->u.get_zones_names_0_3_response.zones[i].name),
-                          "%s", &buffer[6+i*16]);
+                          "%s", &buffer[6 + (i * 16)]);
                 bentel_message->u.get_zones_names_0_3_response.zones[i].name[16] = 0;
                 right_strip (bentel_message->u.get_zones_names_0_3_response.zones[i].name,
-                             sizeof (bentel_message->u.get_zones_names_0_3_response.zones[i].name) -2);
+                             sizeof (bentel_message->u.get_zones_names_0_3_response.zones[i].name) - 2);
+            }
+
+            return 71;
+
+        case 0xf0193f00:
+            /*
+             * BENTEL_GET_ZONES_NAMES_4_7_RESPONSE
+             *
+             * -> f0 f0 19 3f 00 38
+             * <- f0 f0 19 3f 00 38 70 ... 20 f7
+             *                      \-------/
+             *         4 contiguous strings 16 characters long,
+             *                  not NULL terminated
+             */
+            if (buffer[5] != evaluate_checksum (buffer, 5))
+            {
+                return -1;
+            }
+
+            if (len < 71)
+            {
+                /*
+                 * incomplete message, we need to wait for more
+                 * characters
+                 */
+                return 0;
+            }
+
+            /* let's check the second checksum */
+            if (buffer[70] != evaluate_checksum (&buffer[6], 64))
+            {
+                return -2;
+            }
+
+            bentel_message->message_type = BENTEL_GET_ZONES_NAMES_4_7_RESPONSE;
+
+            for (i = 0 ; i < 4 ; i++)
+            {
+                snprintf (bentel_message->u.get_zones_names_4_7_response.zones[i].name,
+                          sizeof (bentel_message->u.get_zones_names_4_7_response.zones[i].name),
+                          "%s", &buffer[6 + (i * 16)]);
+                bentel_message->u.get_zones_names_0_3_response.zones[i].name[16] = 0;
+                right_strip (bentel_message->u.get_zones_names_4_7_response.zones[i].name,
+                             sizeof (bentel_message->u.get_zones_names_4_7_response.zones[i].name) - 2);
+            }
+
+            return 71;
+
+        case 0x301a3f00:
+            /*
+             * BENTEL_GET_ZONES_NAMES_8_11_RESPONSE
+             *
+             * -> f0 30 1a 3f 00 79
+             * <- f0 30 1a 3f 00 79 70 ... 20 f7
+             *                      \-------/
+             *         4 contiguous strings 16 characters long,
+             *                  not NULL terminated
+             */
+            if (buffer[5] != evaluate_checksum (buffer, 5))
+            {
+                return -1;
+            }
+
+            if (len < 71)
+            {
+                /*
+                 * incomplete message, we need to wait for more
+                 * characters
+                 */
+                return 0;
+            }
+
+            /* let's check the second checksum */
+            if (buffer[70] != evaluate_checksum (&buffer[6], 64))
+            {
+                return -2;
+            }
+
+            bentel_message->message_type = BENTEL_GET_ZONES_NAMES_8_11_RESPONSE;
+
+            for (i = 0 ; i < 4 ; i++)
+            {
+                snprintf (bentel_message->u.get_zones_names_8_11_response.zones[i].name,
+                          sizeof (bentel_message->u.get_zones_names_8_11_response.zones[i].name),
+                          "%s", &buffer[6 + (i * 16)]);
+                bentel_message->u.get_zones_names_0_3_response.zones[i].name[16] = 0;
+                right_strip (bentel_message->u.get_zones_names_8_11_response.zones[i].name,
+                             sizeof (bentel_message->u.get_zones_names_8_11_response.zones[i].name) - 2);
+            }
+
+            return 71;
+
+        case 0x701a3f00:
+            /*
+             * BENTEL_GET_ZONES_NAMES_12_15_RESPONSE
+             *
+             * -> f0 70 1a 3f 00 b9
+             * <- f0 70 1a 3f 00 b9 70 ... 20 f7
+             *                      \-------/
+             *         4 contiguous strings 16 characters long,
+             *                  not NULL terminated
+             */
+            if (buffer[5] != evaluate_checksum (buffer, 5))
+            {
+                return -1;
+            }
+
+            if (len < 71)
+            {
+                /*
+                 * incomplete message, we need to wait for more
+                 * characters
+                 */
+                return 0;
+            }
+
+            /* let's check the second checksum */
+            if (buffer[70] != evaluate_checksum (&buffer[6], 64))
+            {
+                return -2;
+            }
+
+            bentel_message->message_type = BENTEL_GET_ZONES_NAMES_12_15_RESPONSE;
+
+            for (i = 0 ; i < 4 ; i++)
+            {
+                snprintf (bentel_message->u.get_zones_names_12_15_response.zones[i].name,
+                          sizeof (bentel_message->u.get_zones_names_12_15_response.zones[i].name),
+                          "%s", &buffer[6 + (i * 16)]);
+                bentel_message->u.get_zones_names_0_3_response.zones[i].name[16] = 0;
+                right_strip (bentel_message->u.get_zones_names_12_15_response.zones[i].name,
+                             sizeof (bentel_message->u.get_zones_names_12_15_response.zones[i].name) - 2);
+            }
+
+            return 71;
+
+        case 0xb01a3f00:
+            /*
+             * BENTEL_GET_ZONES_NAMES_16_19_RESPONSE
+             *
+             * -> f0 b0 1a 3f 00 f9
+             * <- f0 b0 1a 3f 00 f9 70 ... 20 f7
+             *                      \-------/
+             *         4 contiguous strings 16 characters long,
+             *                  not NULL terminated
+             */
+            if (buffer[5] != evaluate_checksum (buffer, 5))
+            {
+                return -1;
+            }
+
+            if (len < 71)
+            {
+                /*
+                 * incomplete message, we need to wait for more
+                 * characters
+                 */
+                return 0;
+            }
+
+            /* let's check the second checksum */
+            if (buffer[70] != evaluate_checksum (&buffer[6], 64))
+            {
+                return -2;
+            }
+
+            bentel_message->message_type = BENTEL_GET_ZONES_NAMES_16_19_RESPONSE;
+
+            for (i = 0 ; i < 4 ; i++)
+            {
+                snprintf (bentel_message->u.get_zones_names_16_19_response.zones[i].name,
+                          sizeof (bentel_message->u.get_zones_names_16_19_response.zones[i].name),
+                          "%s", &buffer[6 + (i * 16)]);
+                bentel_message->u.get_zones_names_0_3_response.zones[i].name[16] = 0;
+                right_strip (bentel_message->u.get_zones_names_16_19_response.zones[i].name,
+                             sizeof (bentel_message->u.get_zones_names_16_19_response.zones[i].name) - 2);
+            }
+
+            return 71;
+
+        case 0xf01a3f00:
+            /*
+             * BENTEL_GET_ZONES_NAMES_20_23_RESPONSE
+             *
+             * -> f0 f0 1a 3f 00 39
+             * <- f0 f0 1a 3f 00 39 70 ... 20 f7
+             *                      \-------/
+             *         4 contiguous strings 16 characters long,
+             *                  not NULL terminated
+             */
+            if (buffer[5] != evaluate_checksum (buffer, 5))
+            {
+                return -1;
+            }
+
+            if (len < 71)
+            {
+                /*
+                 * incomplete message, we need to wait for more
+                 * characters
+                 */
+                return 0;
+            }
+
+            /* let's check the second checksum */
+            if (buffer[70] != evaluate_checksum (&buffer[6], 64))
+            {
+                return -2;
+            }
+
+            bentel_message->message_type = BENTEL_GET_ZONES_NAMES_20_23_RESPONSE;
+
+            for (i = 0 ; i < 4 ; i++)
+            {
+                snprintf (bentel_message->u.get_zones_names_20_23_response.zones[i].name,
+                          sizeof (bentel_message->u.get_zones_names_20_23_response.zones[i].name),
+                          "%s", &buffer[6 + (i * 16)]);
+                bentel_message->u.get_zones_names_0_3_response.zones[i].name[16] = 0;
+                right_strip (bentel_message->u.get_zones_names_20_23_response.zones[i].name,
+                             sizeof (bentel_message->u.get_zones_names_20_23_response.zones[i].name) - 2);
+            }
+
+            return 71;
+
+        case 0x301b3f00:
+            /*
+             * BENTEL_GET_ZONES_NAMES_24_27_RESPONSE
+             *
+             * -> f0 30 1b 3f 00 7a
+             * <- f0 30 1b 3f 00 7a 70 ... 20 f7
+             *                      \-------/
+             *         4 contiguous strings 16 characters long,
+             *                  not NULL terminated
+             */
+            if (buffer[5] != evaluate_checksum (buffer, 5))
+            {
+                return -1;
+            }
+
+            if (len < 71)
+            {
+                /*
+                 * incomplete message, we need to wait for more
+                 * characters
+                 */
+                return 0;
+            }
+
+            /* let's check the second checksum */
+            if (buffer[70] != evaluate_checksum (&buffer[6], 64))
+            {
+                return -2;
+            }
+
+            bentel_message->message_type = BENTEL_GET_ZONES_NAMES_24_27_RESPONSE;
+
+            for (i = 0 ; i < 4 ; i++)
+            {
+                snprintf (bentel_message->u.get_zones_names_24_27_response.zones[i].name,
+                          sizeof (bentel_message->u.get_zones_names_24_27_response.zones[i].name),
+                          "%s", &buffer[6 + (i * 16)]);
+                bentel_message->u.get_zones_names_0_3_response.zones[i].name[16] = 0;
+                right_strip (bentel_message->u.get_zones_names_24_27_response.zones[i].name,
+                             sizeof (bentel_message->u.get_zones_names_24_27_response.zones[i].name) - 2);
+            }
+
+            return 71;
+
+        case 0x701b3f00:
+            /*
+             * BENTEL_GET_ZONES_NAMES_28_31_RESPONSE
+             *
+             * -> f0 70 1b 3f 00 5a
+             * <- f0 70 1b 3f 00 5a 70 ... 20 f7
+             *                      \-------/
+             *         4 contiguous strings 16 characters long,
+             *                  not NULL terminated
+             */
+            if (buffer[5] != evaluate_checksum (buffer, 5))
+            {
+                return -1;
+            }
+
+            if (len < 71)
+            {
+                /*
+                 * incomplete message, we need to wait for more
+                 * characters
+                 */
+                return 0;
+            }
+
+            /* let's check the second checksum */
+            if (buffer[70] != evaluate_checksum (&buffer[6], 64))
+            {
+                return -2;
+            }
+
+            bentel_message->message_type = BENTEL_GET_ZONES_NAMES_28_31_RESPONSE;
+
+            for (i = 0 ; i < 4 ; i++)
+            {
+                snprintf (bentel_message->u.get_zones_names_28_31_response.zones[i].name,
+                          sizeof (bentel_message->u.get_zones_names_28_31_response.zones[i].name),
+                          "%s", &buffer[6 + (i * 16)]);
+                bentel_message->u.get_zones_names_0_3_response.zones[i].name[16] = 0;
+                right_strip (bentel_message->u.get_zones_names_28_31_response.zones[i].name,
+                             sizeof (bentel_message->u.get_zones_names_28_31_response.zones[i].name) - 2);
             }
 
             return 71;
