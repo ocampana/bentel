@@ -193,6 +193,18 @@ bentel_message_encode (bentel_message_t * bentel_message,
             to_return = 6;
             break;
 
+        case BENTEL_GET_STATUS_AND_FAULTS_REQUEST:
+            /* -> f0 04 f0 0a 00 ee */
+            buffer[0] = 0xf0;
+            buffer[1] = 0x04;
+            buffer[2] = 0xf0;
+            buffer[3] = 0x0a;
+            buffer[4] = 0x00;
+            buffer[5] = evaluate_checksum (buffer, 5);
+
+            to_return = 6;
+            break;
+
         default:
             to_return = -1;
             break;
@@ -681,7 +693,7 @@ bentel_message_decode (bentel_message_t * bentel_message,
 
             return 71;
 
-	case 0x50173f00:
+        case 0x50173f00:
             /*
              * BENTEL_GET_PARTITIONS_NAMES_0_3_RESPONSE
              *
@@ -725,7 +737,7 @@ bentel_message_decode (bentel_message_t * bentel_message,
 
             return 71;
 
-	case 0x90173f00:
+        case 0x90173f00:
             /*
              * BENTEL_GET_PARTITIONS_NAMES_4_7_RESPONSE
              *
@@ -768,6 +780,224 @@ bentel_message_decode (bentel_message_t * bentel_message,
             }
 
             return 71;
+
+        case 0x04f00a00:
+            /*
+             * BENTEL_STATUS_AND_FAULTS_RESPONSE
+             *
+             * -> f0 04 f0 0a 00 ee
+             * <- f0 04 f0 0a 00 ee 00 00 00 00 00 00 00 00 00 00 00 00
+             *                      \---------/ \---------/  |  |  |
+             *                         zones       zones     |  |  |
+             *                         alarm     sabotage    |  |  |
+             *                                         warnings |  |
+             *                                        areas alarm  |
+             *                                                sabotages
+             */
+            if (buffer[5] != evaluate_checksum (buffer, 5))
+            {
+                return -1;
+            }
+
+            if (len < 18)
+            {
+                /*
+                 * incomplete message, we need to wait for more
+                 * characters
+                 */
+                return 0;
+            }
+
+            /* let's check the second checksum */
+            if (buffer[17] != evaluate_checksum (&buffer[6], 11))
+            {
+                return -2;
+            }
+
+            bentel_message->message_type = BENTEL_GET_STATUS_AND_FAULTS_RESPONSE;
+
+            bentel_message->u.get_status_and_faults_response.alarm_zone_31 =
+                buffer[6] & (0x01 << 7);
+            bentel_message->u.get_status_and_faults_response.alarm_zone_30 =
+                buffer[6] & (0x01 << 6);
+            bentel_message->u.get_status_and_faults_response.alarm_zone_29 =
+                buffer[6] & (0x01 << 5);
+            bentel_message->u.get_status_and_faults_response.alarm_zone_28 =
+                buffer[6] & (0x01 << 4);
+            bentel_message->u.get_status_and_faults_response.alarm_zone_27 =
+                buffer[6] & (0x01 << 3);
+            bentel_message->u.get_status_and_faults_response.alarm_zone_26 =
+                buffer[6] & (0x01 << 2);
+            bentel_message->u.get_status_and_faults_response.alarm_zone_25 =
+                buffer[6] & (0x01 << 1);
+            bentel_message->u.get_status_and_faults_response.alarm_zone_24 =
+                buffer[6] & (0x01 << 0);
+
+            bentel_message->u.get_status_and_faults_response.alarm_zone_23 =
+                buffer[7] & (0x01 << 7);
+            bentel_message->u.get_status_and_faults_response.alarm_zone_22 =
+                buffer[7] & (0x01 << 6);
+            bentel_message->u.get_status_and_faults_response.alarm_zone_21 =
+                buffer[7] & (0x01 << 5);
+            bentel_message->u.get_status_and_faults_response.alarm_zone_20 =
+                buffer[7] & (0x01 << 4);
+            bentel_message->u.get_status_and_faults_response.alarm_zone_19 =
+                buffer[7] & (0x01 << 3);
+            bentel_message->u.get_status_and_faults_response.alarm_zone_18 =
+                buffer[7] & (0x01 << 2);
+            bentel_message->u.get_status_and_faults_response.alarm_zone_17 =
+                buffer[7] & (0x01 << 1);
+            bentel_message->u.get_status_and_faults_response.alarm_zone_16 =
+                buffer[7] & (0x01 << 0);
+
+            bentel_message->u.get_status_and_faults_response.alarm_zone_15 =
+                buffer[8] & (0x01 << 7);
+            bentel_message->u.get_status_and_faults_response.alarm_zone_14 =
+                buffer[8] & (0x01 << 6);
+            bentel_message->u.get_status_and_faults_response.alarm_zone_13 =
+                buffer[8] & (0x01 << 5);
+            bentel_message->u.get_status_and_faults_response.alarm_zone_12 =
+                buffer[8] & (0x01 << 4);
+            bentel_message->u.get_status_and_faults_response.alarm_zone_11 =
+                buffer[8] & (0x01 << 3);
+            bentel_message->u.get_status_and_faults_response.alarm_zone_10 =
+                buffer[8] & (0x01 << 2);
+            bentel_message->u.get_status_and_faults_response.alarm_zone_9 =
+                buffer[8] & (0x01 << 1);
+            bentel_message->u.get_status_and_faults_response.alarm_zone_8 =
+                buffer[8] & (0x01 << 0);
+
+            bentel_message->u.get_status_and_faults_response.alarm_zone_7 =
+                buffer[9] & (0x01 << 7);
+            bentel_message->u.get_status_and_faults_response.alarm_zone_6 =
+                buffer[9] & (0x01 << 6);
+            bentel_message->u.get_status_and_faults_response.alarm_zone_5 =
+                buffer[9] & (0x01 << 5);
+            bentel_message->u.get_status_and_faults_response.alarm_zone_4 =
+                buffer[9] & (0x01 << 4);
+            bentel_message->u.get_status_and_faults_response.alarm_zone_3 =
+                buffer[9] & (0x01 << 3);
+            bentel_message->u.get_status_and_faults_response.alarm_zone_2 =
+                buffer[9] & (0x01 << 2);
+            bentel_message->u.get_status_and_faults_response.alarm_zone_1 =
+                buffer[9] & (0x01 << 1);
+            bentel_message->u.get_status_and_faults_response.alarm_zone_0 =
+                buffer[9] & (0x01 << 0);
+
+            bentel_message->u.get_status_and_faults_response.sabotage_zone_31 =
+                buffer[10] & (0x01 << 7);
+            bentel_message->u.get_status_and_faults_response.sabotage_zone_30 =
+                buffer[10] & (0x01 << 6);
+            bentel_message->u.get_status_and_faults_response.sabotage_zone_29 =
+                buffer[10] & (0x01 << 5);
+            bentel_message->u.get_status_and_faults_response.sabotage_zone_28 =
+                buffer[10] & (0x01 << 4);
+            bentel_message->u.get_status_and_faults_response.sabotage_zone_27 =
+                buffer[10] & (0x01 << 3);
+            bentel_message->u.get_status_and_faults_response.sabotage_zone_26 =
+                buffer[10] & (0x01 << 2);
+            bentel_message->u.get_status_and_faults_response.sabotage_zone_25 =
+                buffer[10] & (0x01 << 1);
+            bentel_message->u.get_status_and_faults_response.sabotage_zone_24 =
+                buffer[10] & (0x01 << 0);
+
+            bentel_message->u.get_status_and_faults_response.sabotage_zone_23 =
+                buffer[11] & (0x01 << 7);
+            bentel_message->u.get_status_and_faults_response.sabotage_zone_22 =
+                buffer[11] & (0x01 << 6);
+            bentel_message->u.get_status_and_faults_response.sabotage_zone_21 =
+                buffer[11] & (0x01 << 5);
+            bentel_message->u.get_status_and_faults_response.sabotage_zone_20 =
+                buffer[11] & (0x01 << 4);
+            bentel_message->u.get_status_and_faults_response.sabotage_zone_19 =
+                buffer[11] & (0x01 << 3);
+            bentel_message->u.get_status_and_faults_response.sabotage_zone_18 =
+                buffer[11] & (0x01 << 2);
+            bentel_message->u.get_status_and_faults_response.sabotage_zone_17 =
+                buffer[11] & (0x01 << 1);
+            bentel_message->u.get_status_and_faults_response.sabotage_zone_16 =
+                buffer[11] & (0x01 << 0);
+
+            bentel_message->u.get_status_and_faults_response.sabotage_zone_15 =
+                buffer[12] & (0x01 << 7);
+            bentel_message->u.get_status_and_faults_response.sabotage_zone_14 =
+                buffer[12] & (0x01 << 6);
+            bentel_message->u.get_status_and_faults_response.sabotage_zone_13 =
+                buffer[12] & (0x01 << 5);
+            bentel_message->u.get_status_and_faults_response.sabotage_zone_12 =
+                buffer[12] & (0x01 << 4);
+            bentel_message->u.get_status_and_faults_response.sabotage_zone_11 =
+                buffer[12] & (0x01 << 3);
+            bentel_message->u.get_status_and_faults_response.sabotage_zone_10 =
+                buffer[12] & (0x01 << 2);
+            bentel_message->u.get_status_and_faults_response.sabotage_zone_9 =
+                buffer[12] & (0x01 << 1);
+            bentel_message->u.get_status_and_faults_response.sabotage_zone_8 =
+                buffer[12] & (0x01 << 0);
+
+            bentel_message->u.get_status_and_faults_response.sabotage_zone_7 =
+                buffer[13] & (0x01 << 7);
+            bentel_message->u.get_status_and_faults_response.sabotage_zone_6 =
+                buffer[13] & (0x01 << 6);
+            bentel_message->u.get_status_and_faults_response.sabotage_zone_5 =
+                buffer[13] & (0x01 << 5);
+            bentel_message->u.get_status_and_faults_response.sabotage_zone_4 =
+                buffer[13] & (0x01 << 4);
+            bentel_message->u.get_status_and_faults_response.sabotage_zone_3 =
+                buffer[13] & (0x01 << 3);
+            bentel_message->u.get_status_and_faults_response.sabotage_zone_2 =
+                buffer[13] & (0x01 << 2);
+            bentel_message->u.get_status_and_faults_response.sabotage_zone_1 =
+                buffer[13] & (0x01 << 1);
+            bentel_message->u.get_status_and_faults_response.sabotage_zone_0 =
+                buffer[13] & (0x01 << 0);
+
+            bentel_message->u.get_status_and_faults_response.alarm_power =
+                buffer[14] & (0x01 << 0);
+            bentel_message->u.get_status_and_faults_response.alarm_bpi =
+                buffer[14] & (0x01 << 1);
+            bentel_message->u.get_status_and_faults_response.alarm_fuse =
+                buffer[14] & (0x01 << 2);
+            bentel_message->u.get_status_and_faults_response.alarm_battery_low =
+                buffer[14] & (0x01 << 3);
+            bentel_message->u.get_status_and_faults_response.alarm_telephone_line =
+                buffer[14] & (0x01 << 4);
+            bentel_message->u.get_status_and_faults_response.alarm_default_codes =
+                buffer[14] & (0x01 << 5);
+            bentel_message->u.get_status_and_faults_response.alarm_wireless =
+                buffer[14] & (0x01 << 6);
+
+            bentel_message->u.get_status_and_faults_response.alarm_partition_7 =
+                buffer[15] & (0x01 << 7);
+            bentel_message->u.get_status_and_faults_response.alarm_partition_6 =
+                buffer[15] & (0x01 << 6);
+            bentel_message->u.get_status_and_faults_response.alarm_partition_5 =
+                buffer[15] & (0x01 << 5);
+            bentel_message->u.get_status_and_faults_response.alarm_partition_4 =
+                buffer[15] & (0x01 << 4);
+            bentel_message->u.get_status_and_faults_response.alarm_partition_3 =
+                buffer[15] & (0x01 << 3);
+            bentel_message->u.get_status_and_faults_response.alarm_partition_2 =
+                buffer[15] & (0x01 << 2);
+            bentel_message->u.get_status_and_faults_response.alarm_partition_1 =
+                buffer[15] & (0x01 << 1);
+            bentel_message->u.get_status_and_faults_response.alarm_partition_0 =
+                buffer[15] & (0x01 << 0);
+
+            bentel_message->u.get_status_and_faults_response.sabotage_partition =
+                buffer[16] & (0x01 << 2);
+            bentel_message->u.get_status_and_faults_response.sabotage_fake_key =
+                buffer[16] & (0x01 << 3);
+            bentel_message->u.get_status_and_faults_response.sabotage_bpi =
+                buffer[16] & (0x01 << 4);
+            bentel_message->u.get_status_and_faults_response.sabotage_system =
+                buffer[16] & (0x01 << 5);
+            bentel_message->u.get_status_and_faults_response.sabotage_jam =
+                buffer[16] & (0x01 << 6);
+            bentel_message->u.get_status_and_faults_response.sabotage_wireless =
+                buffer[16] & (0x01 << 7);
+
+            return 18;
 
         default:
             break;
