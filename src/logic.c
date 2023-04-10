@@ -372,6 +372,39 @@ int handle_bentel_message (void * layer, void * message)
             sem_release (&configuration.semaphore);
             break;
 
+        case BENTEL_GET_ARMED_PARTITIONS_RESPONSE:
+            sem_acquire_blocking (&configuration.semaphore);
+
+            for (i = 0 ; i < 8 ; i++)
+            {
+                configuration.partitions[i].armed =
+                    bentel_message->u.get_armed_partitions_response.partition_armed_state[i];
+            }
+
+            for (i = 0 ; i < 16 ; i++)
+            {
+                configuration.digital_outputs[i].active =
+                    bentel_message->u.get_armed_partitions_response.digital_output_state[i];
+            }
+
+            configuration.siren_state =
+                bentel_message->u.get_armed_partitions_response.siren_state;
+
+            for (i = 0 ; i < 32 ; i++)
+            {
+                configuration.zones[i].inclusion =
+                    bentel_message->u.get_armed_partitions_response.zone_inclusion[i];
+
+                configuration.zones[i].alarm_memory =
+                    bentel_message->u.get_armed_partitions_response.zone_alarm_memory[i];
+
+                configuration.zones[i].sabotage_memory =
+                    bentel_message->u.get_armed_partitions_response.zone_sabotage_memory[i];
+            }
+
+            sem_release (&configuration.semaphore);
+            break;
+
         default:
             break;
     }

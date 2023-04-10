@@ -34,6 +34,9 @@ struct _configuration_t
         char name[17];
 	bool alarm;
 	bool sabotage;
+	bool inclusion;
+	bool alarm_memory;
+	bool sabotage_memory;
     } zones[32];
 
     /**
@@ -44,7 +47,13 @@ struct _configuration_t
     {
         char name[17];
 	bool alarm;
+	bool armed;
     } partitions[8];
+
+    struct
+    {
+        bool active;
+    } digital_outputs[16];
 
     bool alarm_power;
     bool alarm_bpi;
@@ -60,6 +69,8 @@ struct _configuration_t
     bool sabotage_system;
     bool sabotage_jam;
     bool sabotage_wireless;
+
+    bool siren_state;
 };
 
 int configuration_start (void * layer);

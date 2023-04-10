@@ -205,6 +205,19 @@ bentel_message_encode (bentel_message_t * bentel_message,
             to_return = 6;
             break;
 
+        case BENTEL_GET_ARMED_PARTITIONS_REQUEST:
+            /* -> f0 02 15 12 00 19 */
+            buffer[0] = 0xf0;
+            buffer[1] = 0x02;
+            buffer[2] = 0x15;
+            buffer[3] = 0x12;
+            buffer[4] = 0x00;
+            buffer[5] = evaluate_checksum (buffer, 5);
+
+            to_return = 6;
+            break;
+
+
         default:
             to_return = -1;
             break;
@@ -783,7 +796,7 @@ bentel_message_decode (bentel_message_t * bentel_message,
 
         case 0x04f00a00:
             /*
-             * BENTEL_STATUS_AND_FAULTS_RESPONSE
+             * BENTEL_GET_STATUS_AND_FAULTS_RESPONSE
              *
              * -> f0 04 f0 0a 00 ee
              * <- f0 04 f0 0a 00 ee 00 00 00 00 00 00 00 00 00 00 00 00
@@ -998,6 +1011,51 @@ bentel_message_decode (bentel_message_t * bentel_message,
                 buffer[16] & (0x01 << 7);
 
             return 18;
+
+        case 0x02151200:
+            /*
+             * BENTEL_GET_ARMED_PARTITIONS_RESPONSE
+             *
+             * -> f0 02 15 12 00 19
+             * <- f0 02 15 12 00 19 00 00 00 ff 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ff
+             */
+            if (buffer[5] != evaluate_checksum (buffer, 5))
+            {
+                return -1;
+            }
+
+            if (len < 26)
+            {
+                /*
+                 * incomplete message, we need to wait for more
+                 * characters
+                 */
+                return 0;
+            }
+
+            /* let's check the second checksum */
+            if (buffer[25] != evaluate_checksum (&buffer[6], 19))
+            {
+                return -2;
+            }
+
+            bentel_message->message_type = BENTEL_GET_ARMED_PARTITIONS_RESPONSE;
+
+            for (i = 0 ; i < 8 ; i++)
+            {
+                bentel_message->u.get_armed_partitions_response.partition_armed_state[i] =
+                    (buffer[9] & (0x01 << i) != 0);
+            }
+
+            bentel_message->u.get_armed_partitions_response.siren_state =
+                (buffer[10] != 0);
+
+            for (i = 0 ; i < 8 ; i++)
+            {
+                bentel_message->u.get_armed_partitions_response.digital_output_state[8 + i] = false;
+            }
+
+            return 26;
 
         default:
             break;

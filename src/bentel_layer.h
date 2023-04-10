@@ -33,6 +33,8 @@ enum _bentel_message_type_t
     BENTEL_GET_PARTITIONS_NAMES_4_7_RESPONSE,
     BENTEL_GET_STATUS_AND_FAULTS_REQUEST,
     BENTEL_GET_STATUS_AND_FAULTS_RESPONSE,
+    BENTEL_GET_ARMED_PARTITIONS_REQUEST,
+    BENTEL_GET_ARMED_PARTITIONS_RESPONSE,
 };
 
 typedef struct _bentel_message_t bentel_message_t;
@@ -291,6 +293,21 @@ struct _bentel_message_t
             bool sabotage_jam;
             bool sabotage_wireless;
         } get_status_and_faults_response;
+
+        struct
+        {
+        } get_armed_partitions_request;
+
+        struct
+        {
+            bool partition_armed_state[8];
+            bool siren_state;
+            bool digital_output_state[16];
+            bool zone_inclusion[32];
+            bool zone_alarm_memory[32];
+            bool zone_sabotage_memory[32];
+        } get_armed_partitions_response;
+
     } u;
 };
 
