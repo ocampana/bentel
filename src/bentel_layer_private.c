@@ -1052,10 +1052,59 @@ bentel_message_decode (bentel_message_t * bentel_message,
 
             for (i = 0 ; i < 8 ; i++)
             {
-                bentel_message->u.get_armed_partitions_response.digital_output_state[8 + i] = false;
+                bentel_message->u.get_armed_partitions_response.digital_output_state[8 + i] =
+                    (buffer[11] & (0x01 << i) != 0);
+
+                bentel_message->u.get_armed_partitions_response.digital_output_state[i] =
+                    (buffer[12] & (0x01 << i) != 0);
             }
 
-            return 26;
+            for (i = 0 ; i < 8 ; i++)
+            {
+                bentel_message->u.get_armed_partitions_response.zone_inclusion[24 + i] =
+                    (buffer[13] & (0x01 << i) != 0);
+
+                bentel_message->u.get_armed_partitions_response.zone_inclusion[16 + i] =
+                    (buffer[14] & (0x01 << i) != 0);
+
+                bentel_message->u.get_armed_partitions_response.zone_inclusion[8 + i] =
+                    (buffer[15] & (0x01 << i) != 0);
+
+                bentel_message->u.get_armed_partitions_response.zone_inclusion[i] =
+                    (buffer[16] & (0x01 << i) != 0);
+            }
+
+            for (i = 0 ; i < 8 ; i++)
+            {
+                bentel_message->u.get_armed_partitions_response.zone_alarm_memory[24 + i] =
+                    (buffer[17] & (0x01 << i) != 0);
+
+                bentel_message->u.get_armed_partitions_response.zone_alarm_memory[16 + i] =
+                    (buffer[18] & (0x01 << i) != 0);
+
+                bentel_message->u.get_armed_partitions_response.zone_alarm_memory[8 + i] =
+                    (buffer[19] & (0x01 << i) != 0);
+
+                bentel_message->u.get_armed_partitions_response.zone_alarm_memory[i] =
+                    (buffer[20] & (0x01 << i) != 0);
+            }
+
+            for (i = 0 ; i < 8 ; i++)
+            {
+                bentel_message->u.get_armed_partitions_response.zone_sabotage_memory[24 + i] =
+                    (buffer[21] & (0x01 << i) != 0);
+
+                bentel_message->u.get_armed_partitions_response.zone_sabotage_memory[16 + i] =
+                    (buffer[22] & (0x01 << i) != 0);
+
+                bentel_message->u.get_armed_partitions_response.zone_sabotage_memory[8 + i] =
+                    (buffer[23] & (0x01 << i) != 0);
+
+                bentel_message->u.get_armed_partitions_response.zone_sabotage_memory[i] =
+                    (buffer[24] & (0x01 << i) != 0);
+            }
+
+ 	    return 26;
 
         default:
             break;
