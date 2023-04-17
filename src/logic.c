@@ -405,6 +405,38 @@ int handle_bentel_message (void * layer, void * message)
             sem_release (&configuration.semaphore);
             break;
 
+        case BENTEL_GET_LOGGER_1_RESPONSE:
+        case BENTEL_GET_LOGGER_2_RESPONSE:
+        case BENTEL_GET_LOGGER_3_RESPONSE:
+        case BENTEL_GET_LOGGER_4_RESPONSE:
+        case BENTEL_GET_LOGGER_5_RESPONSE:
+        case BENTEL_GET_LOGGER_6_RESPONSE:
+        case BENTEL_GET_LOGGER_7_RESPONSE:
+        case BENTEL_GET_LOGGER_8_RESPONSE:
+        case BENTEL_GET_LOGGER_9_RESPONSE:
+        case BENTEL_GET_LOGGER_10_RESPONSE:
+        case BENTEL_GET_LOGGER_11_RESPONSE:
+        case BENTEL_GET_LOGGER_12_RESPONSE:
+        case BENTEL_GET_LOGGER_13_RESPONSE:
+        case BENTEL_GET_LOGGER_14_RESPONSE:
+        case BENTEL_GET_LOGGER_15_RESPONSE:
+        case BENTEL_GET_LOGGER_16_RESPONSE:
+        case BENTEL_GET_LOGGER_17_RESPONSE:
+        case BENTEL_GET_LOGGER_18_RESPONSE:
+        case BENTEL_GET_LOGGER_19_RESPONSE:
+        case BENTEL_GET_LOGGER_20_RESPONSE:
+        case BENTEL_GET_LOGGER_21_RESPONSE:
+        case BENTEL_GET_LOGGER_22_RESPONSE:
+        case BENTEL_GET_LOGGER_23_RESPONSE:
+        case BENTEL_GET_LOGGER_24_RESPONSE:
+        case BENTEL_GET_LOGGER_25_RESPONSE:
+        case BENTEL_GET_LOGGER_26_RESPONSE:
+        case BENTEL_GET_LOGGER_27_RESPONSE:
+            break;
+
+        case BENTEL_GET_LOGGER_28_RESPONSE:
+            break;
+
         default:
             break;
     }

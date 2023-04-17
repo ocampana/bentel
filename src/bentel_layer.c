@@ -112,7 +112,8 @@ bentel_layer_received_message (void * layer, void * message, int len)
 
     memset (&bentel_message, 0, sizeof (bentel_message));
 
-    i = bentel_message_decode (&bentel_message, bentel_layer->buffer,
+    i = bentel_message_decode (bentel_layer, &bentel_message,
+                               bentel_layer->buffer,
                                bentel_layer->buffer_index);
 
     if (i > 0 && bentel_layer->upper_layer != NULL &&

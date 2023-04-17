@@ -5,6 +5,8 @@
 
 #include <stdbool.h>
 
+#include "bentel_layer.h"
+
 typedef struct _configuration_t configuration_t;
 
 struct _configuration_t
@@ -71,6 +73,8 @@ struct _configuration_t
     bool sabotage_wireless;
 
     bool siren_state;
+
+    bentel_event_t events[256];
 };
 
 int configuration_start (void * layer);

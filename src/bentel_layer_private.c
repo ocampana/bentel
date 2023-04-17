@@ -217,6 +217,293 @@ bentel_message_encode (bentel_message_t * bentel_message,
             to_return = 6;
             break;
 
+        case BENTEL_GET_LOGGER_1_REQUEST:
+            /* -> f0 3d 0d 3f 00 79 */
+            buffer[0] = 0xf0;
+            buffer[1] = 0x3d;
+            buffer[2] = 0x0d;
+            buffer[3] = 0x3f;
+            buffer[4] = 0x00;
+            buffer[5] = evaluate_checksum (buffer, 5);
+
+            to_return = 6;
+            break;
+
+        case BENTEL_GET_LOGGER_2_REQUEST:
+            /* -> f0 7d 0d 3f 00 b9 */
+            buffer[0] = 0xf0;
+            buffer[1] = 0x7d;
+            buffer[2] = 0x0d;
+            buffer[3] = 0x3f;
+            buffer[4] = 0x00;
+            buffer[5] = evaluate_checksum (buffer, 5);
+
+            to_return = 6;
+            break;
+
+        case BENTEL_GET_LOGGER_3_REQUEST:
+            /* -> f0 bd 0d 3f 00 f9 */
+            buffer[0] = 0xf0;
+            buffer[1] = 0xbd;
+            buffer[2] = 0x0d;
+            buffer[3] = 0x3f;
+            buffer[4] = 0x00;
+            buffer[5] = evaluate_checksum (buffer, 5);
+
+            to_return = 6;
+            break;
+
+        case BENTEL_GET_LOGGER_4_REQUEST:
+            /* -> f0 fd 0d 3f 00 39 */
+            buffer[0] = 0xf0;
+            buffer[1] = 0xfd;
+            buffer[2] = 0x0d;
+            buffer[3] = 0x3f;
+            buffer[4] = 0x00;
+            buffer[5] = evaluate_checksum (buffer, 5);
+
+            to_return = 6;
+            break;
+
+        case BENTEL_GET_LOGGER_5_REQUEST:
+            /* -> f0 3d 0e 3f 00 7a */
+            buffer[0] = 0xf0;
+            buffer[1] = 0x3d;
+            buffer[2] = 0x0e;
+            buffer[3] = 0x3f;
+            buffer[4] = 0x00;
+            buffer[5] = evaluate_checksum (buffer, 5);
+
+            to_return = 6;
+            break;
+
+        case BENTEL_GET_LOGGER_6_REQUEST:
+            /* -> f0 7d 0e 3f 00 ba */
+            buffer[0] = 0xf0;
+            buffer[1] = 0x7d;
+            buffer[2] = 0x0e;
+            buffer[3] = 0x3f;
+            buffer[4] = 0x00;
+            buffer[5] = evaluate_checksum (buffer, 5);
+
+            to_return = 6;
+            break;
+
+        case BENTEL_GET_LOGGER_7_REQUEST:
+            /* -> f0 bd 0e 3f 00 fa */
+            buffer[0] = 0xf0;
+            buffer[1] = 0xbd;
+            buffer[2] = 0x0e;
+            buffer[3] = 0x3f;
+            buffer[4] = 0x00;
+            buffer[5] = evaluate_checksum (buffer, 5);
+
+            to_return = 6;
+            break;
+
+        case BENTEL_GET_LOGGER_8_REQUEST:
+            /* -> f0 fd 0e 3f 00 3a */
+            buffer[0] = 0xf0;
+            buffer[1] = 0xfd;
+            buffer[2] = 0x0e;
+            buffer[3] = 0x3f;
+            buffer[4] = 0x00;
+            buffer[5] = evaluate_checksum (buffer, 5);
+
+            to_return = 6;
+            break;
+
+        case BENTEL_GET_LOGGER_9_REQUEST:
+            /* -> f0 3d 0f 3f 00 7b */
+            buffer[0] = 0xf0;
+            buffer[1] = 0x3d;
+            buffer[2] = 0x0f;
+            buffer[3] = 0x3f;
+            buffer[4] = 0x00;
+            buffer[5] = evaluate_checksum (buffer, 5);
+
+            to_return = 6;
+            break;
+
+        case BENTEL_GET_LOGGER_10_REQUEST:
+            /* -> f0 7d 0f 3f 00 bb */
+            buffer[0] = 0xf0;
+            buffer[1] = 0x7d;
+            buffer[2] = 0x0f;
+            buffer[3] = 0x3f;
+            buffer[4] = 0x00;
+            buffer[5] = evaluate_checksum (buffer, 5);
+
+            to_return = 6;
+            break;
+
+        case BENTEL_GET_LOGGER_11_REQUEST:
+            /* -> f0 bd 0f 3f 00 fb */
+            buffer[0] = 0xf0;
+            buffer[1] = 0xbd;
+            buffer[2] = 0x0f;
+            buffer[3] = 0x3f;
+            buffer[4] = 0x00;
+            buffer[5] = evaluate_checksum (buffer, 5);
+
+            to_return = 6;
+            break;
+
+        case BENTEL_GET_LOGGER_12_REQUEST:
+            /* -> f0 fd 0f 3f 00 3b */
+            buffer[0] = 0xf0;
+            buffer[1] = 0xfd;
+            buffer[2] = 0x0f;
+            buffer[3] = 0x3f;
+            buffer[4] = 0x00;
+            buffer[5] = evaluate_checksum (buffer, 5);
+
+            to_return = 6;
+            break;
+
+        case BENTEL_GET_LOGGER_13_REQUEST:
+            /* -> f0 3d 10 3f 00 7c */
+            buffer[0] = 0xf0;
+            buffer[1] = 0x3d;
+            buffer[2] = 0x10;
+            buffer[3] = 0x3f;
+            buffer[4] = 0x00;
+            buffer[5] = evaluate_checksum (buffer, 5);
+
+            to_return = 6;
+            break;
+
+        case BENTEL_GET_LOGGER_14_REQUEST:
+            /* -> f0 7d 10 3f 00 bc */
+            buffer[0] = 0xf0;
+            buffer[1] = 0x7d;
+            buffer[2] = 0x10;
+            buffer[3] = 0x3f;
+            buffer[4] = 0x00;
+            buffer[5] = evaluate_checksum (buffer, 5);
+
+            to_return = 6;
+            break;
+
+        case BENTEL_GET_LOGGER_15_REQUEST:
+            /* -> f0 bd 10 3f 00 fc */
+            buffer[0] = 0xf0;
+            buffer[1] = 0xbd;
+            buffer[2] = 0x10;
+            buffer[3] = 0x3f;
+            buffer[4] = 0x00;
+            buffer[5] = evaluate_checksum (buffer, 5);
+
+            to_return = 6;
+            break;
+
+        case BENTEL_GET_LOGGER_16_REQUEST:
+            /* -> f0 fd 10 3f 00 3c */
+            buffer[0] = 0xf0;
+            buffer[1] = 0xfd;
+            buffer[2] = 0x10;
+            buffer[3] = 0x3f;
+            buffer[4] = 0x00;
+            buffer[5] = evaluate_checksum (buffer, 5);
+
+            to_return = 6;
+            break;
+
+        case BENTEL_GET_LOGGER_17_REQUEST:
+            /* -> f0 3d 11 3f 00 7d */
+            buffer[0] = 0xf0;
+            buffer[1] = 0x3d;
+            buffer[2] = 0x11;
+            buffer[3] = 0x3f;
+            buffer[4] = 0x00;
+            buffer[5] = evaluate_checksum (buffer, 5);
+
+            to_return = 6;
+            break;
+
+        case BENTEL_GET_LOGGER_18_REQUEST:
+            /* -> f0 7d 11 3f 00 bd */
+            buffer[0] = 0xf0;
+            buffer[1] = 0x7d;
+            buffer[2] = 0x11;
+            buffer[3] = 0x3f;
+            buffer[4] = 0x00;
+            buffer[5] = evaluate_checksum (buffer, 5);
+
+            to_return = 6;
+            break;
+
+        case BENTEL_GET_LOGGER_19_REQUEST:
+            /* -> f0 bd 11 3f 00 fd */
+            buffer[0] = 0xf0;
+            buffer[1] = 0xbd;
+            buffer[2] = 0x11;
+            buffer[3] = 0x3f;
+            buffer[4] = 0x00;
+            buffer[5] = evaluate_checksum (buffer, 5);
+
+            to_return = 6;
+            break;
+
+        case BENTEL_GET_LOGGER_20_REQUEST:
+            /* -> f0 fd 11 3f 00 3d */
+            buffer[0] = 0xf0;
+            buffer[1] = 0xfd;
+            buffer[2] = 0x11;
+            buffer[3] = 0x3f;
+            buffer[4] = 0x00;
+            buffer[5] = evaluate_checksum (buffer, 5);
+
+            to_return = 6;
+            break;
+
+        case BENTEL_GET_LOGGER_21_REQUEST:
+            /* -> f0 3d 12 3f 00 7e */
+            buffer[0] = 0xf0;
+            buffer[1] = 0x3d;
+            buffer[2] = 0x12;
+            buffer[3] = 0x3f;
+            buffer[4] = 0x00;
+            buffer[5] = evaluate_checksum (buffer, 5);
+
+            to_return = 6;
+            break;
+
+        case BENTEL_GET_LOGGER_22_REQUEST:
+            /* -> f0 7d 12 3f 00 be */
+            buffer[0] = 0xf0;
+            buffer[1] = 0x7d;
+            buffer[2] = 0x12;
+            buffer[3] = 0x3f;
+            buffer[4] = 0x00;
+            buffer[5] = evaluate_checksum (buffer, 5);
+
+            to_return = 6;
+            break;
+
+        case BENTEL_GET_LOGGER_23_REQUEST:
+            /* -> f0 bd 12 3f 00 fe */
+            buffer[0] = 0xf0;
+            buffer[1] = 0xbd;
+            buffer[2] = 0x12;
+            buffer[3] = 0x3f;
+            buffer[4] = 0x00;
+            buffer[5] = evaluate_checksum (buffer, 5);
+
+            to_return = 6;
+            break;
+
+        case BENTEL_GET_LOGGER_24_REQUEST:
+            /* -> f0 fd 12 3f 00 3e */
+            buffer[0] = 0xf0;
+            buffer[1] = 0xfd;
+            buffer[2] = 0x12;
+            buffer[3] = 0x3f;
+            buffer[4] = 0x00;
+            buffer[5] = evaluate_checksum (buffer, 5);
+
+            to_return = 6;
+            break;
 
         default:
             to_return = -1;
@@ -227,7 +514,8 @@ bentel_message_encode (bentel_message_t * bentel_message,
 }
 
 int
-bentel_message_decode (bentel_message_t * bentel_message,
+bentel_message_decode (bentel_layer_t * bentel_layer,
+                       bentel_message_t * bentel_message,
                        unsigned char * buffer, int len)
 {
     uint32_t command_id;
@@ -1104,7 +1392,1072 @@ bentel_message_decode (bentel_message_t * bentel_message,
                     (buffer[24] & (0x01 << i) != 0);
             }
 
- 	    return 26;
+            return 26;
+
+        case 0x3d0d3f00:
+            /*
+             * BENTEL_GET_LOGGER_1_RESPONSE
+             *
+             * -> f0 3d 0d 3f 00 79
+             * <- f0 3d 0d 3f 00 79 01 .. 00 c2
+             *                      \------/
+             *    64 bytes, since 64 * 28 = 1792, the size of the logger
+             *
+             * Each event is 7 bytes long, there is no alignement in the
+             * BENTEL_GET_LOGGER_*_RESPONSE
+             */
+            if (buffer[5] != evaluate_checksum (buffer, 5))
+            {
+                return -1;
+            }
+
+            if (len < 71)
+            {
+                /*
+                 * incomplete message, we need to wait for more
+                 * characters
+                 */
+                return 0;
+            }
+
+            /* let's check the second checksum */
+            if (buffer[70] != evaluate_checksum (&buffer[6], 64))
+            {
+                return -2;
+            }
+
+            bentel_message->message_type = BENTEL_GET_LOGGER_1_RESPONSE;
+
+            memcpy (&(bentel_layer->logger[0 * 64]), &(buffer[6]), 64);
+
+            return 71;
+
+        case 0x7d0d3f00:
+            /*
+             * BENTEL_GET_LOGGER_2_RESPONSE
+             *
+             * -> f0 7d 0d 3f 00 b9
+             * <- f0 7d 0d 3f 00 b9 01 .. 00 c2
+             *                      \------/
+             *    64 bytes, since 64 * 28 = 1792, the size of the logger
+             *
+             * Each event is 7 bytes long, there is no alignement in the
+             * BENTEL_GET_LOGGER_*_RESPONSE
+             */
+            if (buffer[5] != evaluate_checksum (buffer, 5))
+            {
+                return -1;
+            }
+
+            if (len < 71)
+            {
+                /*
+                 * incomplete message, we need to wait for more
+                 * characters
+                 */
+                return 0;
+            }
+
+            /* let's check the second checksum */
+            if (buffer[70] != evaluate_checksum (&buffer[6], 64))
+            {
+                return -2;
+            }
+
+            bentel_message->message_type = BENTEL_GET_LOGGER_2_RESPONSE;
+
+            memcpy (&(bentel_layer->logger[1 * 64]), &(buffer[6]), 64);
+
+            return 71;
+
+        case 0xbd0d3f00:
+            /*
+             * BENTEL_GET_LOGGER_3_RESPONSE
+             *
+             * -> f0 bd 0d 3f 00 f9
+             * <- f0 bd 0d 3f 00 f9 01 .. 00 c2
+             *                      \------/
+             *    64 bytes, since 64 * 28 = 1792, the size of the logger
+             *
+             * Each event is 7 bytes long, there is no alignement in the
+             * BENTEL_GET_LOGGER_*_RESPONSE
+             */
+            if (buffer[5] != evaluate_checksum (buffer, 5))
+            {
+                return -1;
+            }
+
+            if (len < 71)
+            {
+                /*
+                 * incomplete message, we need to wait for more
+                 * characters
+                 */
+                return 0;
+            }
+
+            /* let's check the second checksum */
+            if (buffer[70] != evaluate_checksum (&buffer[6], 64))
+            {
+                return -2;
+            }
+
+            bentel_message->message_type = BENTEL_GET_LOGGER_3_RESPONSE;
+
+            memcpy (&(bentel_layer->logger[2 * 64]), &(buffer[6]), 64);
+
+            return 71;
+
+        case 0xfd0d3f00:
+            /*
+             * BENTEL_GET_LOGGER_4_RESPONSE
+             *
+             * -> f0 fd 0d 3f 00 39
+             * <- f0 fd 0d 3f 00 39 01 .. 00 c2
+             *                      \------/
+             *    64 bytes, since 64 * 28 = 1792, the size of the logger
+             *
+             * Each event is 7 bytes long, there is no alignement in the
+             * BENTEL_GET_LOGGER_*_RESPONSE
+             */
+            if (buffer[5] != evaluate_checksum (buffer, 5))
+            {
+                return -1;
+            }
+
+            if (len < 71)
+            {
+                /*
+                 * incomplete message, we need to wait for more
+                 * characters
+                 */
+                return 0;
+            }
+
+            /* let's check the second checksum */
+            if (buffer[70] != evaluate_checksum (&buffer[6], 64))
+            {
+                return -2;
+            }
+
+            bentel_message->message_type = BENTEL_GET_LOGGER_4_RESPONSE;
+
+            memcpy (&(bentel_layer->logger[3 * 64]), &(buffer[6]), 64);
+
+            return 71;
+
+/**/
+        case 0x3d0e3f00:
+            /*
+             * BENTEL_GET_LOGGER_5_RESPONSE
+             *
+             * -> f0 3d 0e 3f 00 7a
+             * <- f0 3d 0e 3f 00 7a 01 .. 00 c2
+             *                      \------/
+             *    64 bytes, since 64 * 28 = 1792, the size of the logger
+             *
+             * Each event is 7 bytes long, there is no alignement in the
+             * BENTEL_GET_LOGGER_*_RESPONSE
+             */
+            if (buffer[5] != evaluate_checksum (buffer, 5))
+            {
+                return -1;
+            }
+
+            if (len < 71)
+            {
+                /*
+                 * incomplete message, we need to wait for more
+                 * characters
+                 */
+                return 0;
+            }
+
+            /* let's check the second checksum */
+            if (buffer[70] != evaluate_checksum (&buffer[6], 64))
+            {
+                return -2;
+            }
+
+            bentel_message->message_type = BENTEL_GET_LOGGER_5_RESPONSE;
+
+            memcpy (&(bentel_layer->logger[4 * 64]), &(buffer[6]), 64);
+
+            return 71;
+
+        case 0x7d0e3f00:
+            /*
+             * BENTEL_GET_LOGGER_6_RESPONSE
+             *
+             * -> f0 7d 0e 3f 00 ba
+             * <- f0 7d 0e 3f 00 ba 01 .. 00 c2
+             *                      \------/
+             *    64 bytes, since 64 * 28 = 1792, the size of the logger
+             *
+             * Each event is 7 bytes long, there is no alignement in the
+             * BENTEL_GET_LOGGER_*_RESPONSE
+             */
+            if (buffer[5] != evaluate_checksum (buffer, 5))
+            {
+                return -1;
+            }
+
+            if (len < 71)
+            {
+                /*
+                 * incomplete message, we need to wait for more
+                 * characters
+                 */
+                return 0;
+            }
+
+            /* let's check the second checksum */
+            if (buffer[70] != evaluate_checksum (&buffer[6], 64))
+            {
+                return -2;
+            }
+
+            bentel_message->message_type = BENTEL_GET_LOGGER_6_RESPONSE;
+
+            memcpy (&(bentel_layer->logger[5 * 64]), &(buffer[6]), 64);
+
+            return 71;
+
+        case 0xbd0e3f00:
+            /*
+             * BENTEL_GET_LOGGER_7_RESPONSE
+             *
+             * -> f0 bd 0e 3f 00 fa
+             * <- f0 bd 0e 3f 00 fa 01 .. 00 c2
+             *                      \------/
+             *    64 bytes, since 64 * 28 = 1792, the size of the logger
+             *
+             * Each event is 7 bytes long, there is no alignement in the
+             * BENTEL_GET_LOGGER_*_RESPONSE
+             */
+            if (buffer[5] != evaluate_checksum (buffer, 5))
+            {
+                return -1;
+            }
+
+            if (len < 71)
+            {
+                /*
+                 * incomplete message, we need to wait for more
+                 * characters
+                 */
+                return 0;
+            }
+
+            /* let's check the second checksum */
+            if (buffer[70] != evaluate_checksum (&buffer[6], 64))
+            {
+                return -2;
+            }
+
+            bentel_message->message_type = BENTEL_GET_LOGGER_7_RESPONSE;
+
+            memcpy (&(bentel_layer->logger[6 * 64]), &(buffer[6]), 64);
+
+            return 71;
+
+        case 0xfd0e3f00:
+            /*
+             * BENTEL_GET_LOGGER_8_RESPONSE
+             *
+             * -> f0 fd 0e 3f 00 3a
+             * <- f0 fd 0e 3f 00 3a 01 .. 00 c2
+             *                      \------/
+             *    64 bytes, since 64 * 28 = 1792, the size of the logger
+             *
+             * Each event is 7 bytes long, there is no alignement in the
+             * BENTEL_GET_LOGGER_*_RESPONSE
+             */
+            if (buffer[5] != evaluate_checksum (buffer, 5))
+            {
+                return -1;
+            }
+
+            if (len < 71)
+            {
+                /*
+                 * incomplete message, we need to wait for more
+                 * characters
+                 */
+                return 0;
+            }
+
+            /* let's check the second checksum */
+            if (buffer[70] != evaluate_checksum (&buffer[6], 64))
+            {
+                return -2;
+            }
+
+            bentel_message->message_type = BENTEL_GET_LOGGER_8_RESPONSE;
+
+            memcpy (&(bentel_layer->logger[7 * 64]), &(buffer[6]), 64);
+
+            return 71;
+
+        case 0x3d0f3f00:
+            /*
+             * BENTEL_GET_LOGGER_9_RESPONSE
+             *
+             * -> f0 3d 0f 3f 00 7b
+             * <- f0 3d 0f 3f 00 7b 01 .. 00 c2
+             *                      \------/
+             *    64 bytes, since 64 * 28 = 1792, the size of the logger
+             *
+             * Each event is 7 bytes long, there is no alignement in the
+             * BENTEL_GET_LOGGER_*_RESPONSE
+             */
+            if (buffer[5] != evaluate_checksum (buffer, 5))
+            {
+                return -1;
+            }
+
+            if (len < 71)
+            {
+                /*
+                 * incomplete message, we need to wait for more
+                 * characters
+                 */
+                return 0;
+            }
+
+            /* let's check the second checksum */
+            if (buffer[70] != evaluate_checksum (&buffer[6], 64))
+            {
+                return -2;
+            }
+
+            bentel_message->message_type = BENTEL_GET_LOGGER_9_RESPONSE;
+
+            memcpy (&(bentel_layer->logger[8 * 64]), &(buffer[6]), 64);
+
+            return 71;
+
+        case 0x7d0f3f00:
+            /*
+             * BENTEL_GET_LOGGER_10_RESPONSE
+             *
+             * -> f0 7d 0f 3f 00 bb
+             * <- f0 7d 0f 3f 00 bb 01 .. 00 c2
+             *                      \------/
+             *    64 bytes, since 64 * 28 = 1792, the size of the logger
+             *
+             * Each event is 7 bytes long, there is no alignement in the
+             * BENTEL_GET_LOGGER_*_RESPONSE
+             */
+            if (buffer[5] != evaluate_checksum (buffer, 5))
+            {
+                return -1;
+            }
+
+            if (len < 71)
+            {
+                /*
+                 * incomplete message, we need to wait for more
+                 * characters
+                 */
+                return 0;
+            }
+
+            /* let's check the second checksum */
+            if (buffer[70] != evaluate_checksum (&buffer[6], 64))
+            {
+                return -2;
+            }
+
+            bentel_message->message_type = BENTEL_GET_LOGGER_10_RESPONSE;
+
+            memcpy (&(bentel_layer->logger[9 * 64]), &(buffer[6]), 64);
+
+            return 71;
+
+        case 0xbd0f3f00:
+            /*
+             * BENTEL_GET_LOGGER_11_RESPONSE
+             *
+             * -> f0 bd 0f 3f 00 fb
+             * <- f0 bd 0f 3f 00 fb 01 .. 00 c2
+             *                      \------/
+             *    64 bytes, since 64 * 28 = 1792, the size of the logger
+             *
+             * Each event is 7 bytes long, there is no alignement in the
+             * BENTEL_GET_LOGGER_*_RESPONSE
+             */
+            if (buffer[5] != evaluate_checksum (buffer, 5))
+            {
+                return -1;
+            }
+
+            if (len < 71)
+            {
+                /*
+                 * incomplete message, we need to wait for more
+                 * characters
+                 */
+                return 0;
+            }
+
+            /* let's check the second checksum */
+            if (buffer[70] != evaluate_checksum (&buffer[6], 64))
+            {
+                return -2;
+            }
+
+            bentel_message->message_type = BENTEL_GET_LOGGER_11_RESPONSE;
+
+            memcpy (&(bentel_layer->logger[10 * 64]), &(buffer[6]), 64);
+
+            return 71;
+
+        case 0xfd0f3f00:
+            /*
+             * BENTEL_GET_LOGGER_12_RESPONSE
+             *
+             * -> f0 fd 0f 3f 00 3b
+             * <- f0 fd 0f 3f 00 3b 01 .. 00 c2
+             *                      \------/
+             *    64 bytes, since 64 * 28 = 1792, the size of the logger
+             *
+             * Each event is 7 bytes long, there is no alignement in the
+             * BENTEL_GET_LOGGER_*_RESPONSE
+             */
+            if (buffer[5] != evaluate_checksum (buffer, 5))
+            {
+                return -1;
+            }
+
+            if (len < 71)
+            {
+                /*
+                 * incomplete message, we need to wait for more
+                 * characters
+                 */
+                return 0;
+            }
+
+            /* let's check the second checksum */
+            if (buffer[70] != evaluate_checksum (&buffer[6], 64))
+            {
+                return -2;
+            }
+
+            bentel_message->message_type = BENTEL_GET_LOGGER_12_RESPONSE;
+
+            memcpy (&(bentel_layer->logger[11 * 64]), &(buffer[6]), 64);
+
+            return 71;
+
+        case 0x3d103f00:
+            /*
+             * BENTEL_GET_LOGGER_13_RESPONSE
+             *
+             * -> f0 3d 10 3f 00 7c
+             * <- f0 3d 10 3f 00 7c 01 .. 00 c2
+             *                      \------/
+             *    64 bytes, since 64 * 28 = 1792, the size of the logger
+             *
+             * Each event is 7 bytes long, there is no alignement in the
+             * BENTEL_GET_LOGGER_*_RESPONSE
+             */
+            if (buffer[5] != evaluate_checksum (buffer, 5))
+            {
+                return -1;
+            }
+
+            if (len < 71)
+            {
+                /*
+                 * incomplete message, we need to wait for more
+                 * characters
+                 */
+                return 0;
+            }
+
+            /* let's check the second checksum */
+            if (buffer[70] != evaluate_checksum (&buffer[6], 64))
+            {
+                return -2;
+            }
+
+            bentel_message->message_type = BENTEL_GET_LOGGER_13_RESPONSE;
+
+            memcpy (&(bentel_layer->logger[12 * 64]), &(buffer[6]), 64);
+
+            return 71;
+
+        case 0x7d103f00:
+            /*
+             * BENTEL_GET_LOGGER_14_RESPONSE
+             *
+             * -> f0 7d 10 3f 00 bc
+             * <- f0 7d 10 3f 00 bc 01 .. 00 c2
+             *                      \------/
+             *    64 bytes, since 64 * 28 = 1792, the size of the logger
+             *
+             * Each event is 7 bytes long, there is no alignement in the
+             * BENTEL_GET_LOGGER_*_RESPONSE
+             */
+            if (buffer[5] != evaluate_checksum (buffer, 5))
+            {
+                return -1;
+            }
+
+            if (len < 71)
+            {
+                /*
+                 * incomplete message, we need to wait for more
+                 * characters
+                 */
+                return 0;
+            }
+
+            /* let's check the second checksum */
+            if (buffer[70] != evaluate_checksum (&buffer[6], 64))
+            {
+                return -2;
+            }
+
+            bentel_message->message_type = BENTEL_GET_LOGGER_14_RESPONSE;
+
+            memcpy (&(bentel_layer->logger[13 * 64]), &(buffer[6]), 64);
+
+            return 71;
+
+        case 0xbd103f00:
+            /*
+             * BENTEL_GET_LOGGER_15_RESPONSE
+             *
+             * -> f0 bd 10 3f 00 fc
+             * <- f0 bd 10 3f 00 fc 01 .. 00 c2
+             *                      \------/
+             *    64 bytes, since 64 * 28 = 1792, the size of the logger
+             *
+             * Each event is 7 bytes long, there is no alignement in the
+             * BENTEL_GET_LOGGER_*_RESPONSE
+             */
+            if (buffer[5] != evaluate_checksum (buffer, 5))
+            {
+                return -1;
+            }
+
+            if (len < 71)
+            {
+                /*
+                 * incomplete message, we need to wait for more
+                 * characters
+                 */
+                return 0;
+            }
+
+            /* let's check the second checksum */
+            if (buffer[70] != evaluate_checksum (&buffer[6], 64))
+            {
+                return -2;
+            }
+
+            bentel_message->message_type = BENTEL_GET_LOGGER_15_RESPONSE;
+
+            memcpy (&(bentel_layer->logger[14 * 64]), &(buffer[6]), 64);
+
+            return 71;
+
+        case 0xfd103f00:
+            /*
+             * BENTEL_GET_LOGGER_16_RESPONSE
+             *
+             * -> f0 fd 10 3f 00 3c
+             * <- f0 fd 10 3f 00 3c 01 .. 00 c2
+             *                      \------/
+             *    64 bytes, since 64 * 28 = 1792, the size of the logger
+             *
+             * Each event is 7 bytes long, there is no alignement in the
+             * BENTEL_GET_LOGGER_*_RESPONSE
+             */
+            if (buffer[5] != evaluate_checksum (buffer, 5))
+            {
+                return -1;
+            }
+
+            if (len < 71)
+            {
+                /*
+                 * incomplete message, we need to wait for more
+                 * characters
+                 */
+                return 0;
+            }
+
+            /* let's check the second checksum */
+            if (buffer[70] != evaluate_checksum (&buffer[6], 64))
+            {
+                return -2;
+            }
+
+            bentel_message->message_type = BENTEL_GET_LOGGER_16_RESPONSE;
+
+            memcpy (&(bentel_layer->logger[15 * 64]), &(buffer[6]), 64);
+
+            return 71;
+
+        case 0x3d113f00:
+            /*
+             * BENTEL_GET_LOGGER_17_RESPONSE
+             *
+             * -> f0 3d 11 3f 00 7d
+             * <- f0 3d 11 3f 00 7d 01 .. 00 c2
+             *                      \------/
+             *    64 bytes, since 64 * 28 = 1792, the size of the logger
+             *
+             * Each event is 7 bytes long, there is no alignement in the
+             * BENTEL_GET_LOGGER_*_RESPONSE
+             */
+            if (buffer[5] != evaluate_checksum (buffer, 5))
+            {
+                return -1;
+            }
+
+            if (len < 71)
+            {
+                /*
+                 * incomplete message, we need to wait for more
+                 * characters
+                 */
+                return 0;
+            }
+
+            /* let's check the second checksum */
+            if (buffer[70] != evaluate_checksum (&buffer[6], 64))
+            {
+                return -2;
+            }
+
+            bentel_message->message_type = BENTEL_GET_LOGGER_17_RESPONSE;
+
+            memcpy (&(bentel_layer->logger[16 * 64]), &(buffer[6]), 64);
+
+            return 71;
+
+        case 0x7d113f00:
+            /*
+             * BENTEL_GET_LOGGER_18_RESPONSE
+             *
+             * -> f0 7d 11 3f 00 bd
+             * <- f0 7d 11 3f 00 bd 01 .. 00 c2
+             *                      \------/
+             *    64 bytes, since 64 * 28 = 1792, the size of the logger
+             *
+             * Each event is 7 bytes long, there is no alignement in the
+             * BENTEL_GET_LOGGER_*_RESPONSE
+             */
+            if (buffer[5] != evaluate_checksum (buffer, 5))
+            {
+                return -1;
+            }
+
+            if (len < 71)
+            {
+                /*
+                 * incomplete message, we need to wait for more
+                 * characters
+                 */
+                return 0;
+            }
+
+            /* let's check the second checksum */
+            if (buffer[70] != evaluate_checksum (&buffer[6], 64))
+            {
+                return -2;
+            }
+
+            bentel_message->message_type = BENTEL_GET_LOGGER_18_RESPONSE;
+
+            memcpy (&(bentel_layer->logger[17 * 64]), &(buffer[6]), 64);
+
+            return 71;
+
+        case 0xbd113f00:
+            /*
+             * BENTEL_GET_LOGGER_19_RESPONSE
+             *
+             * -> f0 bd 11 3f 00 fd
+             * <- f0 bd 11 3f 00 fd 01 .. 00 c2
+             *                      \------/
+             *    64 bytes, since 64 * 28 = 1792, the size of the logger
+             *
+             * Each event is 7 bytes long, there is no alignement in the
+             * BENTEL_GET_LOGGER_*_RESPONSE
+             */
+            if (buffer[5] != evaluate_checksum (buffer, 5))
+            {
+                return -1;
+            }
+
+            if (len < 71)
+            {
+                /*
+                 * incomplete message, we need to wait for more
+                 * characters
+                 */
+                return 0;
+            }
+
+            /* let's check the second checksum */
+            if (buffer[70] != evaluate_checksum (&buffer[6], 64))
+            {
+                return -2;
+            }
+
+            bentel_message->message_type = BENTEL_GET_LOGGER_19_RESPONSE;
+
+            memcpy (&(bentel_layer->logger[18 * 64]), &(buffer[6]), 64);
+
+            return 71;
+
+        case 0xfd113f00:
+            /*
+             * BENTEL_GET_LOGGER_20_RESPONSE
+             *
+             * -> f0 fd 11 3f 00 3d
+             * <- f0 fd 11 3f 00 3d 01 .. 00 c2
+             *                      \------/
+             *    64 bytes, since 64 * 28 = 1792, the size of the logger
+             *
+             * Each event is 7 bytes long, there is no alignement in the
+             * BENTEL_GET_LOGGER_*_RESPONSE
+             */
+            if (buffer[5] != evaluate_checksum (buffer, 5))
+            {
+                return -1;
+            }
+
+            if (len < 71)
+            {
+                /*
+                 * incomplete message, we need to wait for more
+                 * characters
+                 */
+                return 0;
+            }
+
+            /* let's check the second checksum */
+            if (buffer[70] != evaluate_checksum (&buffer[6], 64))
+            {
+                return -2;
+            }
+
+            bentel_message->message_type = BENTEL_GET_LOGGER_20_RESPONSE;
+
+            memcpy (&(bentel_layer->logger[19 * 64]), &(buffer[6]), 64);
+
+            return 71;
+
+        case 0x3d123f00:
+            /*
+             * BENTEL_GET_LOGGER_21_RESPONSE
+             *
+             * -> f0 3d 12 3f 00 7e
+             * <- f0 3d 12 3f 00 7e 01 .. 00 c2
+             *                      \------/
+             *    64 bytes, since 64 * 28 = 1792, the size of the logger
+             *
+             * Each event is 7 bytes long, there is no alignement in the
+             * BENTEL_GET_LOGGER_*_RESPONSE
+             */
+            if (buffer[5] != evaluate_checksum (buffer, 5))
+            {
+                return -1;
+            }
+
+            if (len < 71)
+            {
+                /*
+                 * incomplete message, we need to wait for more
+                 * characters
+                 */
+                return 0;
+            }
+
+            /* let's check the second checksum */
+            if (buffer[70] != evaluate_checksum (&buffer[6], 64))
+            {
+                return -2;
+            }
+
+            bentel_message->message_type = BENTEL_GET_LOGGER_21_RESPONSE;
+
+            memcpy (&(bentel_layer->logger[20 * 64]), &(buffer[6]), 64);
+
+            return 71;
+
+        case 0x7d123f00:
+            /*
+             * BENTEL_GET_LOGGER_22_RESPONSE
+             *
+             * -> f0 7d 12 3f 00 be
+             * <- f0 7d 12 3f 00 be 01 .. 00 c2
+             *                      \------/
+             *    64 bytes, since 64 * 28 = 1792, the size of the logger
+             *
+             * Each event is 7 bytes long, there is no alignement in the
+             * BENTEL_GET_LOGGER_*_RESPONSE
+             */
+            if (buffer[5] != evaluate_checksum (buffer, 5))
+            {
+                return -1;
+            }
+
+            if (len < 71)
+            {
+                /*
+                 * incomplete message, we need to wait for more
+                 * characters
+                 */
+                return 0;
+            }
+
+            /* let's check the second checksum */
+            if (buffer[70] != evaluate_checksum (&buffer[6], 64))
+            {
+                return -2;
+            }
+
+            bentel_message->message_type = BENTEL_GET_LOGGER_22_RESPONSE;
+
+            memcpy (&(bentel_layer->logger[21 * 64]), &(buffer[6]), 64);
+
+            return 71;
+
+        case 0xbd123f00:
+            /*
+             * BENTEL_GET_LOGGER_23_RESPONSE
+             *
+             * -> f0 bd 12 3f 00 fe
+             * <- f0 bd 12 3f 00 fe 01 .. 00 c2
+             *                      \------/
+             *    64 bytes, since 64 * 28 = 1792, the size of the logger
+             *
+             * Each event is 7 bytes long, there is no alignement in the
+             * BENTEL_GET_LOGGER_*_RESPONSE
+             */
+            if (buffer[5] != evaluate_checksum (buffer, 5))
+            {
+                return -1;
+            }
+
+            if (len < 71)
+            {
+                /*
+                 * incomplete message, we need to wait for more
+                 * characters
+                 */
+                return 0;
+            }
+
+            /* let's check the second checksum */
+            if (buffer[70] != evaluate_checksum (&buffer[6], 64))
+            {
+                return -2;
+            }
+
+            bentel_message->message_type = BENTEL_GET_LOGGER_23_RESPONSE;
+
+            memcpy (&(bentel_layer->logger[22 * 64]), &(buffer[6]), 64);
+
+            return 71;
+
+        case 0xfd123f00:
+            /*
+             * BENTEL_GET_LOGGER_24_RESPONSE
+             *
+             * -> f0 fd 12 3f 00 3e
+             * <- f0 fd 12 3f 00 3e 01 .. 00 c2
+             *                      \------/
+             *    64 bytes, since 64 * 28 = 1792, the size of the logger
+             *
+             * Each event is 7 bytes long, there is no alignement in the
+             * BENTEL_GET_LOGGER_*_RESPONSE
+             */
+            if (buffer[5] != evaluate_checksum (buffer, 5))
+            {
+                return -1;
+            }
+
+            if (len < 71)
+            {
+                /*
+                 * incomplete message, we need to wait for more
+                 * characters
+                 */
+                return 0;
+            }
+
+            /* let's check the second checksum */
+            if (buffer[70] != evaluate_checksum (&buffer[6], 64))
+            {
+                return -2;
+            }
+
+            bentel_message->message_type = BENTEL_GET_LOGGER_24_RESPONSE;
+
+            memcpy (&(bentel_layer->logger[23 * 64]), &(buffer[6]), 64);
+
+            return 71;
+
+        case 0x3d133f00:
+            /*
+             * BENTEL_GET_LOGGER_25_RESPONSE
+             *
+             * -> f0 3d 13 3f 00 7f
+             * <- f0 3d 13 3f 00 7f 01 .. 00 c2
+             *                      \------/
+             *    64 bytes, since 64 * 28 = 1792, the size of the logger
+             *
+             * Each event is 7 bytes long, there is no alignement in the
+             * BENTEL_GET_LOGGER_*_RESPONSE
+             */
+            if (buffer[5] != evaluate_checksum (buffer, 5))
+            {
+                return -1;
+            }
+
+            if (len < 71)
+            {
+                /*
+                 * incomplete message, we need to wait for more
+                 * characters
+                 */
+                return 0;
+            }
+
+            /* let's check the second checksum */
+            if (buffer[70] != evaluate_checksum (&buffer[6], 64))
+            {
+                return -2;
+            }
+
+            bentel_message->message_type = BENTEL_GET_LOGGER_25_RESPONSE;
+
+            memcpy (&(bentel_layer->logger[24 * 64]), &(buffer[6]), 64);
+
+            return 71;
+
+        case 0x7d133f00:
+            /*
+             * BENTEL_GET_LOGGER_26_RESPONSE
+             *
+             * -> f0 7d 13 3f 00 bf
+             * <- f0 7d 13 3f 00 bf 01 .. 00 c2
+             *                      \------/
+             *    64 bytes, since 64 * 28 = 1792, the size of the logger
+             *
+             * Each event is 7 bytes long, there is no alignement in the
+             * BENTEL_GET_LOGGER_*_RESPONSE
+             */
+            if (buffer[5] != evaluate_checksum (buffer, 5))
+            {
+                return -1;
+            }
+
+            if (len < 71)
+            {
+                /*
+                 * incomplete message, we need to wait for more
+                 * characters
+                 */
+                return 0;
+            }
+
+            /* let's check the second checksum */
+            if (buffer[70] != evaluate_checksum (&buffer[6], 64))
+            {
+                return -2;
+            }
+
+            bentel_message->message_type = BENTEL_GET_LOGGER_26_RESPONSE;
+
+            memcpy (&(bentel_layer->logger[25 * 64]), &(buffer[6]), 64);
+
+            return 71;
+
+        case 0xbd133f00:
+            /*
+             * BENTEL_GET_LOGGER_27_RESPONSE
+             *
+             * -> f0 bd 13 3f 00 ff
+             * <- f0 bd 13 3f 00 ff 01 .. 00 c2
+             *                      \------/
+             *    64 bytes, since 64 * 28 = 1792, the size of the logger
+             *
+             * Each event is 7 bytes long, there is no alignement in the
+             * BENTEL_GET_LOGGER_*_RESPONSE
+             */
+            if (buffer[5] != evaluate_checksum (buffer, 5))
+            {
+                return -1;
+            }
+
+            if (len < 71)
+            {
+                /*
+                 * incomplete message, we need to wait for more
+                 * characters
+                 */
+                return 0;
+            }
+
+            /* let's check the second checksum */
+            if (buffer[70] != evaluate_checksum (&buffer[6], 64))
+            {
+                return -2;
+            }
+
+            bentel_message->message_type = BENTEL_GET_LOGGER_27_RESPONSE;
+
+            memcpy (&(bentel_layer->logger[26 * 64]), &(buffer[6]), 64);
+
+            return 71;
+
+        case 0xfd133f00:
+            /*
+             * BENTEL_GET_LOGGER_28_RESPONSE
+             *
+             * -> f0 fd 13 3f 00 3f
+             * <- f0 fd 13 3f 00 3f 01 .. 00 c2
+             *                      \------/
+             *    64 bytes, since 64 * 28 = 1792, the size of the logger
+             *
+             * Each event is 7 bytes long, there is no alignement in the
+             * BENTEL_GET_LOGGER_*_RESPONSE
+             */
+            if (buffer[5] != evaluate_checksum (buffer, 5))
+            {
+                return -1;
+            }
+
+            if (len < 71)
+            {
+                /*
+                 * incomplete message, we need to wait for more
+                 * characters
+                 */
+                return 0;
+            }
+
+            /* let's check the second checksum */
+            if (buffer[70] != evaluate_checksum (&buffer[6], 64))
+            {
+                return -2;
+            }
+
+            bentel_message->message_type = BENTEL_GET_LOGGER_28_RESPONSE;
+
+            memcpy (&(bentel_layer->logger[27 * 64]), &(buffer[6]), 64);
+
+            return 71;
 
         default:
             break;
